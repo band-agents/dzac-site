@@ -26,6 +26,7 @@ import { FiveOutline } from "./brand";
 import { Countdown } from "./chrome";
 import { Film } from "./Film";
 import { useLightbox } from "./Lightbox";
+import { Rail } from "./Rail";
 
 const ICONS: Record<string, LucideIcon> = { Globe2, Stethoscope, Mic, Ticket, Leaf, Scissors, Activity, Apple, Cpu };
 
@@ -157,7 +158,7 @@ export function WhatsNew() {
   return (
     <Section>
       <SectionHead kicker={t(EVENT.edition)} title={t(HOME.newTitle)} />
-      <Stagger className="grid-4">
+      <Rail className="grid-4">
         {NEW.map((n, i) => {
           const I = ICONS[n.icon] ?? Globe2;
           return (
@@ -169,7 +170,7 @@ export function WhatsNew() {
             </Glow>
           );
         })}
-      </Stagger>
+      </Rail>
     </Section>
   );
 }
@@ -184,7 +185,7 @@ export function Tracks({ link = true }: { link?: boolean }) {
       <SectionHead kicker={t({ en: "Scientific program", ar: "البرنامج العلمي" })} title={t(HOME.programTitle)} lead={t(PROGRAM_NOTE)}>
         {link && <Link href={page(locale, "program")} className="link">{t(UI.seeProgram)} <Fwd /></Link>}
       </SectionHead>
-      <Stagger as="ol" className="grid-3">
+      <Rail as="ol" className="grid-3">
         {TRACKS.map((tr) => (
           <Glow as="li" key={tr.n} className="card track-card">
             <span className="card-n u-tnum">{tr.n}</span>
@@ -192,7 +193,7 @@ export function Tracks({ link = true }: { link?: boolean }) {
             <p>{t(tr.body)}</p>
           </Glow>
         ))}
-      </Stagger>
+      </Rail>
     </Section>
   );
 }
@@ -208,7 +209,7 @@ export function Beyond() {
     <section className="bx" style={{ ["--n" as string]: BEYOND.length }}>
       <div className="bx-pin">
         <SectionHead kicker={t({ en: "New in DZAC 5", ar: "جديد DZAC 5" })} title={t(HOME.beyondTitle)} lead={t(BEYOND_LINE)} />
-        <div className="bx-row">
+        <Rail className="bx-row" stagger={false}>
           {BEYOND.map((b, i) => {
             const I = ICONS[b.icon] ?? Leaf;
             return (
@@ -222,7 +223,7 @@ export function Beyond() {
               </article>
             );
           })}
-        </div>
+        </Rail>
         <div className="bx-progress" aria-hidden><i /></div>
       </div>
     </section>
@@ -272,7 +273,7 @@ export function Faculty({ past = true, head = true }: { past?: boolean; head?: b
   return (
     <Section flush={!head}>
       {head && <SectionHead kicker={t({ en: "Faculty", ar: "المحاضرون" })} title={t(HOME.facultyTitle)} />}
-      <Stagger className="grid-4">
+      <Rail className="grid-4 leaders">
         {LEADERS.map((l, i) => (
           <Glow key={i} className="card leader" as="article">
             <div className="leader-ph">
@@ -284,7 +285,7 @@ export function Faculty({ past = true, head = true }: { past?: boolean; head?: b
             </div>
           </Glow>
         ))}
-      </Stagger>
+      </Rail>
       <Reveal className="grid-3 orgs">
         {ORGANIZERS.map((o, i) => (
           <div key={i} className="org"><small>{t(o.role)}</small><b>{t(o.name)}</b></div>
@@ -332,7 +333,7 @@ export function Review() {
       </Stagger>
       <Stagger className="grid-3 rv-stats">
         {REVIEW.stats.map((s, i) => (
-          <div key={i} className="rv-stat"><b className="grad-text">{s.v}</b><span>{t(s.l)}</span></div>
+          <div key={i} className="rv-stat"><b className="grad-text" dir="ltr">{s.v}</b><span>{t(s.l)}</span></div>
         ))}
       </Stagger>
     </Section>
@@ -425,7 +426,7 @@ export function Passes() {
   return (
     <Section id="passes">
       <SectionHead kicker={t({ en: "Passes", ar: "التذاكر" })} title={t(HOME.passesTitle)} lead={t({ en: "Choose the conference, the masterclass, or both together.", ar: "اختر المؤتمر، أو الماستر كلاس، أو الاثنين معًا." })} />
-      <Stagger className="grid-3">
+      <Rail className="grid-3">
         {order.map((p) => (
           <Glow key={p.id} className={`card pass${p.featured ? " is-featured" : ""}`}>
             <span className="pass-name">{t(p.name)}</span>
@@ -436,7 +437,7 @@ export function Passes() {
             <Link href={`${page(locale, "register")}?pass=${p.id}`} className={`btn ${p.featured ? "btn-gold" : "btn-ghost"}`}>{t(UI.register)}</Link>
           </Glow>
         ))}
-      </Stagger>
+      </Rail>
     </Section>
   );
 }
@@ -452,14 +453,14 @@ export function Tiers({ link = true, head = true }: { link?: boolean; head?: boo
             {link && <Link href={page(locale, "partners")} className="link">{t(UI.becomePartner)} <Fwd /></Link>}
           </SectionHead>
         : <header className="sh"><p className="lead">{t(PARTNERS_FOR)}</p></header>}
-      <Stagger className="grid-3">
+      <Rail className="grid-3">
         {order.map((tr) => (
           <Glow key={tr.id} className={`card tier${tr.id === "gold" ? " is-featured" : ""}`}>
             <h3 data-tier={tr.id}>{t(tr.name)}</h3>
             <ul>{tr.points.map((x, i) => <li key={i}>{t(x)}</li>)}</ul>
           </Glow>
         ))}
-      </Stagger>
+      </Rail>
     </Section>
   );
 }

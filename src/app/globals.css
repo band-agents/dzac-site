@@ -497,28 +497,33 @@ html[lang="ar"] .film b { font-size: 20px; line-height: 1.45; }
     .ed { view-timeline: --ed block; }
     .ed-line i { animation: grow linear both; animation-timeline: --ed; animation-range: entry 40% cover 55%; }
 
-    /* The statement pins at the centre of the screen until every word is lit. */
-    .stmt { height: 240svh; view-timeline: --stmt block; }
-    .stmt-pin { position: sticky; top: 0; height: 100svh; padding-block: var(--header-h) 0; }
+    /* The statement: words light in order. On wide screens it pins at the centre until every word is lit;
+       on phones it lights as it passes, without holding the page. */
+    .stmt { view-timeline: --stmt block; }
     .words span { animation: lit linear both; animation-timeline: --stmt; animation-range: contain calc(6% + var(--w) / var(--n) * 74%) contain calc(6% + (var(--w) + 1) / var(--n) * 74%); }
 
-    /* Beyond: pinned until the last card has fully arrived, with a still
-       beat at each end. The row travels exactly its overflow, so the first
-       card starts on the left content edge and the last ends on the right. */
-    .bx { container-type: inline-size; view-timeline: --bx block;
-      --pad-v: max(var(--gutter), calc((100vw - var(--wrap)) / 2));
-      --dist-v: max(0px, calc(var(--n) * var(--card-w) + (var(--n) - 1) * var(--gap) + 2 * var(--pad-v) - 100vw));
-      height: calc(100svh + var(--dist-v) / .76); }
-    .bx-pin { position: sticky; top: 0; height: 100svh; padding-block: var(--header-h) 0;
-      --pad-i: max(var(--gutter), calc((100cqw - var(--wrap)) / 2));
-      --dist: max(0px, calc(var(--n) * var(--card-w) + (var(--n) - 1) * var(--gap) + 2 * var(--pad-i) - 100cqw)); }
-    .bx-row { width: max-content; overflow: visible; padding-inline: var(--pad-i); scroll-snap-type: none; animation: bx-slide linear both; animation-timeline: --bx; animation-range: contain 0% contain 100%; }
-    .bx-progress { display: block; position: relative; width: min(calc(100% - 2 * var(--gutter)), 320px); height: 1px; margin-inline: auto; background: var(--line2); overflow: hidden; }
-    .bx-progress i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--cyan), var(--champagne)); transform-origin: left; animation: bx-bar linear both; animation-timeline: --bx; animation-range: contain 0% contain 100%; }
-    [dir="rtl"] .bx-progress i { transform-origin: right; }
+    /* Pinned scenes are for wide screens; phones get a swipe rail instead (see Phone). */
+    @media (min-width: 900px) {
+    .stmt { height: 240svh; }
+    .stmt-pin { position: sticky; top: 0; height: 100svh; padding-block: var(--header-h) 0; }
+  
+      /* Beyond: pinned until the last card has fully arrived, with a still
+         beat at each end. The row travels exactly its overflow, so the first
+         card starts on the left content edge and the last ends on the right. */
+      .bx { container-type: inline-size; view-timeline: --bx block;
+        --pad-v: max(var(--gutter), calc((100vw - var(--wrap)) / 2));
+        --dist-v: max(0px, calc(var(--n) * var(--card-w) + (var(--n) - 1) * var(--gap) + 2 * var(--pad-v) - 100vw));
+        height: calc(100svh + var(--dist-v) / .76); }
+      .bx-pin { position: sticky; top: 0; height: 100svh; padding-block: var(--header-h) 0;
+        --pad-i: max(var(--gutter), calc((100cqw - var(--wrap)) / 2));
+        --dist: max(0px, calc(var(--n) * var(--card-w) + (var(--n) - 1) * var(--gap) + 2 * var(--pad-i) - 100cqw)); }
+      .bx-row { width: max-content; overflow: visible; padding-inline: var(--pad-i); scroll-snap-type: none; animation: bx-slide linear both; animation-timeline: --bx; animation-range: contain 0% contain 100%; }
+      .bx-progress { display: block; position: relative; width: min(calc(100% - 2 * var(--gutter)), 320px); height: 1px; margin-inline: auto; background: var(--line2); overflow: hidden; }
+      .bx-progress i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--cyan), var(--champagne)); transform-origin: left; animation: bx-bar linear both; animation-timeline: --bx; animation-range: contain 0% contain 100%; }
+      [dir="rtl"] .bx-progress i { transform-origin: right; }
+    }
   }
 }
-@media (max-width: 640px) { .bx { --card-w: 78vw; } }
 /* The 5 writes itself on desktops; it redraws a mask every frame, too much for a phone's first seconds. */
 @media (prefers-reduced-motion: no-preference) and (min-width: 900px) {
   .five-draw path { animation: five-draw 2s var(--ease) .45s both; }
@@ -714,3 +719,127 @@ html[lang="ar"] .ap-agenda small { font-family: var(--text); letter-spacing: 0; 
 }
 @media (max-width: 640px) { .ap-opts { grid-template-columns: minmax(0, 1fr); } .ap-opt { padding: 14px 16px; } }
 
+
+/* ═══ Phone ═══════════════════════════════════════════════
+   A layout of its own, not the desktop shrunk: a tighter scale, smaller
+   type, and every list of cards as a swipe rail (peek of the next card,
+   dots underneath) instead of a tall stack. The page is about half as long
+   and reads one calm screen at a time. */
+.rail-dots { display: none; }
+@media (max-width: 899px) {
+  .bx .rail-dots { display: flex; }
+  .bx-pin { padding-block: var(--sec); gap: var(--head); }
+  .bx-row { gap: var(--gap); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); }
+  .bx-card { flex: 0 0 min(78vw, 340px); height: auto; min-height: 300px; scroll-snap-align: start; }
+}
+@media (max-width: 760px) {
+  :root { --sec: 52px; --head: 28px; --stack: 12px; --gap: 12px; --card: 22px; --gutter: 20px; --r: 18px; --header-h: 64px; }
+  body { font-size: 15px; line-height: 1.65; }
+  .h1 { font-size: clamp(38px, 11vw, 48px); }
+  .h2 { font-size: clamp(30px, 8.6vw, 36px); line-height: 1.1; }
+  html[lang="ar"] .h1 { font-size: clamp(30px, 8.6vw, 38px); }
+  html[lang="ar"] .h2 { font-size: clamp(24px, 6.8vw, 29px); line-height: 1.45; }
+  .lead { font-size: 15px; }
+  .kicker { font-size: 10px; letter-spacing: .24em; gap: 10px; }
+  html[lang="ar"] .kicker { font-size: 12.5px; }
+  .kicker::before, .kicker::after { width: 18px; }
+  .btn { min-height: 46px; padding-inline: 22px; }
+  .btn-lg { min-height: 50px; padding-inline: 26px; }
+  .sh { max-width: 100%; }
+
+  /* Header */
+  .hd-logo .wm { font-size: 24px; }
+  .hd-logo img { height: 26px; }
+
+  /* Hero: one clear stack, readable over the film */
+  .hero { padding: calc(var(--header-h) + 20px) var(--gutter) 28px; }
+  .hero-in { gap: 16px; }
+  .hero-kick .pill:last-child { display: none; }
+  .pill { font-size: 9.5px; padding: 6px 13px; }
+  .hero-title { font-size: clamp(64px, 21vw, 92px); }
+  .hero-tag { font-size: clamp(22px, 6.4vw, 27px); }
+  html[lang="ar"] .hero-tag { font-size: clamp(19px, 5.4vw, 23px); }
+  .hero-meta { flex-direction: column; gap: 4px; color: #C3CCDC; font-size: 13.5px; }
+  .hero-cta { width: 100%; flex-direction: column; gap: 10px; }
+  .hero-cta .btn { width: 100%; }
+  .cd { width: 100%; gap: 6px; }
+  .cd-cell { padding: 10px 4px; }
+  .cd-v { font-size: 28px; }
+  .hero-shade { background: linear-gradient(180deg, rgba(5, 9, 20, .72) 0%, rgba(5, 9, 20, .45) 40%, rgba(5, 9, 20, .7) 75%, var(--bg) 100%); }
+
+  /* Marquee and statement */
+  .mq { padding-block: 16px; }
+  .mq-track > span { font-size: 20px; gap: 22px; padding-inline-end: 22px; }
+  .stmt-pin { padding-block: var(--sec); }
+  .stmt-in { gap: var(--head); }
+  .statement { font-size: clamp(25px, 7.2vw, 30px); line-height: 1.25; }
+  html[lang="ar"] .statement { font-size: clamp(20px, 5.8vw, 24px); line-height: 1.75; }
+
+  /* Rails: every card list swipes sideways */
+  .rail { display: flex !important; gap: var(--gap); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); padding-bottom: 4px; }
+  .rail::-webkit-scrollbar { display: none; }
+  .rail > * { flex: 0 0 80%; scroll-snap-align: start; }
+  .rail.stg > * { animation: none !important; }
+  .rail-dots { display: flex; justify-content: center; gap: 6px; margin-top: 18px; }
+  .rail-dots button { width: 6px; height: 6px; padding: 0; border-radius: 999px; background: var(--line2); transition: width .35s var(--ease), background-color .35s; }
+  .rail-dots button.is-on { width: 22px; background: var(--champagne); }
+  .card { gap: 12px; }
+  .card h3 { font-size: 23px; }
+  html[lang="ar"] .card h3 { font-size: 18px; }
+  .track-card { min-height: 0; }
+  .leaders > * { flex-basis: 66%; }
+  .leader-tx { padding: 16px; }
+  .leader-tx b { font-size: 19px; }
+  html[lang="ar"] .leader-tx b { font-size: 16px; }
+  .pass-price { font-size: 40px; }
+  .tier h3 { font-size: 34px; }
+
+  /* Organisers and stats: compact rows */
+  .orgs { grid-template-columns: minmax(0, 1fr); }
+  .org { padding: 16px; }
+  .past li { padding: 8px 14px; font-size: 14px; }
+  .rv-stats { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  .rv-stat { padding: 18px 6px; }
+  .rv-stat + .rv-stat { border-top: 0; border-inline-start: 1px solid var(--line); }
+  .rv-stat b { font-size: 28px; }
+  .rv-stat span { font-size: 11.5px; line-height: 1.45; }
+  .rv-grid { grid-auto-rows: 150px; }
+  .rv-ph.is-center { height: 240px; }
+
+  /* Masterclass: film first, then the count beside its label, then the details */
+  .mc-grid { gap: 22px; }
+  .mc-film { order: -1; max-width: 100%; aspect-ratio: 1 / 1; }
+  .mc-count { display: flex; align-items: center; gap: 14px; text-align: start; }
+  .mc-count b { font-size: 84px; }
+  .mc-count > span { margin-top: 0; font-size: 14.5px; }
+  .mc-side { gap: 16px; width: 100%; }
+  .mc-list { max-width: none; }
+  .mc-list li { padding-block: 10px; font-size: 14px; }
+
+  /* Editions: a compact vertical timeline */
+  .ed { grid-template-columns: minmax(0, 1fr); gap: 0; padding-inline-start: 30px; }
+  .ed-line { display: block; top: 10px; bottom: 30px; inset-inline-start: 8px; inset-inline-end: auto; width: 1px; height: auto; }
+  .ed-line i { display: none; }
+  .ed-item { position: relative; justify-items: start; text-align: start; gap: 4px; padding-bottom: 26px; }
+  .ed-dot { position: absolute; inset-inline-start: -30px; top: 8px; margin: 0; }
+  .ed-n { font-size: 28px; }
+
+  /* Reels, apply, venue, final, footer */
+  .reels { margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); justify-content: flex-start; }
+  .reel { flex-basis: 40%; }
+  .apb { padding: 28px 18px; }
+  .apb-paths { gap: 8px; }
+  .apb-path { padding: 14px 8px; font-size: 18px; }
+  .final-film { aspect-ratio: 4 / 3; }
+  .final-copy { padding: 28px 20px; }
+  .final-copy .row-c { flex-direction: column; width: 100%; }
+  .final-copy .btn { width: 100%; }
+  .ft { padding-block: var(--sec) 32px; }
+  .ft-brand .wm { font-size: 38px; }
+  .ft-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--line); }
+  .ft-col { padding: 18px 4px; gap: 8px; font-size: 12.5px; }
+  .ft-col + .ft-col { border-top: 0; border-inline-start: 1px solid var(--line); }
+  .ft-col h4 { font-size: 9px; letter-spacing: .16em; }
+  .ph { padding-top: calc(var(--header-h) + 40px); }
+}

@@ -33,6 +33,12 @@ tier), the masterclass is a triptych with the film in the middle, the review mos
 header is three zones with the nav exactly centred; the hero and footer are centred. Don't add one-off
 paddings: use the tokens.
 
+**Phone (round 4, 10-16: Dan called mobile "completely destroyed" and Beyond broken on phones):** a
+layout of its own in the "Phone" block of globals.css (tighter --sec/--card/type scale). Every card list is a
+`<Rail>` (components/Rail.tsx): even grid on desktop, swipe rail with snap + peek + live dots under 760px. The
+pinned scenes (Statement, Beyond) only pin at ≥900px; Beyond is a swipe rail below that. Home on a phone went
+18,800 → 13,500 px. Check phones with real emulation (isMobile, touch, DPR 2) and a touch swipe, not a resized window.
+
 **Speed (round 3):** visitors never run Remotion or framer-motion on the content pages.
 - Films are pre-rendered (`scripts/render-films.mjs`, compositions in `src/remotion/Root.tsx`, clips in
   `clips.ts`) to `public/media/films/{hero-ltr,hero-rtl,or-en,or-ar,sting-en,sting-ar}` as AV1 + H.264 +
