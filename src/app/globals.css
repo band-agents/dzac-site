@@ -52,7 +52,7 @@ h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd { margin: 0; padding: 0; }
 ul, ol { list-style: none; }
 ::selection { background: rgba(230, 213, 174, .3); }
 :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
-.u-tnum { font-variant-numeric: tabular-nums; }
+.u-tnum { font-variant-numeric: lining-nums tabular-nums; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 [dir="rtl"] .u-flip { transform: scaleX(-1); }
 
