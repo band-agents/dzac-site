@@ -10,6 +10,7 @@ Brief: the client's deck `Downloads/DZAC5_Presentation (1).pdf` (16 slides) plus
     npm run dev        # http://localhost:3240 (launch.json: "dzac-site")
     npm run typecheck
     npm run build      # static export to out/, then scripts/flatten-segments.mjs
+    npm run deploy:pages   # → https://band-agents.github.io/dzac-site/ (repo band-agents/dzac-site, public)
 
 `output: "export"`: plain files, GitHub Pages ready. `NEXT_BASE_PATH=/<repo>` for a sub-path host;
 `asset()` in lib/paths adds it to /public files (Link adds it itself).
