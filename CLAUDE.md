@@ -11,6 +11,7 @@ Brief: the client's deck `Downloads/DZAC5_Presentation (1).pdf` (16 slides) plus
     npm run typecheck
     npm run build      # static export to out/, then scripts/flatten-segments.mjs
     npm run deploy:pages   # → https://band-agents.github.io/dzac-site/ (repo band-agents/dzac-site, public)
+    node scripts/render-films.mjs [id…] [--encode]   # Remotion → public/media/films (see Films)
 
 `output: "export"`: plain files, GitHub Pages ready. `NEXT_BASE_PATH=/<repo>` for a sub-path host;
 `asset()` in lib/paths adds it to /public files (Link adds it itself).
@@ -23,6 +24,32 @@ text, IBM Plex Mono for the small uppercase labels; Arabic Alexandria 300 + IBM 
 weight above 500 for display. Champagne (`--champagne`, `--lux`) for emphasis and primary buttons; cyan
 only for thin lines and the outlined 5. Keep it that way.
 
+**Spacing (round 3, 10-16: Dan wanted it "symmetric" everywhere):** one system in globals.css —
+`--sec` (equal space above and below every section's content; a hairline + diamond marks the exact
+middle between sections), `--head`, `--stack`, `--gap`, `--card` (equal on all four sides), `--gutter`.
+Every section is `<Section>` (`.s`) with a centred `<SectionHead>`; grids are equal columns
+(`.grid-2/3/4`), cards centre their content, featured items sit in the centre column (Bundle pass, Gold
+tier), the masterclass is a triptych with the film in the middle, the review mosaic mirrors itself. The
+header is three zones with the nav exactly centred; the hero and footer are centred. Don't add one-off
+paddings: use the tokens.
+
+**Speed (round 3):** visitors never run Remotion or framer-motion on the content pages.
+- Films are pre-rendered (`scripts/render-films.mjs`, compositions in `src/remotion/Root.tsx`, clips in
+  `clips.ts`) to `public/media/films/{hero-ltr,hero-rtl,or-en,or-ar,sting-en,sting-ar}` as AV1 + H.264 +
+  webp poster; the hero also has `-sm` for phones. `components/Film.tsx` plays them natively: poster
+  first, loads only near the viewport, plays only on screen, hero waits for page load, none under reduced
+  motion / Data Saver. Change a film → edit the composition, re-render, re-encode.
+- Reveals, staggers, parallax, the word-lit statement, the editions line and the Beyond side-scroll are
+  CSS scroll-driven animations (`lib/motion.tsx` + "Motion" in globals.css): compositor-run, no JS per
+  frame, final state shown where unsupported. framer-motion is only in the form views (Apply/Register/Forms).
+- The Statement and Beyond are pinned scenes: they hold the page until fully played (all words lit; the
+  last card arrived, with a still beat at each end), then release.
+- `main .s` has `content-visibility: auto` (dividers sit 4px inside the box because paint is clipped).
+- Variable fonts; only Latin faces preload. No page-wide fade (it cost a full-page layer); the 5 draws
+  itself on desktops only (mask redraw per frame was too heavy for phones).
+- Measured 10-16 on a 4× throttled CPU vs the round-2 live site: main-thread work at load 6.5 s → 3.0 s,
+  script 3.1 s → 0.5 s, scroll 26 → 65 fps. Tools in the session scratchpad (perf.cjs, cssexp.cjs).
+
 ## Shape
 
 - `src/content/site.ts`: **every word, EN + AR**. `// ours` = written by us, needs the organisers;
@@ -33,8 +60,8 @@ only for thin lines and the outlined 5. Keep it that way.
 - `src/components/sections.tsx`: the home sections, reused by inner pages (`head={false}` drops the
   section heading where the page hero already says it).
 - `src/remotion/`: `films.tsx` (HeroReel full-bleed DZAC 4 footage; OrReel masterclass "live feed";
-  Sting) and `fx.tsx` (custom light-sweep transition, stage waves, grade). `LiveFilm` shows a poster
-  first, mounts the Player after hydration, plays only on screen, never under reduced motion.
+  Sting), `fx.tsx` (custom light-sweep transition, stage waves, grade), `Root.tsx` (compositions, fonts),
+  `clips.ts`. Render-time only (dev dependencies).
 - `/apply` (`views/Apply.tsx`, copy in `content/apply.ts`): the adaptive application form. Steps are
   rebuilt from the answers (attend / masterclass / speak / partner / media); a live sidebar shows the
   answers, a progress ring and a recommendation (`outcome()`); number keys + Enter; email typo fix;

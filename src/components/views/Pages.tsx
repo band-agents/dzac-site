@@ -8,7 +8,7 @@ import { EVENT, HOME, WORKSHOP } from "@/content/site";
 import { useLocale, useT } from "@/lib/locale";
 import { Reveal } from "@/lib/motion";
 import { asset, page, photo } from "@/lib/paths";
-import { Beyond, Editions, Faculty, Lounge, Masterclass, PageHero, Passes, Tiers, Tracks } from "../sections";
+import { Beyond, Editions, Faculty, Lounge, Masterclass, PageHero, Passes, Section, SectionHead, Tiers, Tracks } from "../sections";
 import { useLightbox } from "../Lightbox";
 import { AbstractForm, CertificateView, CheckInView, PartnerForm } from "./Forms";
 import { ApplyView } from "./Apply";
@@ -19,17 +19,13 @@ function AbstractBand() {
   const t = useT();
   const locale = useLocale();
   return (
-    <section className="sec-tight">
-      <div className="wrap">
-        <Reveal className="panel" style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "grid", gap: 8 }}>
-            <p className="kicker">{t({ en: "Call for abstracts", ar: "دعوة لتقديم الملخصات" })}</p>
-            <p className="h3">{t({ en: "Present your work on the DZAC 5 stage.", ar: "اعرض بحثك على منصة DZAC 5." })}</p>
-          </div>
+    <Section>
+      <Reveal className="panel apb">
+        <SectionHead kicker={t({ en: "Call for abstracts", ar: "دعوة لتقديم الملخصات" })} title={t({ en: "Present your work on the DZAC 5 stage.", ar: "اعرض بحثك على منصة DZAC 5." })}>
           <Link href={page(locale, "abstracts")} className="btn btn-primary"><FileText size={16} />{t({ en: "Submit an abstract", ar: "قدّم ملخصًا" })}</Link>
-        </Reveal>
-      </div>
-    </section>
+        </SectionHead>
+      </Reveal>
+    </Section>
   );
 }
 
@@ -55,26 +51,22 @@ export function MasterclassView() {
       <PageHero kicker={t({ en: "Hands-on masterclass", ar: "ماستر كلاس عملي" })} title={t({ en: "Into the operating room", ar: "إلى داخل غرفة العمليات" })}
         lead={t({ en: "Twenty live penile prosthesis implants, with scrub-in for every participant. Places are limited.", ar: "عشرون عملية زراعة دعامة حية، مع دخول غرفة العمليات لكل مشارك. الأماكن محدودة." })} bg={photo("444", "lg", "workshop")} />
       <Masterclass link={false} />
-      <section className="sec-tight">
-        <div className="wrap">
-          <Reveal><p className="kicker" style={{ marginBottom: 22 }}>{t({ en: "DZAC 4 masterclass, Alexandria Urology Hospital", ar: "ماستر كلاس DZAC 4، مستشفى الإسكندرية لجراحة المسالك" })}</p></Reveal>
-          <div className="reels" style={{ gap: 12 }}>
+      <Section>
+        <SectionHead kicker={t({ en: "DZAC 4 masterclass", ar: "ماستر كلاس DZAC 4" })} title={t({ en: "Alexandria Urology Hospital", ar: "مستشفى الإسكندرية لجراحة المسالك" })} />
+          <div className="reels">
             {shots.map((s, i) => (
-              <button key={s.id} type="button" className="reel" style={{ flexBasis: "clamp(180px, 20vw, 260px)", aspectRatio: "3 / 4" }}
+              <button key={s.id} type="button" className="reel" style={{ flexBasis: "clamp(160px, 18vw, 240px)", aspectRatio: "3 / 4" }}
                 onClick={() => open({ kind: "photos", index: i, list: shots.map((x) => ({ src: photo(x.id, "lg", "workshop"), alt: "DZAC 4 masterclass" })) })}
                 aria-label={`DZAC 4 masterclass ${i + 1}`}>
-                <img src={photo(s.id, "sm", "workshop")} alt="" loading="lazy" style={{ filter: "none" }} />
+                <img src={photo(s.id, "sm", "workshop")} alt="" loading="lazy" decoding="async" style={{ filter: "none" }} />
               </button>
             ))}
           </div>
-        </div>
-      </section>
-      <section className="sec-tight">
-        <div className="wrap" style={{ display: "grid", gap: 26 }}>
-          <Reveal><h2 className="h2">{t({ en: "Watch the DZAC 4 masterclass", ar: "شاهد ماستر كلاس DZAC 4" })}</h2></Reveal>
-          <FilmsGrid />
-        </div>
-      </section>
+      </Section>
+      <Section>
+        <SectionHead kicker={t({ en: "Films", ar: "الأفلام" })} title={t({ en: "Watch the DZAC 4 masterclass", ar: "شاهد ماستر كلاس DZAC 4" })} />
+        <FilmsGrid />
+      </Section>
       <Passes />
     </>
   );
@@ -98,7 +90,7 @@ export function GalleryPage() {
     <>
       <PageHero kicker="DZAC 4 · 8–9 January 2026" title={t({ en: "Gallery", ar: "معرض الصور" })}
         lead={t({ en: "Two days at the Triumph Luxury Hotel and the Alexandria Urology Hospital. The DZAC 1 to 3 archives join soon.", ar: "يومان في فندق تريومف ومستشفى الإسكندرية لجراحة المسالك. أرشيف DZAC 1 إلى 3 ينضم قريبًا." })} />
-      <section className="sec" style={{ paddingTop: 0 }}><div className="wrap"><GalleryView /></div></section>
+      <section className="s"><div className="wrap"><GalleryView /></div></section>
     </>
   );
 }
@@ -109,7 +101,7 @@ export function FilmsPage() {
     <>
       <PageHero kicker={t({ en: "Films", ar: "الأفلام" })} title={t({ en: "Watch DZAC", ar: "شاهد DZAC" })}
         lead={t({ en: "The DZAC 4 film, the masterclass, the Dar El Zokora story and the Men's Lounge interviews.", ar: "فيلم DZAC 4، والماستر كلاس، وحكاية دار الذكورة، ولقاءات Men's Lounge." })} bg={asset("/media/posters/dzac4-film.webp")} />
-      <section className="sec" style={{ paddingTop: 0 }}><div className="wrap"><FilmsGrid /></div></section>
+      <section className="s"><div className="wrap"><FilmsGrid /></div></section>
       <Lounge />
     </>
   );
@@ -122,7 +114,7 @@ export function PartnersView() {
       <PageHero kicker={t({ en: "Partners", ar: "الشركاء" })} title={t(HOME.partnersTitle)}
         lead={t({ en: "Put your brand in front of the region's urologists and andrologists, on stage, on screen and in the exhibition.", ar: "اعرض علامتك أمام أطباء المسالك والذكورة في المنطقة: على المنصة، وعلى الشاشات، وفي المعرض." })} bg={photo("1449")} />
       <Tiers link={false} head={false} />
-      <section className="sec" style={{ paddingTop: 0 }}><div className="wrap" style={{ maxWidth: 900 }}><PartnerForm /></div></section>
+      <section className="s"><div className="wrap" style={{ maxWidth: 900 }}><PartnerForm /></div></section>
     </>
   );
 }
@@ -133,7 +125,7 @@ export function RegisterPage() {
     <>
       <PageHero kicker={`${t(EVENT.date)} · ${t(EVENT.venue)}`} title={t({ en: "Register for DZAC 5", ar: "سجّل في DZAC 5" })}
         lead={t({ en: "Four short steps, then your e-ticket with a QR code for the door.", ar: "أربع خطوات قصيرة، ثم تذكرتك الإلكترونية برمز QR للدخول." })} />
-      <section className="sec" style={{ paddingTop: 0 }}><div className="wrap" style={{ maxWidth: 980 }}><RegisterView /></div></section>
+      <section className="s"><div className="wrap" style={{ maxWidth: 980 }}><RegisterView /></div></section>
     </>
   );
 }
@@ -144,7 +136,7 @@ export function ApplyPage() {
     <>
       <PageHero kicker={t({ en: "Apply · about a minute", ar: "التقديم · حوالي دقيقة" })} title={t({ en: "Apply to DZAC 5", ar: "قدّم على DZAC 5" })}
         lead={t({ en: "Tell us who you are and what you're after. The form adapts as you answer, and tells you what fits you best.", ar: "أخبرنا من أنت وما الذي تبحث عنه. النموذج يتكيف مع إجاباتك، ويخبرك بما يناسبك أكثر." })} />
-      <section className="sec" style={{ paddingTop: 0 }}><div className="wrap"><ApplyView /></div></section>
+      <section className="s"><div className="wrap"><ApplyView /></div></section>
     </>
   );
 }
@@ -154,7 +146,7 @@ export function TicketPage() {
   return (
     <>
       <PageHero kicker="DZAC 5" title={t({ en: "Your ticket", ar: "تذكرتك" })} lead={t({ en: "Show the QR code at registration.", ar: "اعرض رمز QR عند التسجيل." })} />
-      <section className="sec" style={{ paddingTop: 0 }}><div className="wrap" style={{ maxWidth: 980 }}><TicketView /></div></section>
+      <section className="s"><div className="wrap" style={{ maxWidth: 980 }}><TicketView /></div></section>
     </>
   );
 }
@@ -165,7 +157,7 @@ export function AbstractsView() {
     <>
       <PageHero kicker={t({ en: "Call for abstracts", ar: "دعوة لتقديم الملخصات" })} title={t({ en: "Submit an abstract", ar: "قدّم ملخصًا بحثيًا" })}
         lead={t({ en: "Original work in any of the six tracks, as an oral presentation, a poster or a surgical video.", ar: "أعمال أصلية في أي من المسارات الستة، كعرض شفهي أو بوستر أو فيديو جراحي." })} />
-      <section className="sec" style={{ paddingTop: 0 }}><div className="wrap" style={{ maxWidth: 980 }}><AbstractForm /></div></section>
+      <section className="s"><div className="wrap" style={{ maxWidth: 980 }}><AbstractForm /></div></section>
     </>
   );
 }
@@ -176,7 +168,7 @@ export function CertificatePage() {
     <>
       <PageHero kicker="DZAC 5" title={t({ en: "Certificate of attendance", ar: "شهادة الحضور" })}
         lead={t({ en: "After the conference, enter your ticket code to download your certificate.", ar: "بعد المؤتمر، اكتب كود تذكرتك لتحميل شهادتك." })} />
-      <section className="sec" style={{ paddingTop: 0 }}><div className="wrap" style={{ maxWidth: 1080 }}><CertificateView /></div></section>
+      <section className="s"><div className="wrap" style={{ maxWidth: 1080 }}><CertificateView /></div></section>
     </>
   );
 }
@@ -187,7 +179,7 @@ export function CheckInPage() {
     <>
       <PageHero kicker={t({ en: "Staff", ar: "فريق العمل" })} title={t({ en: "Check-in", ar: "تسجيل الدخول" })}
         lead={t({ en: "Scan a ticket's QR code or type its code. Each ticket checks in once.", ar: "امسح رمز QR أو اكتب الكود. كل تذكرة تدخل مرة واحدة." })} />
-      <section className="sec" style={{ paddingTop: 0 }}><div className="wrap" style={{ maxWidth: 980 }}><CheckInView /></div></section>
+      <section className="s"><div className="wrap" style={{ maxWidth: 980 }}><CheckInView /></div></section>
     </>
   );
 }

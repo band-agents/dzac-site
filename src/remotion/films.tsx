@@ -1,5 +1,6 @@
 /**
- * The three Remotion films the site plays live in @remotion/player.
+ * The three Remotion films. scripts/render-films.mjs renders them to video
+ * files once; the site plays those files (components/Film.tsx).
  *
  *   HeroReel   DZAC 4 footage cut to light sweeps, slides and fades, under
  *              the stage's wave light. Full-bleed behind the home hero.
@@ -7,17 +8,17 @@
  *              REC light, running timecode, a caption per approach.
  *   Sting      The DZAC 5 mark writing itself over converging waves.
  *
- * Footage comes in as URLs (the page adds the base path) and plays through
- * Html5Video, muted. Each film fades from and to black at its loop point.
+ * Footage comes in as paths inside public/ and is read frame-accurately by
+ * OffthreadVideo. Each film fades from and to black at its loop point.
  */
 
-import { AbsoluteFill, Html5Video, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, OffthreadVideo, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { TransitionSeries, linearTiming, springTiming, type TransitionPresentation } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
 import { FiveOutline } from "@/components/brand";
-import { CYAN, Dip, GOLD, Grade, INK, Waves, lightSweep } from "./fx";
+import { Dip, GOLD, Grade, INK, Waves, lightSweep } from "./fx";
 
 export type Clip = { src: string; frames: number; caption?: string };
 
@@ -36,7 +37,7 @@ function Shot({ clip, push = 0.05 }: { clip: Clip; push?: number }) {
   const s = 1.03 + push * (f / clip.frames);
   return (
     <AbsoluteFill style={{ background: INK, overflow: "hidden" }}>
-      <Html5Video src={clip.src} muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${s})` }} />
+      <OffthreadVideo src={staticFile(clip.src)} muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${s})` }} />
     </AbsoluteFill>
   );
 }
@@ -54,7 +55,6 @@ export function HeroReel({ clips, rtl }: HeroReelProps) {
         {clips.flatMap((c, i) => [
           <TransitionSeries.Sequence key={`s${i}`} durationInFrames={c.frames} premountFor={20}>
             <Shot clip={c} />
-            {c.caption && <Caption text={c.caption} frames={c.frames} rtl={rtl} />}
           </TransitionSeries.Sequence>,
           ...(i < clips.length - 1
             ? [<TransitionSeries.Transition key={`t${i}`} presentation={presentations[i % presentations.length]}
@@ -66,24 +66,6 @@ export function HeroReel({ clips, rtl }: HeroReelProps) {
       <Waves period={total} top={0.7} opacity={0.75} />
       <Dip frames={14} total={total} />
     </AbsoluteFill>
-  );
-}
-
-/** A small caption that slides in with each shot, at the reading-end corner. */
-function Caption({ text, frames, rtl }: { text: string; frames: number; rtl: boolean }) {
-  const f = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const inn = spring({ frame: f - 10, fps, config: { damping: 200 } });
-  const out = interpolate(f, [frames - 18, frames - 6], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  return (
-    <div dir={rtl ? "rtl" : "ltr"} style={{
-      position: "absolute", bottom: 64, [rtl ? "left" : "right"]: 72, display: "flex", alignItems: "center", gap: 14,
-      fontFamily: "var(--text)", fontSize: 22, letterSpacing: rtl ? 0 : "0.14em", textTransform: rtl ? "none" : "uppercase",
-      color: "rgba(234,240,250,0.92)", opacity: inn * out, transform: `translateY(${(1 - inn) * 18}px)`,
-    }}>
-      <span style={{ width: 36, height: 2, background: CYAN }} />
-      {text}
-    </div>
   );
 }
 

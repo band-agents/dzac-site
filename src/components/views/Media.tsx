@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { Play } from "lucide-react";
 import { FILMS, GALLERY_TAGS, SHOTS, WORKSHOP, type Shot } from "@/content/site";
 import { useT } from "@/lib/locale";
@@ -30,11 +29,10 @@ export function GalleryView() {
       </div>
       <div className="masonry">
         {list.map((s, i) => (
-          <motion.button key={`${s.set}-${s.id}`} type="button" layout initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-5% 0px" }}
-            transition={{ duration: 0.6, delay: (i % 4) * 0.05 }} aria-label={`${alt} · ${i + 1}`}
+          <button key={`${s.set}-${s.id}`} type="button" className="rv" aria-label={`${alt} · ${i + 1}`}
             onClick={() => open({ kind: "photos", index: i, list: list.map((x) => ({ src: photo(x.id, "lg", x.set), alt })) })}>
-            <img src={photo(s.id, "sm", s.set)} alt="" width={s.w} height={s.h} loading="lazy" style={{ aspectRatio: `${s.w} / ${s.h}` }} />
-          </motion.button>
+            <img src={photo(s.id, "sm", s.set)} alt="" width={s.w} height={s.h} loading="lazy" decoding="async" style={{ aspectRatio: `${s.w} / ${s.h}` }} />
+          </button>
         ))}
       </div>
     </>
@@ -47,12 +45,12 @@ export function FilmsGrid() {
   return (
     <div className="films">
       {FILMS.map((f, i) => (
-        <motion.button key={f.id} type="button" className="film" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.08 }}
+        <button key={f.id} type="button" className="film rv" style={{ ["--i" as string]: i }}
           onClick={() => open(f.kind === "file" ? { kind: "file", src: asset(f.src), poster: asset(f.poster), title: t(f.title) } : { kind: "drive", id: f.drive, title: t(f.title) })}>
-          <span className="film-ph"><img src={asset(f.poster)} alt="" loading="lazy" /><span className="film-play"><Play size={22} /></span></span>
+          <span className="film-ph"><img src={asset(f.poster)} alt="" loading="lazy" decoding="async" /><span className="film-play"><Play size={22} /></span></span>
           <b>{t(f.title)}</b>
           <small>{t(f.sub)}</small>
-        </motion.button>
+        </button>
       ))}
     </div>
   );

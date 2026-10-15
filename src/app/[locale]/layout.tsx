@@ -10,12 +10,14 @@ import { Footer, Header } from "@/components/chrome";
 import { LightboxProvider } from "@/components/Lightbox";
 
 /* Quiet, light type: a high-contrast serif for display and numbers, a refined sans for text, a fine
-   mono for the small instrument labels. Arabic: Alexandria in its light weights, IBM Plex Sans Arabic. */
-const serif = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "400", "500", "600"], style: ["normal", "italic"], variable: "--f-serif", display: "swap" });
-const sans = Manrope({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--f-sans", display: "swap" });
-const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--f-mono", display: "swap" });
-const alex = Alexandria({ subsets: ["arabic", "latin"], weight: ["200", "300", "400", "500"], variable: "--f-alex", display: "swap" });
-const plex = IBM_Plex_Sans_Arabic({ subsets: ["arabic"], weight: ["300", "400", "500"], variable: "--f-plex", display: "swap" });
+   mono for the small labels; Alexandria + IBM Plex Sans Arabic in Arabic. Variable fonts where Google
+   has them (one file for every weight). Only the Latin faces are preloaded:
+   the first screen needs them. The rest load when a page uses them. */
+const serif = Cormorant_Garamond({ subsets: ["latin"], style: ["normal", "italic"], variable: "--f-serif", display: "swap" });
+const sans = Manrope({ subsets: ["latin"], variable: "--f-sans", display: "swap" });
+const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400"], variable: "--f-mono", display: "swap" });
+const alex = Alexandria({ subsets: ["arabic"], variable: "--f-alex", display: "swap", preload: false });
+const plex = IBM_Plex_Sans_Arabic({ subsets: ["arabic"], weight: ["300", "400", "500"], variable: "--f-plex", display: "swap", preload: false });
 
 export const dynamicParams = false;
 export function generateStaticParams() {

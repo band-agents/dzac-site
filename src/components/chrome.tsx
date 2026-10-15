@@ -3,15 +3,16 @@
 /**
  * Header, footer and countdown.
  *
- * The header turns to glass once the page scrolls. The language switch keeps
- * you on the same page. The countdown renders dashes until it mounts, so the
- * static HTML and the first client render agree.
+ * The header is three zones, with the navigation exactly centred, and turns
+ * solid once the page scrolls. The language switch keeps you on the same
+ * page. The countdown renders dashes until it mounts, so the static HTML and
+ * the first client render agree. No animation library: the menu animates in
+ * CSS.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, MapPin, Menu, X } from "lucide-react";
 import { EVENT, NAV, UI } from "@/content/site";
 import { useLocale, useT } from "@/lib/locale";
@@ -37,7 +38,10 @@ export function Header() {
   useEffect(() => { setOpen(false); }, [path]);
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
-    return () => { document.documentElement.style.overflow = ""; };
+    if (!open) return;
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", esc);
+    return () => { document.documentElement.style.overflow = ""; window.removeEventListener("keydown", esc); };
   }, [open]);
 
   return (
@@ -45,10 +49,7 @@ export function Header() {
       <div className="wrap hd-in">
         <Link href={page(locale)} className="hd-logo" aria-label={`DZAC 5, ${t(EVENT.full)}`}>
           <DzMark />
-          <span>
-            <Wordmark />
-            <small>{t(EVENT.full)}</small>
-          </span>
+          <Wordmark />
         </Link>
         <nav className="hd-nav" aria-label={t(UI.menu)}>
           {NAV.map((n) => (
@@ -63,28 +64,23 @@ export function Header() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div className="menu" role="dialog" aria-modal="true" aria-label={t(UI.menu)}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-            <div className="wrap menu-top">
-              <Wordmark style={{ fontSize: 26 }} />
-              <button type="button" className="hd-burger" style={{ display: "grid" }} onClick={() => setOpen(false)} aria-label={t(UI.close)}><X size={20} /></button>
-            </div>
-            <nav className="wrap menu-links">
-              {[{ href: "", label: { en: "Home", ar: "الرئيسية" } }, ...NAV, { href: "apply", label: UI.apply }, { href: "register", label: UI.register }].map((n, i) => (
-                <motion.div key={n.href || "home"} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 + i * 0.04, duration: 0.5 }}>
-                  <Link href={page(locale, n.href)}><span className="u-tnum">{String(i + 1).padStart(2, "0")}</span>{t(n.label)}</Link>
-                </motion.div>
-              ))}
-            </nav>
-            <div className="wrap menu-foot">
-              <Link href={switchHref} className="hd-lang">{t(UI.lang)}</Link>
-              <span style={{ color: "var(--muted)", fontSize: 14 }}>{t(EVENT.date)} · {t(EVENT.venue)}</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {open && (
+        <div className="menu" role="dialog" aria-modal="true" aria-label={t(UI.menu)}>
+          <div className="wrap menu-top">
+            <Wordmark style={{ fontSize: 28 }} />
+            <button type="button" className="hd-burger" style={{ display: "grid" }} onClick={() => setOpen(false)} aria-label={t(UI.close)}><X size={20} /></button>
+          </div>
+          <nav className="wrap menu-links">
+            {[{ href: "", label: { en: "Home", ar: "الرئيسية" } }, ...NAV, { href: "apply", label: UI.apply }, { href: "register", label: UI.register }].map((n, i) => (
+              <Link key={n.href || "home"} href={page(locale, n.href)} style={{ ["--k" as string]: i } as CSSProperties}>{t(n.label)}</Link>
+            ))}
+          </nav>
+          <div className="wrap menu-foot">
+            <Link href={switchHref} className="hd-lang">{t(UI.lang)}</Link>
+            <span>{t(EVENT.date)} · {t(EVENT.venue)}</span>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
@@ -94,39 +90,40 @@ export function Footer() {
   const locale = useLocale();
   return (
     <footer className="ft">
-      <div className="wrap ft-grid">
+      <div className="wrap">
         <div className="ft-brand">
           <Wordmark />
           <p>{t(EVENT.full)} · {t(EVENT.tagline)}</p>
-          <p style={{ display: "flex", gap: 16, flexWrap: "wrap", fontSize: 14 }}>
-            <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}><CalendarDays size={15} /> {t(EVENT.date)}</span>
-            <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}><MapPin size={15} /> {t(EVENT.venue)}</span>
+          <p className="ft-meta">
+            <span><CalendarDays size={15} /> {t(EVENT.date)}</span>
+            <span><MapPin size={15} /> {t(EVENT.venue)}</span>
           </p>
         </div>
-        <div className="ft-col">
-          <h4>{t({ en: "Conference", ar: "المؤتمر" })}</h4>
-          {NAV.slice(0, 3).map((n) => <Link key={n.href} href={page(locale, n.href)}>{t(n.label)}</Link>)}
-          <Link href={page(locale, "abstracts")}>{t({ en: "Submit an abstract", ar: "قدّم ملخصًا بحثيًا" })}</Link>
+        <div className="ft-grid">
+          <div className="ft-col">
+            <h4>{t({ en: "Conference", ar: "المؤتمر" })}</h4>
+            {NAV.slice(0, 3).map((n) => <Link key={n.href} href={page(locale, n.href)}>{t(n.label)}</Link>)}
+            <Link href={page(locale, "abstracts")}>{t({ en: "Submit an abstract", ar: "قدّم ملخصًا بحثيًا" })}</Link>
+          </div>
+          <div className="ft-col">
+            <h4>{t({ en: "Attend", ar: "الحضور" })}</h4>
+            <Link href={page(locale, "apply")}>{t(UI.apply)}</Link>
+            <Link href={page(locale, "register")}>{t(UI.register)}</Link>
+            <Link href={page(locale, "certificate")}>{t({ en: "Certificate of attendance", ar: "شهادة الحضور" })}</Link>
+            <Link href={page(locale, "check-in")}>{t({ en: "Staff check-in", ar: "تسجيل الدخول للفريق" })}</Link>
+          </div>
+          <div className="ft-col">
+            <h4>{t({ en: "Follow", ar: "تابعنا" })}</h4>
+            <a href={EVENT.facebook} target="_blank" rel="noreferrer">Facebook · DZAC</a>
+            <Link href={page(locale, "gallery")}>{t({ en: "DZAC 4 gallery", ar: "صور DZAC 4" })}</Link>
+            <Link href={page(locale, "films")}>{t({ en: "Films", ar: "الأفلام" })}</Link>
+            <span style={{ color: "var(--champagne)" }}>{EVENT.hashtag}</span>
+          </div>
         </div>
-        <div className="ft-col">
-          <h4>{t({ en: "Attend", ar: "الحضور" })}</h4>
-          <Link href={page(locale, "apply")}>{t(UI.apply)}</Link>
-          <Link href={page(locale, "register")}>{t(UI.register)}</Link>
-          <Link href={page(locale, "certificate")}>{t({ en: "Certificate of attendance", ar: "شهادة الحضور" })}</Link>
-          <Link href={page(locale, "partners")}>{t(UI.becomePartner)}</Link>
-          <Link href={page(locale, "check-in")}>{t({ en: "Staff check-in", ar: "تسجيل الدخول للفريق" })}</Link>
+        <div className="ft-base">
+          <span>{t({ en: "Organized by Dar El Zokora Group · Scientific partner ISMHA · Event organizer Horizon", ar: "تنظيم مجموعة دار الذكورة · الشريك العلمي ISMHA · منظم الحدث Horizon" })}</span>
+          <span>© 2026 {t(EVENT.organizer)} · DZAC</span>
         </div>
-        <div className="ft-col">
-          <h4>{t({ en: "Follow", ar: "تابعنا" })}</h4>
-          <a href={EVENT.facebook} target="_blank" rel="noreferrer">Facebook · DZAC</a>
-          <span style={{ color: "var(--cyan)" }}>{EVENT.hashtag}</span>
-          <Link href={page(locale, "gallery")}>{t({ en: "DZAC 4 gallery", ar: "صور DZAC 4" })}</Link>
-          <Link href={page(locale, "films")}>{t({ en: "Films", ar: "الأفلام" })}</Link>
-        </div>
-      </div>
-      <div className="wrap ft-base">
-        <span>© 2026 {t(EVENT.organizer)} · DZAC</span>
-        <span>{t({ en: "Organized by Dar El Zokora Group · Scientific partner ISMHA · Event organizer Horizon", ar: "تنظيم مجموعة دار الذكورة · الشريك العلمي ISMHA · منظم الحدث Horizon" })}</span>
       </div>
     </footer>
   );

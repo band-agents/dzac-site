@@ -10,21 +10,23 @@
     "deploy:pages": "node scripts/deploy-pages.mjs"
   },
   "dependencies": {
-    "@remotion/player": "4.0.519",
-    "@remotion/transitions": "4.0.519",
     "framer-motion": "^12.43.0",
     "lucide-react": "^0.469.0",
     "next": "16.3.3",
     "qrcode": "^1.5.4",
     "react": "19.2.6",
-    "react-dom": "19.2.6",
-    "remotion": "4.0.519"
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
+    "@remotion/bundler": "^4.0.519",
+    "@remotion/google-fonts": "^4.0.519",
+    "@remotion/renderer": "^4.0.519",
+    "@remotion/transitions": "^4.0.519",
     "@types/node": "22.19.9",
     "@types/qrcode": "^1.5.5",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "remotion": "^4.0.519",
     "typescript": "5.7.3"
   }
 }
