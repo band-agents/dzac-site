@@ -56,6 +56,17 @@ pinned scenes (Statement, Beyond) only pin at ≥900px; Beyond is a swipe rail b
 - Measured 10-16 on a 4× throttled CPU vs the round-2 live site: main-thread work at load 6.5 s → 3.0 s,
   script 3.1 s → 0.5 s, scroll 26 → 65 fps. Tools in the session scratchpad (perf.cjs, cssexp.cjs).
 
+## Directions (10-16, after Dan rejected the Claude Design round)
+
+`public/directions/`: three standalone static concepts plus a board (`/directions/`), not part of the Next
+app. A "Pulse" (white + electric blue, Archivo wide, video-in-letters fly-through hero), B "Premiere"
+(black + gold Bodoni, full-screen film chapters, ticket passes), C "Atlas" (glass bento on a blue mesh,
+Geist, programme filter/search, pass finder, phone tab bar). All read `shared/content.js` (EN/AR) and
+`shared/dz.js` (lang/RTL, lazy video, reveals, countdown, rails, lightbox); each page defines
+`window.render()`. Own media in `directions/media/`; site media via `../../media/`. Register/apply link
+to the real site. A fixed element bigger than the viewport (C's mesh) widens the phone layout in RTL:
+keep fixed backgrounds at `inset: 0` with `overflow: hidden`.
+
 ## Shape
 
 - `src/content/site.ts`: **every word, EN + AR**. `// ours` = written by us, needs the organisers;

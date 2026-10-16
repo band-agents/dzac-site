@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<meta name="theme-color" content="#050505">
+<title>DZAC 5 · Direction B · Premiere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..500;1,6..96,400&family=Inter+Tight:wght@300;400;500&family=Amiri:ital@0;1&family=Noto+Kufi+Arabic:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/dz.css">
+<style>
+/* ═══ B · PREMIERE ═════════════════════════════════════════
+   DZAC 5 told as a film: black and the masterclass gold, every section a
+   full-screen chapter with its own footage, a chapter rail and a progress
+   bar. Bodoni Moda for titles (light, never heavy), Inter Tight for text;
+   Amiri and Noto Kufi Arabic in Arabic. On phones the chapters become
+   full-screen panels you swipe through, like stories. */
+:root {
+  --bk: #050505; --bk2: #0D0C0A; --gold: #D4AF6A; --gold2: #F1DDAE; --gold3: #9C7A3C; --cream: #F4EEE2; --mute: rgba(244, 238, 226, .62); --line: rgba(212, 175, 106, .28); --blue: #0656D4;
+  --disp: "Bodoni Moda", Georgia, serif; --txt: "Inter Tight", system-ui, sans-serif;
+  --pad: clamp(22px, 5vw, 80px); --ease: cubic-bezier(.2, .8, .2, 1);
+}
+html[lang="ar"] { --disp: "Amiri", serif; --txt: "Noto Kufi Arabic", system-ui, sans-serif; }
+html { scroll-snap-type: y proximity; scroll-behavior: smooth; background: var(--bk); }
+body { background: var(--bk); color: var(--cream); font-family: var(--txt); font-weight: 300; font-size: 16px; line-height: 1.6; }
+.gold { background: linear-gradient(100deg, #F6E4B5, #D4AF6A 45%, #9C7A3C 80%, #E8CF95); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cap { font-size: 11px; letter-spacing: .38em; text-transform: uppercase; color: var(--gold); font-weight: 400; }
+html[lang="ar"] .cap { letter-spacing: 0; font-size: 14px; }
+.ttl { font-family: var(--disp); font-weight: 400; font-size: clamp(48px, 7.4vw, 128px); line-height: .95; letter-spacing: -.01em; font-optical-sizing: auto; }
+html[lang="ar"] .ttl { line-height: 1.3; font-size: clamp(42px, 6vw, 100px); letter-spacing: 0; }
+.ttl em { font-style: italic; }
+html[lang="ar"] .ttl em { font-style: normal; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; height: 54px; padding-inline: 30px; font-size: 12px; letter-spacing: .26em; text-transform: uppercase; font-weight: 500; transition: background-color .4s, color .4s, border-color .4s, letter-spacing .5s var(--ease); white-space: nowrap; }
+html[lang="ar"] .btn { letter-spacing: 0; font-size: 15px; text-transform: none; }
+.btn-g { background: linear-gradient(100deg, #F1DDAE, #D4AF6A 55%, #B48A45); color: #140F05; }
+.btn-g:hover { letter-spacing: .32em; }
+.btn-l { border: 1px solid var(--line); color: var(--cream); }
+.btn-l:hover { border-color: var(--gold); color: var(--gold2); }
+
+/* Chrome: logo, chapter rail, progress */
+.top { position: fixed; z-index: 60; inset-inline: 0; top: 0; height: 74px; display: flex; align-items: center; justify-content: space-between; padding-inline: var(--pad); pointer-events: none; }
+.top > * { pointer-events: auto; }
+.logo { font-family: "Bodoni Moda", serif; font-size: 24px; letter-spacing: .08em; direction: ltr; }
+.logo i { font-style: italic; color: var(--gold); }
+.top-r { display: flex; gap: 10px; align-items: center; }
+.lang { height: 40px; min-width: 46px; padding-inline: 12px; display: grid; place-items: center; border: 1px solid var(--line); font-size: 13px; }
+.top .btn { height: 40px; padding-inline: 18px; }
+.prog { position: fixed; z-index: 61; top: 0; inset-inline: 0; height: 2px; background: rgba(244, 238, 226, .08); }
+.prog i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--gold3), var(--gold2)); transform-origin: left; scale: var(--sp, 0) 1; }
+[dir="rtl"] .prog i { transform-origin: right; }
+.rail { position: fixed; z-index: 55; inset-inline-end: 28px; top: 50%; translate: 0 -50%; display: grid; gap: 14px; }
+.rail a { display: flex; align-items: center; justify-content: flex-end; gap: 12px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--mute); }
+html[lang="ar"] .rail a { letter-spacing: 0; font-size: 13px; }
+.rail a span { opacity: 0; translate: 10px 0; transition: opacity .4s, translate .4s var(--ease); white-space: nowrap; }
+[dir="rtl"] .rail a span { translate: -10px 0; }
+.rail a i { width: 18px; height: 1px; background: var(--mute); transition: width .45s var(--ease), background-color .4s; }
+.rail a.on i { width: 44px; background: var(--gold); }
+.rail a.on span, .rail a:hover span { opacity: 1; translate: 0 0; color: var(--gold2); }
+@media (max-width: 1100px) { .rail { display: none; } }
+
+/* Chapters */
+.ch { position: relative; min-height: 100svh; scroll-snap-align: start; display: grid; align-items: end; overflow: hidden; isolation: isolate; }
+.ch-bg { position: absolute; inset: 0; z-index: -2; }
+.ch-bg > img, .ch-bg > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; scale: 1.12; transition: scale 9s linear, opacity 1.2s; }
+.ch.act .ch-bg > img, .ch.act .ch-bg > video { scale: 1; }
+.ch-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5, 5, 5, .55) 0%, rgba(5, 5, 5, .15) 35%, rgba(5, 5, 5, .7) 72%, var(--bk) 100%); }
+.ch-in { width: 100%; max-width: 1440px; margin-inline: auto; padding: 120px var(--pad) clamp(48px, 9vh, 96px); display: grid; gap: 26px; }
+.ch-no { display: flex; align-items: center; gap: 16px; }
+.ch-no::after { content: ""; width: 60px; height: 1px; background: var(--gold); }
+.lead { font-size: clamp(16px, 1.25vw, 19px); color: var(--mute); max-width: 52ch; }
+.ch [data-r] { transition-duration: 1.3s; }
+
+/* 00 Opening */
+.open .ch-in { min-height: 100svh; align-content: end; }
+.bars::before, .bars::after { content: ""; position: absolute; z-index: 3; inset-inline: 0; height: 11vh; background: var(--bk); transition: height 1.8s var(--ease) .3s; }
+.bars::before { top: 0; } .bars::after { bottom: 0; }
+.loaded .bars::before, .loaded .bars::after { height: 0; }
+.credit { font-size: 12px; letter-spacing: .5em; text-transform: uppercase; color: var(--gold2); }
+html[lang="ar"] .credit { letter-spacing: 0; font-size: 15px; }
+.hero-t { font-family: "Bodoni Moda", serif; font-weight: 400; font-size: clamp(96px, 20vw, 340px); line-height: .82; letter-spacing: -.02em; direction: ltr; text-align: start; display: flex; align-items: baseline; gap: .04em; }
+html[dir="rtl"] .hero-t { justify-content: flex-end; }
+.hero-t em { font-style: italic; }
+.hero-sub { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 26px; }
+.hero-sub .tag { font-family: var(--disp); font-style: italic; font-size: clamp(26px, 3vw, 46px); line-height: 1.1; max-width: 18ch; }
+html[lang="ar"] .hero-sub .tag { font-style: normal; line-height: 1.5; }
+.when { display: flex; gap: 32px; flex-wrap: wrap; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+html[lang="ar"] .when { letter-spacing: 0; font-size: 15px; }
+.when b { display: block; color: var(--cream); font-weight: 400; letter-spacing: .04em; font-size: 15px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* 01 Story */
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); margin-top: 18px; }
+.facts div { padding: 24px 22px 0 0; }
+.facts div + div { border-inline-start: 1px solid var(--line); padding-inline-start: 22px; }
+.facts b { display: block; font-family: "Bodoni Moda", serif; font-weight: 400; font-size: clamp(60px, 7vw, 110px); line-height: .9; }
+.facts span { font-size: 13px; color: var(--mute); }
+.story-t { font-family: var(--disp); font-size: clamp(30px, 3.6vw, 58px); line-height: 1.15; max-width: 24ch; }
+html[lang="ar"] .story-t { line-height: 1.6; font-size: clamp(24px, 2.8vw, 44px); }
+
+/* 02 Programme */
+.tl { display: grid; border-top: 1px solid var(--line); }
+.tl button { display: grid; grid-template-columns: 70px minmax(0, 1fr) auto; align-items: baseline; gap: 18px; padding-block: 18px; border-bottom: 1px solid var(--line); text-align: start; transition: padding .5s var(--ease), color .4s; }
+.tl button:hover { padding-inline-start: 18px; color: var(--gold2); }
+.tl i { font-style: italic; font-family: "Bodoni Moda", serif; color: var(--gold); font-size: 20px; }
+.tl strong { font-family: var(--disp); font-weight: 400; font-size: clamp(26px, 3.2vw, 50px); line-height: 1.1; }
+html[lang="ar"] .tl strong { line-height: 1.5; font-size: clamp(22px, 2.6vw, 40px); }
+.tl small { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+.sheet { position: fixed; z-index: 90; inset-block: 0; inset-inline-end: 0; width: min(560px, 100%); background: var(--bk2); border-inline-start: 1px solid var(--line); padding: 90px 40px 40px; overflow: auto; translate: 100% 0; transition: translate .6s var(--ease); }
+[dir="rtl"] .sheet { translate: -100% 0; }
+.sheet.on { translate: 0 0; }
+.sheet-x { position: absolute; top: 24px; inset-inline-end: 24px; width: 44px; height: 44px; border: 1px solid var(--line); }
+.sheet h3 { font-family: var(--disp); font-weight: 400; font-size: 40px; line-height: 1.1; margin-block: 14px 26px; }
+.sheet li { padding-block: 20px; border-top: 1px solid var(--line); display: grid; gap: 6px; }
+.sheet li i { font-style: italic; font-family: "Bodoni Moda", serif; color: var(--gold); }
+.sheet li span { font-size: 16px; line-height: 1.45; }
+.sheet li small { color: var(--gold2); font-size: 13px; }
+.veil { position: fixed; inset: 0; z-index: 85; background: rgba(0, 0, 0, .6); opacity: 0; pointer-events: none; transition: opacity .5s; }
+.veil.on { opacity: 1; pointer-events: auto; }
+
+/* 03 Beyond: an end-credits roll */
+.roll { text-align: center; display: grid; justify-items: center; gap: 6px; }
+.roll small { font-size: 11px; letter-spacing: .4em; text-transform: uppercase; color: var(--gold); margin-top: 22px; }
+.roll strong { font-family: var(--disp); font-weight: 400; font-size: clamp(36px, 5vw, 80px); line-height: 1.05; }
+html[lang="ar"] .roll small { letter-spacing: 0; font-size: 14px; }
+.roll span { font-size: 14px; color: var(--mute); }
+.beyond .ch-in { justify-items: center; text-align: center; align-content: center; min-height: 100svh; }
+
+/* 04 Masterclass */
+.mc .ch-in { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: 40px; }
+.n20 { font-family: "Bodoni Moda", serif; font-weight: 400; font-style: italic; font-size: clamp(160px, 22vw, 360px); line-height: .78; }
+.pts { display: grid; border-top: 1px solid var(--line); }
+.pts li { padding-block: 14px; border-bottom: 1px solid var(--line); display: flex; gap: 14px; font-size: 15px; }
+.pts li::before { content: "✦"; color: var(--gold); font-size: 11px; margin-top: 4px; }
+.fee { display: flex; align-items: baseline; gap: 14px; margin-block: 8px 4px; }
+.fee b { font-family: "Bodoni Moda", serif; font-weight: 400; font-size: 46px; }
+.fee small { font-size: 12px; color: var(--mute); }
+@media (max-width: 900px) { .mc .ch-in { grid-template-columns: minmax(0, 1fr); } }
+
+/* 05 The Cast */
+.cast { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.cm { display: grid; gap: 12px; }
+.cm .ph { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: #15130F; border: 1px solid var(--line); }
+.cm .ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; filter: grayscale(1) sepia(.25) contrast(1.1) brightness(.85); transition: filter 1s, scale 1.4s var(--ease); }
+.cm:hover .ph img { filter: grayscale(0) sepia(0); scale: 1.06; }
+.cm .ini { position: absolute; inset: 0; display: grid; place-items: center; font-family: "Bodoni Moda", serif; font-style: italic; font-size: 110px; color: var(--gold3); }
+.cm small { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+html[lang="ar"] .cm small { letter-spacing: 0; font-size: 13px; }
+.cm strong { font-family: var(--disp); font-weight: 400; font-size: 24px; line-height: 1.2; }
+.also { color: var(--mute); font-size: 14px; }
+.also b { color: var(--cream); font-weight: 400; }
+
+/* 06 Behind the scenes */
+.bts { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 6px; }
+.bts::-webkit-scrollbar { display: none; }
+.bt { flex: 0 0 clamp(170px, 15vw, 220px); aspect-ratio: 9 / 16; position: relative; overflow: hidden; border: 1px solid var(--line); scroll-snap-align: start; }
+.bt span { position: absolute; z-index: 2; inset-inline-start: 12px; bottom: 12px; font-size: 11px; letter-spacing: .2em; color: var(--gold2); direction: ltr; }
+.bt::after { content: "▶"; position: absolute; z-index: 2; inset-inline-end: 12px; bottom: 10px; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(5, 5, 5, .6); border: 1px solid var(--gold); color: var(--gold2); font-size: 11px; }
+
+/* 07 Archive: the editions on a film strip */
+.strip { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: #0A0907; border-block: 22px solid #0A0907; }
+.strip::before, .strip::after { content: ""; position: absolute; inset-inline: 0; height: 10px; background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(244, 238, 226, .5) 14px 24px); }
+.strip::before { top: -16px; } .strip::after { bottom: -16px; }
+.fr { padding: 24px 20px; border-inline-end: 1px solid var(--line); display: grid; gap: 8px; min-height: 230px; align-content: start; }
+.fr b { font-family: "Bodoni Moda", serif; font-weight: 400; font-style: italic; font-size: 64px; line-height: .9; direction: ltr; text-align: start; }
+.fr small { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+.fr strong { font-weight: 400; font-size: 15px; }
+.fr span { font-size: 13px; color: var(--mute); }
+.fr.now { background: linear-gradient(180deg, rgba(212, 175, 106, .18), transparent); }
+
+/* 08 Now showing */
+.posters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.pst { display: grid; gap: 12px; text-align: start; }
+.pst .vw { aspect-ratio: 2 / 3; border: 1px solid var(--line); }
+.pst .vw::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(5, 5, 5, .9)); }
+.pst-t { position: absolute; z-index: 2; inset-inline: 16px; bottom: 16px; display: grid; gap: 4px; }
+.pst-t small { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.pst-t strong { font-family: var(--disp); font-weight: 400; font-size: 22px; line-height: 1.15; }
+.pst:hover .vw { border-color: var(--gold); }
+
+/* 09 Tickets */
+.tix { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.tk { position: relative; display: grid; grid-template-rows: auto 1fr auto; background: var(--cream); color: #14110B; --cut: radial-gradient(circle at 0 50%, transparent 14px, #000 15px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 14px, #000 15px) right / 51% 100% no-repeat;
+  transition: transform .6s var(--ease); }
+.tk:hover { transform: translateY(-8px) rotate(-.6deg); }
+.tk-h { padding: 22px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px dashed rgba(20, 17, 11, .35); }
+.tk-h small { font-size: 10px; letter-spacing: .34em; text-transform: uppercase; }
+.tk-h b { font-family: "Bodoni Moda", serif; font-style: italic; font-weight: 400; font-size: 22px; }
+.tk-b { padding: 22px 24px; display: grid; gap: 14px; align-content: start; }
+.tk-b strong { font-family: var(--disp); font-weight: 400; font-size: 40px; line-height: 1.05; }
+html[lang="ar"] .tk-b strong { line-height: 1.4; font-size: 32px; }
+.tk-b li { font-size: 14px; padding-block: 7px; border-top: 1px solid rgba(20, 17, 11, .14); }
+.tk-f { padding: 16px 24px 22px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1.5px dashed rgba(20, 17, 11, .35); }
+.tk-f .bc { height: 34px; flex: 1; max-width: 140px; background: repeating-linear-gradient(90deg, #14110B 0 2px, transparent 2px 4px, #14110B 4px 5px, transparent 5px 9px); opacity: .8; }
+.tk-f a { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; font-weight: 500; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+html[lang="ar"] .tk-f a { letter-spacing: 0; font-size: 14px; }
+.tk.best { background: linear-gradient(160deg, #F6E4B5, #D4AF6A 60%, #B48A45); }
+.tk.mc { background: #14110B; color: var(--cream); }
+.tk.mc .tk-h, .tk.mc .tk-f { border-color: rgba(244, 238, 226, .3); }
+.tk.mc .tk-b li { border-color: rgba(244, 238, 226, .14); }
+.tk.mc .bc { background: repeating-linear-gradient(90deg, var(--gold) 0 2px, transparent 2px 4px, var(--gold) 4px 5px, transparent 5px 9px); }
+.tk::before, .tk::after { content: ""; position: absolute; top: calc(100% - 64px); width: 22px; height: 22px; border-radius: 50%; background: var(--bk); }
+.tk::before { inset-inline-start: -11px; } .tk::after { inset-inline-end: -11px; }
+
+/* 10 Credits / partners */
+.credits { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; text-align: center; }
+.credits small { display: block; font-size: 11px; letter-spacing: .34em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+.credits strong { font-family: var(--disp); font-weight: 400; font-size: 26px; line-height: 1.25; }
+.tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-block: 1px solid var(--line); margin-top: 10px; }
+.tiers div { padding: 26px 22px; text-align: center; display: grid; gap: 8px; }
+.tiers div + div { border-inline-start: 1px solid var(--line); }
+.tiers strong { font-family: "Bodoni Moda", serif; font-style: italic; font-weight: 400; font-size: 36px; }
+html[lang="ar"] .tiers strong { font-family: var(--disp); font-style: normal; }
+.tiers span { font-size: 13px; color: var(--mute); }
+
+/* 12 Finale */
+.finale .ch-in { min-height: 100svh; align-content: center; justify-items: center; text-align: center; }
+.cd { display: flex; gap: clamp(18px, 4vw, 56px); direction: ltr; }
+.cd div { display: grid; justify-items: center; gap: 6px; }
+.cd b { font-family: "Bodoni Moda", serif; font-weight: 400; font-size: clamp(54px, 7vw, 112px); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
+.cd small { font-size: 10px; letter-spacing: .34em; text-transform: uppercase; color: var(--gold); }
+.endc { font-size: 12px; color: var(--mute); letter-spacing: .14em; text-transform: uppercase; margin-top: 30px; }
+html[lang="ar"] .endc { letter-spacing: 0; }
+
+/* Phone: chapters become full-screen panels */
+.storybar { display: none; }
+@media (max-width: 760px) {
+  html { scroll-snap-type: y proximity; }
+  .top .btn { display: none; }
+  .ch-in { padding-top: 96px; gap: 20px; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .facts div:nth-child(3) { border-inline-start: 0; padding-inline-start: 0; }
+  .facts div { padding-bottom: 18px; }
+  .hero-t { font-size: 30vw; }
+  .hero-sub { flex-direction: column; align-items: flex-start; }
+  .row .btn { flex: 1; }
+  .tl button { grid-template-columns: 40px minmax(0, 1fr); }
+  .tl small { display: none; }
+  .sheet { padding: 80px 24px 32px; }
+  .cast, .posters, .tix, .credits, .tiers, .strip { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); gap: 14px; }
+  .cast > *, .posters > *, .tix > *, .credits > *, .tiers > *, .strip > * { flex: 0 0 74%; scroll-snap-align: start; }
+  .strip { gap: 0; }
+  .tiers div + div { border-inline-start: 0; }
+  .tiers > div { border: 1px solid var(--line); }
+  [data-dots] { display: flex; color: var(--gold); }
+  .storybar { display: flex; position: fixed; z-index: 62; top: 8px; inset-inline: 12px; gap: 4px; }
+  .storybar i { flex: 1; height: 2px; background: rgba(244, 238, 226, .2); border-radius: 2px; overflow: hidden; position: relative; }
+  .storybar i.done::after, .storybar i.on::after { content: ""; position: absolute; inset: 0; background: var(--gold2); }
+  .prog { display: none; }
+  .top { top: 8px; }
+}
+</style>
+</head>
+<body>
+<div class="prog"><i></i></div>
+<div class="storybar" id="sb"></div>
+<header class="top" id="top"></header>
+<nav class="rail" id="rail"></nav>
+<main id="app"></main>
+<div class="veil" id="veil"></div>
+<aside class="sheet" id="sheet" aria-hidden="true"></aside>
+<script src="../shared/content.js"></script>
+<script src="../shared/dz.js"></script>
+<script>
+const { C, t, esc, M, D, photo, site, vid } = DZ;
+const ph = (id, cls = "") => `<img class="${cls}" src="${photo(id, "lg")}" alt="" loading="lazy" decoding="async">`;
+window.render = () => {
+  const u = C.ui, E = C.event;
+  const L = (en, ar) => t({ en, ar });
+  const chapters = [
+    ["open", L("Opening", "الافتتاح")], ["story", L("The story", "الحكاية")], ["prog", L("The programme", "البرنامج")], ["beyond", L("Beyond", "ما بعد الذكورة")],
+    ["mc", L("The masterclass", "الماستر كلاس")], ["cast", L("The cast", "النجوم")], ["bts", L("Behind the scenes", "خلف الكواليس")], ["archive", L("The archive", "الأرشيف")],
+    ["showing", L("Now showing", "يُعرض الآن")], ["tickets", L("Tickets", "التذاكر")], ["credits", L("Produced with", "بالشراكة مع")], ["venue", L("The venue", "المكان")], ["finale", L("Premiere", "العرض الأول")],
+  ];
+  const no = (i) => `<p class="ch-no cap" data-r>${L("Chapter", "الفصل")} ${String(i).padStart(2, "0")}</p>`;
+  const narrow = matchMedia("(max-width: 760px)").matches;
+  document.getElementById("top").innerHTML = `<a class="logo" href="#open">DZAC <i>5</i></a><div class="top-r"><a href="#" class="lang" data-lang>${t(u.lang)}</a><a class="btn btn-g" href="${site("register")}">${t(u.register)}</a></div>`;
+  document.getElementById("rail").innerHTML = chapters.map(([id, l], i) => `<a href="#${id}" data-ch="${id}"><span>${l}</span><i></i></a>`).join("");
+  document.getElementById("sb").innerHTML = chapters.map(() => "<i></i>").join("");
+  const cd = `<div class="cd">${[["d", u.days], ["h", u.hrs], ["m", u.min], ["s", u.sec]].map(([k, l]) => `<div><b data-u="${k}" class="gold">–</b><small>${t(l)}</small></div>`).join("")}</div>`;
+  document.getElementById("app").innerHTML = `
+  <section class="ch open bars" id="open">
+    <div class="ch-bg">${narrow ? vid(D("montage-v.mp4"), D("montage-v.webp")) : vid(D("montage-h.mp4"), D("montage-h.webp"))}</div><div class="ch-shade"></div>
+    <div class="ch-in">
+      <p class="credit" data-r>${L("Dar El Zokora presents", "دار الذكورة تقدّم")}</p>
+      <h1 class="hero-t" data-r style="--d:1">DZAC <em class="gold">5</em></h1>
+      <div class="hero-sub" data-r style="--d:2">
+        <p class="tag">${t(E.tagline)}</p>
+        <div class="when"><span>${L("Premieres", "العرض الأول")}<b>${t(E.date)}</b></span><span>${L("Showing at", "في")}<b>${t(E.venue)}</b></span></div>
+      </div>
+      <div class="row" data-r style="--d:3"><a class="btn btn-g" href="${site("register")}">${t(u.registerNow)}</a><a class="btn btn-l" href="#" data-play-drive="${C.films[0].drive}">▶ ${L("Watch the trailer", "شاهد الإعلان")}</a></div>
+    </div>
+  </section>
+
+  <section class="ch" id="story">
+    <div class="ch-bg">${ph("1721")}</div><div class="ch-shade" style="background:linear-gradient(180deg,rgba(5,5,5,.75),rgba(5,5,5,.6) 40%,var(--bk))"></div>
+    <div class="ch-in">${no(1)}
+      <p class="story-t" data-r>${t(C.intro)}</p>
+      <div class="facts">${C.facts.map((f, i) => `<div data-r style="--d:${i}"><b class="gold" data-count="${f.n}">${f.n}</b><span>${t(f.l)}</span></div>`).join("")}</div>
+    </div>
+  </section>
+
+  <section class="ch" id="prog">
+    <div class="ch-bg">${vid(M("media/video/r3-hall.mp4"), M("media/posters/dzac4-film.webp"))}</div><div class="ch-shade" style="background:linear-gradient(90deg,rgba(5,5,5,.92) 35%,rgba(5,5,5,.55)),linear-gradient(180deg,transparent 60%,var(--bk))"></div>
+    <div class="ch-in">${no(2)}<h2 class="ttl" data-r>${L("Six tracks.", "ستة محاور.")} <em class="gold">${L("One stage.", "منصة واحدة.")}</em></h2>
+      <div class="tl">${C.tracks.map((tr, i) => `<button type="button" data-tr="${i}" data-r style="--d:${i}"><i>${tr.n}</i><strong>${t(tr.t)}</strong><small>${t(u.talks)}</small></button>`).join("")}</div>
+    </div>
+  </section>
+
+  <section class="ch beyond" id="beyond">
+    <div class="ch-bg">${ph("1745")}</div><div class="ch-shade" style="background:rgba(5,5,5,.82)"></div>
+    <div class="ch-in">${no(3)}<h2 class="ttl" data-r><em class="gold">${t(u.beyond)}</em></h2><p class="lead" data-r>${t(C.beyondLine)}</p>
+      <div class="roll">${C.beyond.map((b, i) => `<small data-r>${L("Featuring", "بمشاركة")}</small><strong data-r>${t(b.t)}</strong><span data-r>${t(b.b)}</span>`).join("")}</div>
+    </div>
+  </section>
+
+  <section class="ch mc" id="mc">
+    <div class="ch-bg">${narrow ? vid(D("v-m2-or.mp4"), D("v-m2-or.webp")) : vid(M("media/video/masterclass-film.mp4"), M("media/posters/masterclass-film.webp"))}</div><div class="ch-shade" style="background:linear-gradient(180deg,rgba(5,5,5,.4),rgba(5,5,5,.6) 50%,var(--bk))"></div>
+    <div class="ch-in">
+      <div>${no(4)}<p class="cap" data-r style="margin-top:14px">${t(C.mc.kicker)}</p><h2 class="ttl" data-r style="font-size:clamp(42px,5.4vw,92px);margin-top:12px">${t(C.mc.title)}</h2>
+        <div style="display:flex;align-items:flex-end;gap:18px;margin-top:20px" data-r><b class="n20 gold" data-count="20">20</b><span class="lead" style="max-width:12ch">${t(C.mc.live)}</span></div></div>
+      <div><ul class="pts">${C.mc.points.map((p) => `<li data-r>${t(p)}</li>`).join("")}</ul>
+        <div class="fee" data-r><b class="gold" dir="ltr">${C.mc.fee}</b><small>${t(C.mc.feeNote)}</small></div>
+        <div class="row" data-r><a class="btn btn-g" href="${site("apply")}?intent=masterclass">${t(u.seat)}</a></div></div>
+    </div>
+  </section>
+
+  <section class="ch" id="cast">
+    <div class="ch-bg" style="background:radial-gradient(70% 60% at 50% 30%,#1A160F,var(--bk))"></div>
+    <div class="ch-in">${no(5)}<h2 class="ttl" data-r>${L("The", "")} <em class="gold">${L("cast", "النجوم")}</em></h2>
+      <div class="cast" data-rail>${C.leaders.map((l, i) => `<div class="cm" data-r style="--d:${i}"><div class="ph">${l.img ? `<img src="${photo(l.img)}" alt="${esc(t(l.n))}" loading="lazy">` : `<span class="ini">${l.n.en.replace(/^(Prof\. Dr\.|Prof\.|Dr\.)\s*/, "").split(/\s+/).slice(0, 2).map((w) => w[0]).join("")}</span>`}</div><small>${t(l.r)}</small><strong>${t(l.n)}</strong></div>`).join("")}</div><div data-dots></div>
+      <p class="also" data-r>${L("With", "مع")} ${C.past.map((p) => `<b>${p}</b>`).join(" · ")} ${L("— faculty of past editions", "— من محاضري النسخ السابقة")}</p>
+    </div>
+  </section>
+
+  <section class="ch" id="bts">
+    <div class="ch-bg">${ph("1481")}</div><div class="ch-shade" style="background:rgba(5,5,5,.84)"></div>
+    <div class="ch-in">${no(6)}<h2 class="ttl" data-r>${L("Behind the", "خلف")} <em class="gold">${L("scenes", "الكواليس")}</em></h2><p class="lead" data-r>${t(u.loungeBody)}</p>
+      <div class="bts">${C.lounge.map((id, i) => `<a class="bt" href="#" data-play-drive="${id}" data-vertical="1" data-r style="--d:${i}">${vid(M(`media/loops/lounge-${i + 1}.mp4`), M(`media/loops/lounge-${i + 1}.webp`))}<span>MEN'S LOUNGE · ${String(i + 1).padStart(2, "0")}</span></a>`).join("")}</div>
+    </div>
+  </section>
+
+  <section class="ch" id="archive">
+    <div class="ch-bg">${vid(M("media/loops/review.mp4"), M("media/loops/review.webp"))}</div><div class="ch-shade" style="background:linear-gradient(180deg,rgba(5,5,5,.5),rgba(5,5,5,.75) 55%,var(--bk))"></div>
+    <div class="ch-in">${no(7)}<p class="cap" data-r>${t(u.review)}</p><h2 class="ttl" data-r style="max-width:14ch">${t(u.reviewTitle)}</h2>
+      <div class="strip" data-rail>${C.editions.map((e, i) => `<div class="fr${i === 4 ? " now" : ""}" data-r style="--d:${i}"><b class="gold">${e.n}</b><small>${t(e.w)}</small><strong>${t(e.p)}</strong><span>${t(e.x)}</span></div>`).join("")}</div><div data-dots></div>
+    </div>
+  </section>
+
+  <section class="ch" id="showing">
+    <div class="ch-bg" style="background:radial-gradient(60% 50% at 50% 0%,#1C1810,var(--bk))"></div>
+    <div class="ch-in">${no(8)}<h2 class="ttl" data-r>${L("Now", "يُعرض")} <em class="gold">${L("showing", "الآن")}</em></h2>
+      <div class="posters" data-rail>${C.films.map((f, i) => `<a class="pst" href="#" ${f.file ? `data-play-file="${M(f.file)}"` : `data-play-drive="${f.drive}"`} data-r style="--d:${i}"><div class="vw">${vid(M(`media/loops/film-${f.key}.mp4`), M(`media/loops/film-${f.key}.webp`))}<div class="pst-t"><small>${t(f.k)}</small><strong>${t(f.t)}</strong></div></div></a>`).join("")}</div><div data-dots></div>
+    </div>
+  </section>
+
+  <section class="ch" id="tickets">
+    <div class="ch-bg" style="background:radial-gradient(70% 60% at 50% 100%,#1C1810,var(--bk))"></div>
+    <div class="ch-in">${no(9)}<h2 class="ttl" data-r>${L("Admit", "تذكرة")} <em class="gold">${L("one", "دخول")}</em></h2>
+      <div class="tix" data-rail>${C.passes.map((p, i) => `<div class="tk${p.best ? " best" : ""}${p.id === "masterclass" ? " mc" : ""}" data-r style="--d:${i}">
+        <div class="tk-h"><small>DZAC 5 · ${t(p.n)}</small><b>${p.best ? "★" : "No. 0" + (i + 1)}</b></div>
+        <div class="tk-b"><strong dir="${p.id === "masterclass" ? "ltr" : "auto"}">${t(p.id === "bundle" ? p.x : p.p)}</strong><ul>${p.i.map((x) => `<li>${t(x)}</li>`).join("")}</ul></div>
+        <div class="tk-f"><span class="bc"></span><a href="${site("register")}?pass=${p.id}">${L("Admit me", "احجز مقعدي")} →</a></div></div>`).join("")}</div><div data-dots></div>
+      <p class="also" data-r>${L("Not sure which ticket?", "لست متأكدًا أي تذكرة؟")} <a href="${site("apply")}" style="color:var(--gold2);border-bottom:1px solid">${t(u.findPass)}</a></p>
+    </div>
+  </section>
+
+  <section class="ch" id="credits">
+    <div class="ch-bg" style="background:var(--bk)"></div>
+    <div class="ch-in" style="justify-items:center;text-align:center">${no(10)}<h2 class="ttl" data-r>${L("Produced", "بالشراكة")} <em class="gold">${L("with", "مع")}</em></h2>
+      <div class="credits">${C.orgs.map((o) => `<div data-r><small>${t(o.r)}</small><strong>${t(o.n)}</strong></div>`).join("")}</div>
+      <p class="lead" data-r style="margin-top:20px">${t(C.partnersFor)}</p>
+      <div class="tiers" style="width:100%">${C.tiers.map((x) => `<div data-r><strong class="gold">${t(x.n)}</strong><span>${t(x.i)}</span></div>`).join("")}</div>
+      <a class="btn btn-l" data-r href="${site("apply")}?intent=partner">${t(u.becomePartner)}</a>
+    </div>
+  </section>
+
+  <section class="ch" id="venue">
+    <div class="ch-bg">${vid(M("media/loops/venue.mp4"), M("media/loops/venue.webp"))}</div><div class="ch-shade"></div>
+    <div class="ch-in">${no(11)}<p class="cap" data-r>${t(E.city)}</p><h2 class="ttl" data-r>${t(E.venueName)}</h2>
+      <div class="row" data-r><a class="btn btn-l" href="${E.maps}" target="_blank" rel="noreferrer">${t(u.directions)} ↗</a></div></div>
+  </section>
+
+  <section class="ch finale" id="finale">
+    <div class="ch-bg">${ph("2929")}</div><div class="ch-shade" style="background:rgba(5,5,5,.86)"></div>
+    <div class="ch-in"><p class="credit" data-r>${L("World premiere", "العرض الأول")} · ${t(E.dateShort)}</p>
+      <h2 class="ttl" data-r>${t(E.tagline)}</h2>${cd}
+      <div class="row" data-r style="justify-content:center"><a class="btn btn-g" href="${site("register")}">${t(u.registerNow)}</a><a class="btn btn-l" href="${site("apply")}">${t(u.findPass)}</a></div>
+      <p class="endc">${t(E.full)} · ${t(E.venue)} · Dar El Zokora · ISMHA · Horizon</p></div>
+  </section>`;
+
+  /* Programme sheet */
+  const sheet = document.getElementById("sheet"), veil = document.getElementById("veil");
+  const close = () => { sheet.classList.remove("on"); veil.classList.remove("on"); sheet.setAttribute("aria-hidden", "true"); };
+  document.querySelectorAll("[data-tr]").forEach((b) => b.onclick = () => {
+    const tr = C.tracks[+b.dataset.tr];
+    sheet.innerHTML = `<button class="sheet-x" aria-label="${t(u.close)}">✕</button><p class="cap">${L("Track", "المحور")} ${tr.n}</p><h3>${t(tr.t)}</h3>
+      <ul>${tr.s.map(([s, sp], j) => `<li><i>${tr.n}.${j + 1}</i><span dir="ltr">${esc(s)}</span><small dir="ltr">${esc(sp || t(u.tbc))}</small></li>`).join("")}<li><i>${tr.n}.4</i><span>${t(u.discussion)}</span></li></ul>`;
+    sheet.classList.add("on"); veil.classList.add("on"); sheet.setAttribute("aria-hidden", "false");
+    sheet.querySelector(".sheet-x").onclick = close;
+  });
+  veil.onclick = close;
+  addEventListener("keydown", (e) => e.key === "Escape" && close());
+
+  /* Active chapter: Ken Burns, rail, story bar */
+  const secs = [...document.querySelectorAll(".ch")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const i = secs.indexOf(e.target);
+    secs.forEach((s) => s.classList.toggle("act", s === e.target));
+    document.querySelectorAll(".rail a").forEach((a, j) => a.classList.toggle("on", j === i));
+    document.querySelectorAll("#sb i").forEach((b, j) => { b.classList.toggle("done", j < i); b.classList.toggle("on", j === i); });
+  }), { threshold: 0.5 });
+  secs.forEach((s) => io.observe(s));
+  requestAnimationFrame(() => document.body.classList.add("loaded"));
+};
+addEventListener("scroll", () => { const h = document.documentElement; document.documentElement.style.setProperty("--sp", (h.scrollTop / (h.scrollHeight - innerHeight)).toFixed(4)); }, { passive: true });
+</script>
+</body>
+</html>
