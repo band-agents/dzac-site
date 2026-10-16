@@ -1,23 +1,24 @@
 "use client";
 
 /**
- * Header, phone menu, phone bottom bar, footer and the countdowns, as in the
- * DZAC 5 design.
+ * Header, footer and countdown.
  *
- * The header is transparent over the hero, turns solid once the page
- * scrolls, slides away while you scroll down and returns when you scroll up.
- * On phones a slim bar with the live countdown and Register follows you
- * after the hero. Countdowns render dashes until mounted, so the static HTML
- * and the first client render agree.
+ * The header is three zones, with the navigation exactly centred, and turns
+ * solid once the page scrolls. The language switch keeps you on the same
+ * page. The countdown renders dashes until it mounts, so the static HTML and
+ * the first client render agree. No animation library: the menu animates in
+ * CSS.
  */
 
 import { useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CalendarDays, MapPin, Menu, X } from "lucide-react";
 import { EVENT, NAV, UI } from "@/content/site";
-import { H } from "@/content/home";
 import { useLocale, useT } from "@/lib/locale";
+import { useScrolled } from "@/lib/motion";
 import { page } from "@/lib/paths";
+import { DzMark, Wordmark } from "./brand";
 
 function useSwitchHref() {
   const path = usePathname() || "/en/";
@@ -26,45 +27,13 @@ function useSwitchHref() {
   return path.replace(/^\/(en|ar)(?=\/|$)/, `/${other}`) || `/${other}/`;
 }
 
-/** Scroll state: past the top, past the first screen, and whether we're heading down. */
-function useScrollState() {
-  const [s, setS] = useState({ solid: false, past: false, hide: false });
-  useEffect(() => {
-    let last = window.scrollY, raf = 0;
-    const on = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const y = window.scrollY;
-        const down = y > last + 4, up = y < last - 4;
-        setS((p) => ({ solid: y > 40, past: y > window.innerHeight * 0.85, hide: y > 240 && (down ? true : up ? false : p.hide) }));
-        last = y;
-      });
-    };
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => { window.removeEventListener("scroll", on); cancelAnimationFrame(raf); };
-  }, []);
-  return s;
-}
-
-function Mark() {
-  const t = useT();
-  return (
-    <span className="mark">
-      <span className="mark-5">5</span>
-      <span className="mark-t"><b dir="ltr">DZAC</b><small>{t(H.brandSub)}</small></span>
-    </span>
-  );
-}
-
 export function Header() {
   const t = useT();
   const locale = useLocale();
   const path = usePathname() || "";
-  const { solid, past, hide } = useScrollState();
+  const scrolled = useScrolled(30);
   const [open, setOpen] = useState(false);
   const switchHref = useSwitchHref();
-  const home = path === `/${locale}/` || path === `/${locale}`;
 
   useEffect(() => { setOpen(false); }, [path]);
   useEffect(() => {
@@ -76,48 +45,43 @@ export function Header() {
   }, [open]);
 
   return (
-    <>
-      <header className={`hd${solid || open || !home ? " is-solid" : ""}${hide && !open ? " is-hidden" : ""}`}>
-        <Link href={page(locale)} className="hd-logo" aria-label={`DZAC 5, ${t(EVENT.full)}`}><Mark /></Link>
+    <header className={`hd${scrolled || open ? " is-solid" : ""}`}>
+      <div className="wrap hd-in">
+        <Link href={page(locale)} className="hd-logo" aria-label={`DZAC 5, ${t(EVENT.full)}`}>
+          <DzMark />
+          <Wordmark />
+        </Link>
         <nav className="hd-nav" aria-label={t(UI.menu)}>
           {NAV.map((n) => (
             <Link key={n.href} href={page(locale, n.href)} aria-current={path.includes(`/${n.href}/`) ? "page" : undefined}>{t(n.label)}</Link>
           ))}
         </nav>
         <div className="hd-actions">
-          <Link href={switchHref} className="hd-lang" hrefLang={locale === "en" ? "ar" : "en"} aria-label={t(UI.langLabel)}>{locale === "en" ? "عربي" : "EN"}</Link>
-          <Link href={page(locale, "register")} className="hd-reg">{t(UI.register)}</Link>
-          <button type="button" className={`hd-burger${open ? " is-open" : ""}`} onClick={() => setOpen((o) => !o)} aria-label={open ? t(UI.close) : t(UI.menu)} aria-expanded={open}>
-            <span /><span />
-          </button>
+          <Link href={switchHref} className="hd-lang" hrefLang={locale === "en" ? "ar" : "en"} aria-label={t(UI.langLabel)}>{t(UI.lang)}</Link>
+          <Link href={page(locale, "apply")} className="btn btn-ghost btn-sm hd-apply">{t(UI.apply)}</Link>
+          <Link href={page(locale, "register")} className="btn btn-primary btn-sm">{t(UI.register)}</Link>
+          <button type="button" className="hd-burger" onClick={() => setOpen(true)} aria-label={t(UI.menu)} aria-expanded={open}><Menu size={20} /></button>
         </div>
-      </header>
+      </div>
 
       {open && (
         <div className="menu" role="dialog" aria-modal="true" aria-label={t(UI.menu)}>
-          <nav className="menu-links">
-            {[{ href: "", label: { en: "Home", ar: "الرئيسية" } }, ...NAV].map((n, i) => (
-              <Link key={n.href || "home"} href={page(locale, n.href)} style={{ ["--k" as string]: i } as CSSProperties}>
-                <span>{t(n.label)}</span><small dir="ltr">{String(i + 1).padStart(2, "0")}</small>
-              </Link>
+          <div className="wrap menu-top">
+            <Wordmark style={{ fontSize: 28 }} />
+            <button type="button" className="hd-burger" style={{ display: "grid" }} onClick={() => setOpen(false)} aria-label={t(UI.close)}><X size={20} /></button>
+          </div>
+          <nav className="wrap menu-links">
+            {[{ href: "", label: { en: "Home", ar: "الرئيسية" } }, ...NAV, { href: "apply", label: UI.apply }, { href: "register", label: UI.register }].map((n, i) => (
+              <Link key={n.href || "home"} href={page(locale, n.href)} style={{ ["--k" as string]: i } as CSSProperties}>{t(n.label)}</Link>
             ))}
           </nav>
-          <div className="menu-foot">
-            <Link href={page(locale, "register")} className="btn btn-light btn-lg">{t(UI.register)}</Link>
-            <Link href={page(locale, "apply")} className="btn btn-line btn-lg">{t(UI.apply)}</Link>
+          <div className="wrap menu-foot">
+            <Link href={switchHref} className="hd-lang">{t(UI.lang)}</Link>
             <span>{t(EVENT.date)} · {t(EVENT.venue)}</span>
           </div>
         </div>
       )}
-
-      <div className={`mbar${past && !open ? " is-on" : ""}`} aria-hidden={!past}>
-        <div className="mbar-t">
-          <Clock compact />
-          <small>{t({ en: "14 Jan 2027 · Cairo", ar: "14 يناير 2027 · القاهرة" })}</small>
-        </div>
-        <Link href={page(locale, "register")} className="btn btn-light">{t(UI.register)}</Link>
-      </div>
-    </>
+    </header>
   );
 }
 
@@ -125,34 +89,49 @@ export function Footer() {
   const t = useT();
   const locale = useLocale();
   return (
-    <footer className="ft t-dark">
-      <div className="wrap ft-in">
+    <footer className="ft">
+      <div className="wrap">
         <div className="ft-brand">
-          <span className="ft-wm" dir="ltr">DZAC<sup>05</sup></span>
-          <p>{t(EVENT.tagline)}</p>
+          <Wordmark />
+          <p>{t(EVENT.full)} · {t(EVENT.tagline)}</p>
+          <p className="ft-meta">
+            <span><CalendarDays size={15} /> {t(EVENT.date)}</span>
+            <span><MapPin size={15} /> {t(EVENT.venue)}</span>
+          </p>
         </div>
-        <div className="ft-col">
-          <h4>{t(H.explore)}</h4>
-          {NAV.map((n) => <Link key={n.href} href={page(locale, n.href)}>{t(n.label)}</Link>)}
+        <div className="ft-grid">
+          <div className="ft-col">
+            <h4>{t({ en: "Conference", ar: "المؤتمر" })}</h4>
+            {NAV.slice(0, 3).map((n) => <Link key={n.href} href={page(locale, n.href)}>{t(n.label)}</Link>)}
+            <Link href={page(locale, "abstracts")}>{t({ en: "Submit an abstract", ar: "قدّم ملخصًا بحثيًا" })}</Link>
+          </div>
+          <div className="ft-col">
+            <h4>{t({ en: "Attend", ar: "الحضور" })}</h4>
+            <Link href={page(locale, "apply")}>{t(UI.apply)}</Link>
+            <Link href={page(locale, "register")}>{t(UI.register)}</Link>
+            <Link href={page(locale, "certificate")}>{t({ en: "Certificate of attendance", ar: "شهادة الحضور" })}</Link>
+            <Link href={page(locale, "check-in")}>{t({ en: "Staff check-in", ar: "تسجيل الدخول للفريق" })}</Link>
+          </div>
+          <div className="ft-col">
+            <h4>{t({ en: "Follow", ar: "تابعنا" })}</h4>
+            <a href={EVENT.facebook} target="_blank" rel="noreferrer">Facebook · DZAC</a>
+            <Link href={page(locale, "gallery")}>{t({ en: "DZAC 4 gallery", ar: "صور DZAC 4" })}</Link>
+            <Link href={page(locale, "films")}>{t({ en: "Films", ar: "الأفلام" })}</Link>
+            <span style={{ color: "var(--champagne)" }}>{EVENT.hashtag}</span>
+          </div>
         </div>
-        <div className="ft-col">
-          <h4>{t(H.attendees)}</h4>
-          <Link href={page(locale, "register")}>{t(UI.register)}</Link>
-          <Link href={page(locale, "apply")}>{t(UI.apply)}</Link>
-          <Link href={page(locale, "abstracts")}>{t({ en: "Submit an abstract", ar: "قدّم ملخصًا بحثيًا" })}</Link>
-          <Link href={page(locale, "certificate")}>{t({ en: "Certificate of attendance", ar: "شهادة الحضور" })}</Link>
-          <Link href={page(locale, "check-in")}>{t({ en: "Staff check-in", ar: "تسجيل دخول الفريق" })}</Link>
+        <div className="ft-base">
+          <span>{t({ en: "Organized by Dar El Zokora Group · Scientific partner ISMHA · Event organizer Horizon", ar: "تنظيم مجموعة دار الذكورة · الشريك العلمي ISMHA · منظم الحدث Horizon" })}</span>
+          <span>© 2026 {t(EVENT.organizer)} · DZAC</span>
         </div>
-      </div>
-      <div className="wrap ft-base">
-        <span>© 2027 {t({ en: "Dar El Zokora Group · ISMHA · Horizon", ar: "مجموعة دار الذكورة · ISMHA · Horizon" })}</span>
-        <a href={EVENT.facebook} target="_blank" rel="noreferrer" dir="ltr">{EVENT.hashtag}</a>
       </div>
     </footer>
   );
 }
 
-function useCountdown() {
+/** Days, hours, minutes, seconds to the opening. */
+export function Countdown() {
+  const t = useT();
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
     setNow(Date.now());
@@ -160,35 +139,17 @@ function useCountdown() {
     return () => clearInterval(id);
   }, []);
   const left = now === null ? null : Math.max(0, new Date(EVENT.startsAt).getTime() - now);
-  return left === null ? null : [Math.floor(left / 86400000), Math.floor(left / 3600000) % 24, Math.floor(left / 60000) % 60, Math.floor(left / 1000) % 60];
-}
-
-/** The small inline countdown of the hero and the phone bar. */
-export function Clock({ compact }: { compact?: boolean }) {
-  const t = useT();
-  const parts = useCountdown();
-  const pad = (n: number) => String(n).padStart(2, "0");
-  if (compact) {
-    return <b className="clock-c u-tnum" dir="ltr">{parts ? `${parts[0]}d ${pad(parts[1])}:${pad(parts[2])}:${pad(parts[3])}` : "–"}</b>;
-  }
+  const parts = left === null ? null : [
+    Math.floor(left / 86400000), Math.floor(left / 3600000) % 24, Math.floor(left / 60000) % 60, Math.floor(left / 1000) % 60,
+  ];
+  const labels = [UI.days, UI.hours, UI.minutes, UI.seconds];
   return (
-    <span className="clock u-tnum" dir="ltr" role="timer">
-      {H.units.map((u, i) => (
-        <span key={i}><b>{parts ? (i ? pad(parts[i]) : parts[i]) : "–"}</b><small>{t(u)}</small></span>
-      ))}
-    </span>
-  );
-}
-
-/** The large countdown of the final call. */
-export function Countdown() {
-  const t = useT();
-  const parts = useCountdown();
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return (
-    <div className="cd u-tnum" dir="ltr" role="timer" aria-label={t({ en: "Time until DZAC 5 opens", ar: "الوقت المتبقي على افتتاح DZAC 5" })}>
-      {H.units.map((u, i) => (
-        <span key={i} className="cd-cell"><b>{parts ? (i ? pad(parts[i]) : parts[i]) : "–"}</b><small>{t(u)}</small></span>
+    <div className="cd" role="timer" aria-label={t({ en: "Time until DZAC 5 opens", ar: "الوقت المتبقي على افتتاح DZAC 5" })}>
+      {labels.map((l, i) => (
+        <div key={i} className="cd-cell">
+          <span className="cd-v u-tnum">{parts ? String(parts[i]).padStart(i ? 2 : 1, "0") : "–"}</span>
+          <span className="cd-l">{t(l)}</span>
+        </div>
       ))}
     </div>
   );

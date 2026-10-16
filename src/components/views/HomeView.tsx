@@ -1,22 +1,25 @@
 "use client";
 
-import { Editions, Faculty, Films, Final, Hero, Intro, Lounge, Marquee, Masterclass, Passes, Review, Tiers, Tracks, Venue, WhatsNew } from "../sections";
+import {
+  ApplyBand, Beyond, Editions, Faculty, Final, Hero, Lounge, Marquee, Masterclass, Passes, Review, Statement, Tiers, Tracks, Venue, WhatsNew,
+} from "../sections";
 
-/** The home page, top to bottom, in the order of the DZAC 5 design. */
+/** The home page, top to bottom. */
 export function HomeView() {
   return (
     <>
       <Hero />
       <Marquee />
-      <Intro />
+      <Statement />
       <WhatsNew />
       <Tracks />
+      <Beyond />
       <Masterclass />
       <Faculty />
       <Review />
       <Editions />
       <Lounge />
-      <Films />
+      <ApplyBand />
       <Passes />
       <Tiers />
       <Venue />

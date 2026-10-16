@@ -37,7 +37,6 @@ const FILMS = {
   "or-ar": { sizes: [[720, 900, "", 40, 27]], poster: 40, posterW: 720 },
   "sting-en": { sizes: [[1600, 750, "", 40, 27]], poster: 150, posterW: 1600 },
   "sting-ar": { sizes: [[1600, 750, "", 40, 27]], poster: 150, posterW: 1600 },
-  "backdrop": { sizes: [[1600, 900, "", 44, 29], [960, 540, "-sm", 44, 29]], poster: 120, posterW: 1600 },
 };
 
 const encodeOnly = process.argv.includes("--encode");

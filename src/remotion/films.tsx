@@ -17,7 +17,8 @@ import { TransitionSeries, linearTiming, springTiming, type TransitionPresentati
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
-import { CYAN, Dip, GOLD, Grade, INK, Waves, lightSweep } from "./fx";
+import { FiveOutline } from "@/components/brand";
+import { Dip, GOLD, Grade, INK, Waves, lightSweep } from "./fx";
 
 export type Clip = { src: string; frames: number; caption?: string };
 
@@ -105,7 +106,7 @@ function OrCaption({ text, frames, rtl }: { text: string; frames: number; rtl: b
       position: "absolute", left: 80, right: 80, bottom: 120, fontFamily: "var(--display)", color: "#fff", opacity: out,
     }}>
       <div style={{ width: 120 * inn, height: 1.5, background: GOLD, marginBottom: 22 }} />
-      <div style={{ fontSize: rtl ? 50 : 64, fontWeight: 300, lineHeight: rtl ? 1.4 : 1.02, letterSpacing: rtl ? 0 : "-0.02em", transform: `translateY(${(1 - inn) * 30}px)`, opacity: inn, textShadow: "0 4px 30px rgba(0,0,0,0.5)" }}>{text}</div>
+      <div style={{ fontSize: rtl ? 50 : 66, fontWeight: 300, fontStyle: rtl ? "normal" : "italic", lineHeight: rtl ? 1.4 : 1.05, transform: `translateY(${(1 - inn) * 30}px)`, opacity: inn, textShadow: "0 4px 30px rgba(0,0,0,0.5)" }}>{text}</div>
     </div>
   );
 }
@@ -145,54 +146,29 @@ export type StingProps = { tagline: string; date: string; rtl: boolean } & Recor
 export function Sting({ tagline, date, rtl }: StingProps) {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const draw = interpolate(f, [14, 74], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: (x) => 1 - Math.pow(1 - x, 3) });
   const word = spring({ frame: f - 6, fps, config: { damping: 200 } });
-  const num = spring({ frame: f - 26, fps, config: { damping: 18, mass: 0.7 } });
-  const five = interpolate(f, [0, 110], [0, 1], { extrapolateRight: "clamp", easing: (x) => 1 - Math.pow(1 - x, 3) });
-  const line = spring({ frame: f - 60, fps, config: { damping: 200 } });
-  const meta = spring({ frame: f - 78, fps, config: { damping: 200 } });
+  const line = spring({ frame: f - 70, fps, config: { damping: 200 } });
+  const meta = spring({ frame: f - 86, fps, config: { damping: 200 } });
   const out = interpolate(f, [STING_FRAMES - 30, STING_FRAMES - 4], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const sweep = interpolate(f % STING_FRAMES, [96, 170], [-30, 130], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const shimmer = interpolate((f % STING_FRAMES), [100, 160], [-30, 130], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <AbsoluteFill style={{ background: `radial-gradient(70% 90% at 50% 38%, #0B2A7A 0%, #0A1A44 38%, ${INK} 78%)`, alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-      {/* The giant Raftel 5 behind, rising and turning from outline to light. */}
-      <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", fontFamily: "var(--num)", fontSize: 1180, lineHeight: 0.8,
-        color: "transparent", WebkitTextStroke: `2px rgba(62,209,242,${0.18 + 0.22 * five})`, transform: `translateY(${(1 - five) * 140}px) scale(${1.12 - 0.12 * five})`, opacity: out }}>5</div>
-      <Waves period={STING_FRAMES} top={0.66} spread={0.028} opacity={0.85} />
-      <div style={{ position: "relative", opacity: out, display: "flex", flexDirection: "column", alignItems: "center", gap: 30 }}>
-        <div dir="ltr" style={{ display: "flex", alignItems: "flex-start", gap: 14, color: "#F2F6FB" }}>
-          <span style={{ fontFamily: "\"Host Grotesk\", sans-serif", fontWeight: 300, fontSize: 300, letterSpacing: "-0.04em", lineHeight: 0.82,
-            opacity: word, transform: `translateY(${(1 - word) * 40}px)` }}>DZAC</span>
-          <span style={{ fontFamily: "var(--num)", fontSize: 128, lineHeight: 1, color: CYAN, marginTop: 6, opacity: num, transform: `translateY(${(1 - num) * -30}px)` }}>05</span>
+    <AbsoluteFill style={{ background: `radial-gradient(80% 90% at 50% 40%, #0B1A3A, ${INK} 70%)`, alignItems: "center", justifyContent: "center" }}>
+      <Waves period={STING_FRAMES} top={0.62} spread={0.03} opacity={0.9} />
+      <div style={{ opacity: out, display: "flex", flexDirection: "column", alignItems: "center", gap: 26 }}>
+        <div dir="ltr" style={{ display: "flex", alignItems: "center", gap: 18, transform: `scale(${0.94 + 0.06 * word})` }}>
+          <span style={{ fontFamily: "var(--f-serif), Georgia, serif", fontWeight: 300, fontSize: 270, letterSpacing: "0.01em", color: "#F5EFE3", opacity: word, lineHeight: 1 }}>DZAC</span>
+          <div style={{ position: "relative", width: 205, height: 280 }}>
+            <FiveOutline draw={draw} style={{ width: "100%", height: "100%" }} />
+            <div style={{ position: "absolute", inset: 0, background: `linear-gradient(100deg, transparent ${shimmer - 12}%, rgba(255,255,255,0.65) ${shimmer}%, transparent ${shimmer + 12}%)`, mixBlendMode: "overlay" }} />
+          </div>
         </div>
-        <div style={{ position: "relative", overflow: "hidden" }}>
-          <div dir={rtl ? "rtl" : "ltr"} style={{ fontFamily: "var(--display)", fontSize: rtl ? 52 : 60, fontWeight: 300, color: "#F2F6FB", opacity: line, transform: `translateY(${(1 - line) * 24}px)`, letterSpacing: rtl ? 0 : "-0.01em" }}>{tagline}</div>
-          <div style={{ position: "absolute", inset: 0, background: `linear-gradient(100deg, transparent ${sweep - 10}%, rgba(255,255,255,0.55) ${sweep}%, transparent ${sweep + 10}%)`, mixBlendMode: "overlay" }} />
-        </div>
-        <div dir={rtl ? "rtl" : "ltr"} style={{ display: "flex", alignItems: "center", gap: 20, fontFamily: "var(--text)", fontSize: rtl ? 28 : 22, letterSpacing: rtl ? 0 : "0.32em", textTransform: rtl ? "none" : "uppercase", color: CYAN, opacity: meta }}>
-          <span style={{ width: 80 * meta, height: 1, background: CYAN }} />{date}<span style={{ width: 80 * meta, height: 1, background: CYAN }} />
+        <div dir={rtl ? "rtl" : "ltr"} style={{ fontFamily: "var(--display)", fontSize: rtl ? 48 : 62, fontStyle: rtl ? "normal" : "italic", color: "#F5EFE3", opacity: line, transform: `translateY(${(1 - line) * 20}px)`, fontWeight: 300 }}>{tagline}</div>
+        <div dir={rtl ? "rtl" : "ltr"} style={{ display: "flex", alignItems: "center", gap: 18, fontFamily: rtl ? "var(--text)" : "var(--mono)", fontSize: rtl ? 28 : 22, letterSpacing: rtl ? 0 : "0.3em", textTransform: rtl ? "none" : "uppercase", color: "#E6D5AE", opacity: meta }}>
+          <span style={{ width: 70 * meta, height: 1, background: "#E6D5AE" }} />{date}<span style={{ width: 70 * meta, height: 1, background: "#E6D5AE" }} />
         </div>
       </div>
       <Dip frames={10} total={STING_FRAMES} />
-    </AbsoluteFill>
-  );
-}
-
-/* ── Backdrop: the closing section's moving background, no words ── */
-
-export const BACKDROP_FRAMES = 300;
-
-export function Backdrop() {
-  const f = useCurrentFrame();
-  const t = (f % BACKDROP_FRAMES) / BACKDROP_FRAMES;
-  const breathe = 0.5 - 0.5 * Math.cos(t * Math.PI * 2);
-  const sweep = -40 + 180 * t;
-  return (
-    <AbsoluteFill style={{ background: `radial-gradient(70% 90% at 50% 45%, #0B2A7A 0%, #0A1A44 40%, ${INK} 80%)`, overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", fontFamily: "var(--num)", fontSize: 1250, lineHeight: 0.8,
-        color: "transparent", WebkitTextStroke: `2px rgba(62,209,242,${0.16 + 0.14 * breathe})`, transform: `scale(${1 + 0.04 * breathe}) rotate(${-2 + 4 * breathe}deg)` }}>5</div>
-      <div style={{ position: "absolute", inset: 0, background: `linear-gradient(105deg, transparent ${sweep - 14}%, rgba(62,209,242,0.10) ${sweep}%, transparent ${sweep + 14}%)` }} />
-      <Waves period={BACKDROP_FRAMES} top={0.58} spread={0.034} opacity={0.9} />
-      <AbsoluteFill style={{ background: `radial-gradient(60% 50% at 50% 50%, transparent, rgba(7,13,27,0.55))` }} />
     </AbsoluteFill>
   );
 }
