@@ -10,10 +10,11 @@ import type { FC } from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import type { TransitionPresentation, TransitionPresentationComponentProps } from "@remotion/transitions";
 
-export const CYAN = "#3BD8F2";
-export const BLUE = "#2E6BFF";
-export const GOLD = "#D9B25F";
-export const INK = "#050914";
+/* The DZAC 5 brand, from the conference deck: royal blue, cyan, deep navy, masterclass gold. */
+export const CYAN = "#3ED1F2";
+export const BLUE = "#0656D4";
+export const GOLD = "#C89B4E";
+export const INK = "#070D1B";
 
 /* ── Light sweep ───────────────────────────────────────── */
 

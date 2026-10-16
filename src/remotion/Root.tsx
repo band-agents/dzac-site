@@ -8,27 +8,35 @@
  */
 
 import { Fragment, type ComponentType, type ReactNode } from "react";
-import { Composition } from "remotion";
-import { loadFont as loadSerif } from "@remotion/google-fonts/CormorantGaramond";
-import { loadFont as loadMono } from "@remotion/google-fonts/IBMPlexMono";
+import { Composition, continueRender, delayRender, staticFile } from "remotion";
 import { loadFont as loadAlex } from "@remotion/google-fonts/Alexandria";
 import { loadFont as loadPlex } from "@remotion/google-fonts/IBMPlexSansArabic";
-import { HeroReel, OrReel, STING_FRAMES, Sting, filmLength } from "./films";
+import { BACKDROP_FRAMES, Backdrop, HeroReel, OrReel, STING_FRAMES, Sting, filmLength } from "./films";
 import { HERO_CLIPS, OR_CLIPS, STING_TEXT } from "./clips";
 
-const serif = loadSerif("normal", { weights: ["300", "400"], subsets: ["latin"] });
-loadSerif("italic", { weights: ["300"], subsets: ["latin"] });
-const mono = loadMono("normal", { weights: ["400"], subsets: ["latin"] });
+/* The brand faces from the DZAC 5 design, served from public/fonts. */
+const local: [string, string, string][] = [
+  ["Host Grotesk", "HostGrotesk-Light.otf", "300"],
+  ["Host Grotesk", "HostGrotesk-Regular.otf", "400"],
+  ["Host Grotesk", "HostGrotesk-Medium.otf", "500"],
+  ["Raftel", "Raftel.ttf", "400"],
+];
+if (typeof window !== "undefined" && typeof FontFace !== "undefined") {
+  const h = delayRender("brand fonts");
+  Promise.all(local.map(([family, file, weight]) => new FontFace(family, `url(${staticFile(`fonts/${file}`)})`, { weight }).load()
+    .then((ff) => { document.fonts.add(ff); })))
+    .then(() => continueRender(h), () => continueRender(h));
+}
 const alex = loadAlex("normal", { weights: ["300"], subsets: ["arabic", "latin"] });
 const plex = loadPlex("normal", { weights: ["400"], subsets: ["arabic"] });
 
 /** The same CSS variables the site uses, so the film code reads like the page code. */
 function Type({ rtl, children }: { rtl: boolean; children: ReactNode }) {
   const vars = {
-    "--f-serif": serif.fontFamily,
-    "--mono": `${mono.fontFamily}, monospace`,
-    "--display": rtl ? `${alex.fontFamily}, sans-serif` : `${serif.fontFamily}, serif`,
-    "--text": rtl ? `${plex.fontFamily}, sans-serif` : `${mono.fontFamily}, sans-serif`,
+    "--num": "Raftel, serif",
+    "--mono": "\"Host Grotesk\", sans-serif",
+    "--display": rtl ? `${alex.fontFamily}, sans-serif` : "\"Host Grotesk\", sans-serif",
+    "--text": rtl ? `${plex.fontFamily}, sans-serif` : "\"Host Grotesk\", sans-serif",
   } as React.CSSProperties;
   return <div style={{ ...vars, position: "absolute", inset: 0 }}>{children}</div>;
 }
@@ -43,6 +51,7 @@ const FPS = 30;
 export function Root() {
   return (
     <>
+      <Composition id="backdrop" component={wrap(Backdrop, false)} durationInFrames={BACKDROP_FRAMES} fps={FPS} width={1920} height={1080} defaultProps={{}} />
       {([false, true] as const).map((rtl) => {
         const dir = rtl ? "rtl" : "ltr";
         const lang = rtl ? "ar" : "en";

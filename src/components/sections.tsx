@@ -1,78 +1,72 @@
 "use client";
 
 /**
- * The sections the home page is built from; the inner pages reuse them.
+ * The home page, as designed in Claude Design (DZAC 5.dc.html), in the
+ * conference's own colours: deep navy, DZAC royal blue and cyan, with the
+ * masterclass in navy and gold. Inner pages reuse these sections.
  *
- * Every section is a `.s` (equal space above and below its content) with a
- * centred heading (`SectionHead`), and its content is symmetric: equal
- * columns, equal card padding, featured items in the centre. The films are
- * pre-rendered video (Film); motion is CSS (lib/motion).
+ * Motion is CSS scroll-driven (globals.css, "Motion") and pre-rendered
+ * Remotion films / short loops played natively (Film). Nothing waits on
+ * JavaScript to be visible.
  */
 
-import type { CSSProperties, ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
+import { ArrowRight, ArrowUpRight, Play, Plus } from "lucide-react";
 import {
-  Activity, Apple, ArrowRight, CalendarDays, Cpu, Globe2, Leaf, MapPin, Mic, Play, Scissors, Stethoscope, Ticket,
-  type LucideIcon,
-} from "lucide-react";
-import {
-  BEYOND, BEYOND_LINE, EDITIONS, EVENT, FILMS, HOME, LEADERS, LOUNGE, MASTERCLASS, NEW, ORGANIZERS, PARTNERS_FOR, PASSES, PAST_FACULTY,
-  PROGRAM_NOTE, REVIEW, SHOTS, TIERS, TRACKS, UI,
+  BEYOND, EVENT, LEADERS, LOUNGE, MASTERCLASS, NEW, ORGANIZERS, PASSES, PAST_FACULTY, TIERS, TRACKS, UI, type L,
 } from "@/content/site";
+import { EDITIONS_D, FILMS_D, H } from "@/content/home";
+import { P, SESSIONS } from "@/content/programme";
 import { useLocale, useT } from "@/lib/locale";
-import { CountUp, Parallax, Reveal, ScrollText, Stagger } from "@/lib/motion";
-import { asset, page, photo } from "@/lib/paths";
-import { FiveOutline } from "./brand";
-import { Countdown } from "./chrome";
+import { CountUp, Reveal, ScrollText } from "@/lib/motion";
+import { asset, page } from "@/lib/paths";
+import { icsFile } from "@/lib/store";
+import { Countdown, Clock } from "./chrome";
 import { Film } from "./Film";
 import { useLightbox } from "./Lightbox";
 import { Rail } from "./Rail";
-
-const ICONS: Record<string, LucideIcon> = { Globe2, Stethoscope, Mic, Ticket, Leaf, Scissors, Activity, Apple, Cpu };
 
 /** Forward arrow in the reading direction. */
 export function Fwd({ size = 16 }: { size?: number }) {
   return <ArrowRight size={size} className="u-flip" />;
 }
 
-/** A card with a soft light that follows the pointer. */
-export function Glow({ children, className = "", style, as = "div" }: { children: ReactNode; className?: string; style?: CSSProperties; as?: "div" | "article" | "li" }) {
-  const Tag = as;
-  return (
-    <Tag className={`glow ${className}`} style={style}
-      onPointerMove={(e: React.PointerEvent<HTMLElement>) => {
-        const r = e.currentTarget.getBoundingClientRect();
-        e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
-        e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
-      }}>
-      {children}
-    </Tag>
-  );
-}
-
 /** Keeps "DZAC" and its number on one line, in both directions. */
 export const nb = (s: string) => s.replace(/DZAC (\d)/g, "DZAC $1");
 
-/** A section: the same space above and below, content in the centred column. */
-export function Section({ children, className = "", id, flush }: { children: ReactNode; className?: string; id?: string; flush?: boolean }) {
+/** Kept for the inner pages: a card that is just a card now. */
+export function Glow({ children, className = "", style, as = "div" }: { children: ReactNode; className?: string; style?: CSSProperties; as?: "div" | "article" | "li" }) {
+  const Tag = as;
+  return <Tag className={`card ${className}`} style={style}>{children}</Tag>;
+}
+
+/** A section band: light (paper) or dark (navy), with the design's page margins. */
+export function Section({ children, className = "", id, tone = "light", flush }: {
+  children: ReactNode; className?: string; id?: string; tone?: "light" | "dark" | "blue" | "gold"; flush?: boolean;
+}) {
   return (
-    <section className={`s${flush ? " s-flush" : ""} ${className}`} id={id}>
+    <section className={`band t-${tone}${flush ? " flush" : ""} ${className}`} id={id}>
       <div className="wrap">{children}</div>
     </section>
   );
 }
 
-/** Centred heading: kicker, title, lead, and an optional link, one rhythm everywhere. */
-export function SectionHead({ kicker, title, lead, children }: { kicker?: string; title: string; lead?: string; children?: ReactNode }) {
+/** Eyebrow, title, and an optional link at the far end: the design's section head. */
+export function SectionHead({ kicker, title, lead, children, rule }: { kicker?: string; title: string; lead?: string; children?: ReactNode; rule?: boolean }) {
   return (
-    <header className="sh">
-      {kicker && <Reveal><p className="kicker">{kicker}</p></Reveal>}
-      <Reveal delay={0.1}><h2 className="h2">{nb(title)}</h2></Reveal>
-      {lead && <Reveal delay={0.2}><p className="lead">{lead}</p></Reveal>}
-      {children && <Reveal delay={0.3} className="sh-act">{children}</Reveal>}
+    <header className={`sh${rule ? " sh-rule" : ""}`}>
+      <div className="sh-main">
+        {kicker && <Reveal><p className="eyebrow">{kicker}</p></Reveal>}
+        <Reveal delay={0.1}><h2 className="h2">{nb(title)}</h2></Reveal>
+        {lead && <Reveal delay={0.2}><p className="lead">{lead}</p></Reveal>}
+      </div>
+      {children && <Reveal delay={0.2} className="sh-act">{children}</Reveal>}
     </header>
   );
 }
+
+const k = (n: number) => ({ ["--k" as string]: n }) as CSSProperties;
 
 /* ── Hero ──────────────────────────────────────────────── */
 
@@ -80,71 +74,69 @@ export function Hero() {
   const t = useT();
   const locale = useLocale();
   const open = useLightbox();
-  const film = FILMS[0];
-  const k = (n: number) => ({ ["--k" as string]: n }) as CSSProperties;
   return (
-    <section className="hero">
-      <div className="hero-film">
-        <Film name={`hero-${locale === "ar" ? "rtl" : "ltr"}`} small="-sm" cover deferred priority
-          label={t({ en: "Highlights from DZAC 4", ar: "لقطات من DZAC 4" })} />
+    <section className="hero t-dark">
+      <div className="hero-media">
+        <Film name={`hero-${locale === "ar" ? "rtl" : "ltr"}`} small="-sm" cover deferred priority label={t({ en: "Highlights from DZAC 4", ar: "لقطات من DZAC 4" })} />
       </div>
-      <div className="hero-shade" aria-hidden />
-      <div className="hero-in">
-        <div className="hero-kick" style={k(0)}>
-          <span className="pill">{t(EVENT.full)}</span>
-          <span className="pill">{t(EVENT.edition)}</span>
+      <div className="hero-tint" aria-hidden />
+      <div className="hero-five" aria-hidden>5</div>
+      <div className="hero-in wrap">
+        <p className="hero-eyebrow" style={k(0)}><i className="pulse" />{t(H.heroEyebrow)}</p>
+        <div className="hero-head">
+          <h1 className="hero-title" style={k(1)} dir="ltr"><span>DZAC</span><sup>05</sup><span className="sr-only"> 5</span></h1>
+          <p className="hero-tag" style={k(2)}>{t(EVENT.tagline)}</p>
         </div>
-        <h1 className="hero-title" style={k(1)}>
-          <span className="wm" dir="ltr">
-            <span className="wm-dzac">DZAC</span>
-            <FiveOutline className="wm-five five-draw" />
-          </span>
-          <span className="sr-only">DZAC 5</span>
-        </h1>
-        <p className="hero-tag" style={k(2)}>{t(EVENT.tagline)}</p>
-        <p className="hero-meta" style={k(3)}>
-          <span><CalendarDays size={16} />{t(EVENT.date)}</span>
-          <span><MapPin size={16} />{t(EVENT.venue)}</span>
-        </p>
+        <div className="hero-facts" style={k(3)}>
+          <div><span className="lbl">{t(H.when)}</span><span className="val">{t(EVENT.date)}</span></div>
+          <div><span className="lbl">{t(H.where)}</span><span className="val">{t(EVENT.venue)}</span></div>
+          <div><span className="lbl">{t(H.opensIn)}</span><Clock /></div>
+        </div>
         <div className="hero-cta" style={k(4)}>
-          <Link href={page(locale, "register")} className="btn btn-primary btn-lg">{t(UI.registerNow)} <Fwd /></Link>
-          {film.kind === "file" && (
-            <button type="button" className="btn btn-ghost btn-lg" onClick={() => open({ kind: "file", src: asset(film.src), poster: asset(film.poster), title: t(film.title) })}>
-              <Play size={15} /> {t(UI.watch)}
-            </button>
-          )}
+          <Link href={page(locale, "register")} className="btn btn-light btn-lg">{t(UI.registerNow)} <Fwd /></Link>
+          <Link href={page(locale, "apply")} className="btn btn-line btn-lg">{t(H.findPass)}</Link>
+          <button type="button" className="play-link" onClick={() => open({ kind: "drive", id: FILMS_D[0].drive!, title: t(FILMS_D[0].title) })}>
+            <span className="play-dot"><Play size={12} /></span>{t(H.watchReveal)}
+          </button>
         </div>
-        <div style={{ ...k(5), width: "100%", display: "grid", justifyItems: "center" }}><Countdown /></div>
       </div>
+      <div className="hero-cue" aria-hidden><i /></div>
     </section>
   );
 }
 
-/* ── Marquee & statement ───────────────────────────────── */
+/* ── Marquee & intro ───────────────────────────────────── */
 
 export function Marquee() {
   const t = useT();
   const words = [...TRACKS.map((x) => t(x.title)), ...BEYOND.map((x) => t(x.title))];
   return (
-    <div className="mq" aria-hidden>
+    <div className="mq t-dark" aria-hidden>
       <div className="mq-track">
-        {[0, 1].map((k) => (
-          <span key={k}>{words.map((w, i) => <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 32 }}>{w}<b /></span>)}</span>
+        {[0, 1].map((n) => (
+          <span key={n}>{words.map((w, i) => <span key={i} className="mq-item">{w}<b>✦</b></span>)}</span>
         ))}
       </div>
     </div>
   );
 }
 
-/** Pinned at the centre of the screen until every word has lit. */
-export function Statement() {
+export function Intro() {
   const t = useT();
   return (
-    <section className="stmt">
-      <div className="stmt-pin">
-        <div className="wrap stmt-in">
-          <p className="kicker">{t({ en: "DZAC since its first edition", ar: "DZAC منذ نسخته الأولى" })}</p>
-          <ScrollText className="statement" text={t(HOME.statement)} />
+    <section className="band t-light intro">
+      <div className="wrap intro-grid">
+        <div className="intro-copy">
+          <Reveal><p className="eyebrow">{t(H.introEyebrow)}</p></Reveal>
+          <ScrollText className="intro-body" text={t(H.introBody)} />
+        </div>
+        <div className="facts">
+          {H.facts.map((f, i) => (
+            <Reveal key={i} delay={i * 0.1} className="fact">
+              <CountUp to={f.n} className="fact-n" />
+              <span className="fact-l">{t(f.l)}</span>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
@@ -156,370 +148,418 @@ export function Statement() {
 export function WhatsNew() {
   const t = useT();
   return (
-    <Section>
-      <SectionHead kicker={t(EVENT.edition)} title={t(HOME.newTitle)} />
-      <Rail className="grid-4">
-        {NEW.map((n, i) => {
-          const I = ICONS[n.icon] ?? Globe2;
-          return (
-            <Glow key={i} className="card">
-              <span className="card-n u-tnum">0{i + 1}</span>
-              <span className="card-i"><I size={22} /></span>
-              <h3>{t(n.title)}</h3>
-              <p>{t(n.body)}</p>
-            </Glow>
-          );
-        })}
-      </Rail>
-    </Section>
-  );
-}
-
-/* ── Program ───────────────────────────────────────────── */
-
-export function Tracks({ link = true }: { link?: boolean }) {
-  const t = useT();
-  const locale = useLocale();
-  return (
-    <Section>
-      <SectionHead kicker={t({ en: "Scientific program", ar: "البرنامج العلمي" })} title={t(HOME.programTitle)} lead={t(PROGRAM_NOTE)}>
-        {link && <Link href={page(locale, "program")} className="link">{t(UI.seeProgram)} <Fwd /></Link>}
-      </SectionHead>
-      <Rail as="ol" className="grid-3">
-        {TRACKS.map((tr) => (
-          <Glow as="li" key={tr.n} className="card track-card">
-            <span className="card-n u-tnum">{tr.n}</span>
-            <h3>{t(tr.title)}</h3>
-            <p>{t(tr.body)}</p>
-          </Glow>
+    <Section className="news-band flush">
+      <header className="sh sh-rule sh-inline">
+        <Reveal><h2 className="h2">{t(H.newTitle)}</h2></Reveal>
+        <Reveal delay={0.1}><p className="eyebrow">{t(H.newEyebrow)}</p></Reveal>
+      </header>
+      <Rail className="news" label={t(H.newTitle)}>
+        {NEW.map((n, i) => (
+          <article key={i} className="news-item">
+            <span className="num">0{i + 1}</span>
+            <h3>{t(n.title)}</h3>
+            <p>{t(n.body)}</p>
+          </article>
         ))}
       </Rail>
     </Section>
   );
 }
 
-/**
- * Five panels that travel sideways while the section is pinned. The page
- * does not move on until the last panel has fully arrived (globals.css,
- * Motion). Without scroll-driven animation it is a row you swipe.
- */
-export function Beyond() {
+/* ── Programme: six tracks that open into their sessions, then Beyond ─ */
+
+export function Tracks({ link = true }: { link?: boolean }) {
   const t = useT();
+  const locale = useLocale();
+  const [open, setOpen] = useState<string | null>(null);
   return (
-    <section className="bx" style={{ ["--n" as string]: BEYOND.length }}>
-      <div className="bx-pin">
-        <SectionHead kicker={t({ en: "New in DZAC 5", ar: "جديد DZAC 5" })} title={t(HOME.beyondTitle)} lead={t(BEYOND_LINE)} />
-        <Rail className="bx-row" stagger={false}>
-          {BEYOND.map((b, i) => {
-            const I = ICONS[b.icon] ?? Leaf;
-            return (
-              <article key={i} className="bx-card">
-                <span className="bx-big" aria-hidden>{i + 1}</span>
-                <span className="card-i"><I size={24} /></span>
-                <div>
-                  <h3>{t(b.title)}</h3>
-                  <p>{t(b.body)}</p>
-                </div>
-              </article>
-            );
-          })}
-        </Rail>
-        <div className="bx-progress" aria-hidden><i /></div>
-      </div>
-    </section>
+    <Section tone="dark" className="prog">
+      <SectionHead kicker={t(H.progEyebrow)} title={t(H.progTitle)}>
+        {link && <Link href={page(locale, "program")} className="tlink">{t(H.fullProgramme)} <Fwd size={14} /></Link>}
+      </SectionHead>
+      <ol className="tracks">
+        {TRACKS.map((tr) => {
+          const on = open === tr.n;
+          return (
+            <li key={tr.n} className={`track${on ? " is-open" : ""}`}>
+              <button type="button" className="track-row" aria-expanded={on} onClick={() => setOpen(on ? null : tr.n)}>
+                <span className="track-n">{tr.n}</span>
+                <span className="track-name">{t(tr.title)}</span>
+                <span className="track-count">{t(P.talks)}</span>
+                <span className="track-plus" aria-hidden><Plus size={18} /></span>
+              </button>
+              <div className="track-body" role="region">
+                <ul>
+                  {(SESSIONS[tr.n] ?? []).map((s, i) => (
+                    <li key={i}>
+                      <span className="sess-i">{tr.n}.{i + 1}</span>
+                      <span className="sess-t" dir="ltr">{s.title}</span>
+                      <span className="sess-s" dir="ltr">{s.speaker || t(P.tbc)}</span>
+                    </li>
+                  ))}
+                  <li className="sess-disc"><span className="sess-i">{tr.n}.4</span><span className="sess-t">{t(P.discussion)}</span><span /></li>
+                </ul>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      <Beyond inline />
+    </Section>
   );
 }
 
-/* ── Masterclass: count · film · details ──────────────── */
+/** Beyond andrology: the Elegant script, then five themes. */
+export function Beyond({ inline }: { inline?: boolean }) {
+  const t = useT();
+  const body = (
+    <div className="beyond">
+      <Reveal className="beyond-head">
+        <span className="script" dir="ltr">Beyond</span>
+        <h3 className="h3">{t(H.beyondTitle)}</h3>
+        <p className="lead">{t(H.beyondCaption)}</p>
+      </Reveal>
+      <Rail className="beyond-grid" label={t(H.beyondTitle)}>
+        {BEYOND.map((b, i) => (
+          <article key={i} className="beyond-item">
+            <span className="num">0{i + 1}</span>
+            <b>{t(b.title)}</b>
+            <span>{t(b.body)}</span>
+          </article>
+        ))}
+      </Rail>
+    </div>
+  );
+  return inline ? body : <Section tone="dark">{body}</Section>;
+}
+
+/* ── Masterclass: the OR film, the count, the facts ─────── */
 
 export function Masterclass({ link = true }: { link?: boolean }) {
   const t = useT();
   const locale = useLocale();
   return (
-    <Section className="mc">
-      <SectionHead kicker={t(MASTERCLASS.kicker)} title={t(MASTERCLASS.title)} lead={t(MASTERCLASS.approach)} />
-      <div className="mc-grid">
-        <Reveal className="mc-side">
-          <div className="mc-count">
-            <b className="gold-text"><CountUp to={MASTERCLASS.count} /></b>
-            <span>{t(MASTERCLASS.countLabel)}<em>{t(MASTERCLASS.scrub)}</em></span>
-          </div>
-        </Reveal>
-        <Reveal delay={0.1} className="mc-film fm-frame" style={{ position: "relative", overflow: "hidden" }}>
-          <Film name={`or-${locale}`} cover label={t({ en: "The masterclass operating room, as a live feed", ar: "غرفة عمليات الماستر كلاس كبث مباشر" })} />
-        </Reveal>
-        <Reveal delay={0.2} className="mc-side">
-          <ul className="mc-list">{MASTERCLASS.points.map((x, i) => <li key={i}>{t(x)}</li>)}</ul>
-          <div className="mc-fee">
-            <b dir="ltr">{MASTERCLASS.fee}</b>
-            <span className="tag">{t(UI.provisional)} · {t(UI.limited)}</span>
-          </div>
-          <div className="row-c">
-            <Link href={`${page(locale, "apply")}?intent=masterclass`} className="btn btn-gold">{t({ en: "Apply for a seat", ar: "قدّم على مقعد" })}</Link>
-            {link && <Link href={page(locale, "masterclass")} className="btn btn-ghost">{t(UI.learnMore)}</Link>}
-          </div>
-        </Reveal>
+    <section className="mc t-gold">
+      <div className="mc-media">
+        <Film name={`or-${locale}`} cover label={t({ en: "The masterclass operating room, as a live feed", ar: "غرفة عمليات الماستر كلاس كبث مباشر" })} />
+        <span className="live"><i className="pulse red" />{t(H.liveOR)}</span>
       </div>
-    </Section>
+      <div className="mc-copy">
+        <Reveal><p className="eyebrow">{t(H.mcEyebrow)}</p></Reveal>
+        <Reveal delay={0.1}><h2 className="h2">{t(H.mcTitle)}</h2></Reveal>
+        <Reveal delay={0.15} className="mc-count">
+          <CountUp to={MASTERCLASS.count} className="mc-num" />
+          <span>{t(H.mcLive)}</span>
+        </Reveal>
+        <Reveal delay={0.2} as="ul" className="dash-list">
+          {MASTERCLASS.points.map((x, i) => <li key={i}>{t(x)}</li>)}
+          <li>{t(MASTERCLASS.approach)}</li>
+        </Reveal>
+        <Reveal delay={0.25} className="mc-fee">
+          <div>
+            <span className="lbl">{t(H.fee)}</span>
+            <b dir="ltr">5,000 €<sup>*</sup></b>
+          </div>
+          <div className="row">
+            <Link href={`${page(locale, "apply")}?intent=masterclass`} className="btn btn-gold">{t(H.reserveSeat)}</Link>
+            {link && <Link href={page(locale, "masterclass")} className="btn btn-line">{t(H.details)}</Link>}
+          </div>
+        </Reveal>
+        <p className="note-sm">* {t(H.currencyNote)}</p>
+      </div>
+    </section>
   );
 }
 
-/* ── Faculty ───────────────────────────────────────────── */
-
-const initials = (s: string) => s.replace(/^(Prof\.|Dr\.|Prof\. Dr\.)\s*/g, "").replace(/^(Prof\.|Dr\.)\s*/g, "").split(/\s+/).filter((w) => /^[A-Z]/.test(w)).slice(0, 2).map((w) => w[0]).join("");
+/* ── Leadership ────────────────────────────────────────── */
 
 export function Faculty({ past = true, head = true }: { past?: boolean; head?: boolean }) {
   const t = useT();
+  const locale = useLocale();
   return (
-    <Section flush={!head}>
-      {head && <SectionHead kicker={t({ en: "Faculty", ar: "المحاضرون" })} title={t(HOME.facultyTitle)} />}
-      <Rail className="grid-4 leaders">
+    <Section className={head ? "" : "flush"}>
+      {head && (
+        <SectionHead kicker={t(H.facEyebrow)} title={t(H.facTitle)}>
+          <Link href={page(locale, "faculty")} className="tlink">{t(H.allFaculty)} <Fwd size={14} /></Link>
+        </SectionHead>
+      )}
+      <Rail className="leaders" label={t(H.facTitle)}>
         {LEADERS.map((l, i) => (
-          <Glow key={i} className="card leader" as="article">
+          <article key={i} className="leader">
             <div className="leader-ph">
-              {l.photo ? <img src={asset(l.photo.replace("/photos/", "/photos/sm/"))} alt={t(l.name)} loading="lazy" decoding="async" /> : <span className="leader-init" aria-hidden>{initials(l.name.en)}</span>}
+              {l.photo
+                ? <img src={asset(l.photo.replace("/photos/", "/photos/sm/"))} alt={t(l.name)} loading="lazy" decoding="async" />
+                : <span className="leader-init" aria-hidden>{l.name.en.replace(/^(Prof\. Dr\.|Prof\.|Dr\.)\s*/, "").split(/\s+/).slice(0, 2).map((w) => w[0]).join("")}</span>}
             </div>
-            <div className="leader-tx">
-              <small>{t(l.role)}</small>
-              <b>{t(l.name)}</b>
-            </div>
-          </Glow>
+            <span className="lbl">{t(l.role)}</span>
+            <b>{t(l.name)}</b>
+          </article>
         ))}
       </Rail>
-      <Reveal className="grid-3 orgs">
+      <Reveal className="orgs">
         {ORGANIZERS.map((o, i) => (
-          <div key={i} className="org"><small>{t(o.role)}</small><b>{t(o.name)}</b></div>
+          <div key={i}><span className="lbl">{t(o.role)}</span><b>{t(o.name)}</b></div>
         ))}
       </Reveal>
       {past && (
-        <>
-          <Reveal className="past-h"><p className="kicker">{t(HOME.pastFaculty)}</p></Reveal>
-          <Stagger as="ul" className="past">
-            {PAST_FACULTY.map((p, i) => <li key={i}><b>{t(p.name)}</b><small>{t(p.from)}</small></li>)}
-          </Stagger>
-        </>
+        <Reveal className="past">
+          <span className="past-l">{t(H.pastFaculty)}</span>
+          <div className="past-names">{PAST_FACULTY.map((p, i) => <span key={i}>{t(p.name)}</span>)}</div>
+        </Reveal>
       )}
     </Section>
   );
 }
 
-/* ── DZAC 4 in review: a mirrored mosaic ─────────────────── */
-
-/** Small and large sources for a gallery photo, so the browser picks the size it needs. */
-function srcSet(id: string) {
-  const s = SHOTS.find((x) => x.id === id);
-  return `${photo(id, "sm")} 720w, ${photo(id)} ${s?.w ?? 1200}w`;
-}
+/* ── DZAC 4 in review: a film that opens to full bleed as you scroll ─ */
 
 export function Review() {
   const t = useT();
   const locale = useLocale();
-  /* Left column, centre (tall), right column: the two sides mirror each other. */
-  const shots = [["1721", ""], ["1481", ""], ["1585", "is-center"], ["1233", ""], ["2025", ""]] as const;
+  const stats: { n: string; l: L }[] = [
+    { n: "8–9 Jan 2026", l: { en: "Two conference days", ar: "يوما المؤتمر" } },
+    { n: "2", l: { en: "Venues: Triumph Luxury Hotel and Alexandria Urology Hospital", ar: "مقرّان: فندق تريومف ومستشفى الإسكندرية لجراحة المسالك" } },
+    { n: "4th", l: { en: "Edition, «Empowering the Future of Male Health»", ar: "نسخة، بشعار «تمكين مستقبل صحة الرجل»" } },
+  ];
   return (
-    <Section>
-      <SectionHead kicker="DZAC 4" title={t(HOME.reviewTitle)}>
-        <Link href={page(locale, "gallery")} className="link">{t(UI.allPhotos)} <Fwd /></Link>
-      </SectionHead>
-      <Stagger className="rv-grid">
-        {shots.map(([id, cls]) => (
-          <div key={id} className={`rv-ph ${cls}`}>
-            <Parallax>
-              <img src={photo(id, "sm")} srcSet={srcSet(id)} sizes={cls ? "(max-width: 760px) 100vw, 40vw" : "(max-width: 760px) 50vw, 30vw"}
-                alt="" loading="lazy" decoding="async" />
-            </Parallax>
+    <section className="review t-dark">
+      <div className="review-stage">
+        <div className="review-frame">
+          <Film name="review" dir="loops" av1={false} cover label={t(H.reviewCaption)} />
+          <div className="review-shade" aria-hidden />
+          <div className="review-title wrap">
+            <p className="eyebrow">{t(H.reviewEyebrow)}</p>
+            <h2 className="h2">{t(H.reviewTitle)}</h2>
+            <span className="note-sm">{t(H.reviewCaption)}</span>
           </div>
+        </div>
+      </div>
+      <div className="wrap review-stats">
+        {stats.map((s, i) => (
+          <Reveal key={i} delay={i * 0.1} className="rstat"><b dir="ltr">{s.n}</b><span>{t(s.l)}</span></Reveal>
         ))}
-      </Stagger>
-      <Stagger className="grid-3 rv-stats">
-        {REVIEW.stats.map((s, i) => (
-          <div key={i} className="rv-stat"><b className="grad-text" dir="ltr">{s.v}</b><span>{t(s.l)}</span></div>
-        ))}
-      </Stagger>
-    </Section>
+        <Reveal delay={0.3} className="rstat rstat-act">
+          <Link href={page(locale, "gallery")} className="btn btn-line">{t(H.gallery)}</Link>
+          <Link href={page(locale, "films")} className="btn btn-light">{t(H.films)}</Link>
+        </Reveal>
+      </div>
+    </section>
   );
 }
 
-/* ── Editions ──────────────────────────────────────────── */
+/* ── Five editions: a pinned sideways scroll on desktop, a swipe on phones ─ */
 
 export function Editions() {
   const t = useT();
   return (
-    <Section>
-      <SectionHead kicker={t({ en: "Since the first edition", ar: "منذ النسخة الأولى" })} title={t(HOME.editionsTitle)} />
-      <Stagger className="ed">
-        <div className="ed-line" aria-hidden><i /></div>
-        {EDITIONS.map((e) => (
-          <div key={e.n} className={`ed-item${e.n === 5 ? " is-now" : ""}`}>
-            <span className="ed-dot" aria-hidden />
-            <span className="ed-n">DZAC {e.n}</span>
-            <span className="ed-when">{t(e.when)}</span>
-            <b>{t(e.theme)}</b>
-            <p>{t(e.where)}</p>
-          </div>
-        ))}
-      </Stagger>
-    </Section>
+    <section className="eds t-light">
+      <div className="eds-pin">
+        <div className="wrap">
+          <SectionHead kicker={t(H.histEyebrow)} title={t(H.histTitle)} />
+        </div>
+        <Rail className="eds-row" stagger={false} label={t(H.histTitle)}>
+          {EDITIONS_D.map((e) => (
+            <article key={e.n} className={`ed${e.n === "05" ? " is-now" : ""}`}>
+              <span className="ed-n" dir="ltr">{e.n}</span>
+              <span className="lbl">{t(e.when)}</span>
+              <b>{t(e.place)}</b>
+              <span className="ed-note">{t(e.note)}</span>
+            </article>
+          ))}
+        </Rail>
+        <div className="eds-bar" aria-hidden><i /></div>
+      </div>
+    </section>
   );
 }
 
-/* ── Men's Lounge ──────────────────────────────────────── */
+/* ── Men's Lounge: vertical interview loops ──────────────── */
 
 export function Lounge() {
   const t = useT();
   const open = useLightbox();
   return (
-    <Section>
-      <SectionHead kicker={t({ en: "Video series", ar: "سلسلة فيديو" })} title={t(HOME.loungeTitle)} lead={t(HOME.loungeBody)} />
-      <Stagger className="reels">
+    <section className="lounge t-blue">
+      <div className="wrap lounge-head">
+        <Reveal className="sh-main">
+          <p className="eyebrow" dir="ltr">Men’s Lounge Talks</p>
+          <h2 className="h2">{t(H.loungeTitle)}</h2>
+        </Reveal>
+        <Reveal delay={0.1}><p className="lead">{t(H.loungeBody)}</p></Reveal>
+      </div>
+      <Rail className="reels" stagger={false} label={t(H.loungeTitle)}>
         {LOUNGE.map((r, i) => (
           <button key={r.id} type="button" className="reel" onClick={() => open({ kind: "drive", id: r.id, title: `DZAC 4 · ${i + 1}`, vertical: true })}
-            aria-label={t({ en: `Play interview ${i + 1}`, ar: `تشغيل اللقاء ${i + 1}` })}>
-            <img src={asset(`/media/lounge/${r.img}.webp`)} alt="" loading="lazy" decoding="async" />
-            <span className="reel-play"><Play size={15} /></span>
+            aria-label={t({ en: `Play interview ${i + 1}`, ar: `تشغيل اللقاء ${i + 1}` })} style={k(i)}>
+            <div className="reel-media">
+              <Film name={`lounge-${i + 1}`} dir="loops" av1={false} cover label="" />
+              <span className="reel-ep" dir="ltr">EP {String(i + 1).padStart(2, "0")}</span>
+              <span className="reel-play"><Play size={14} /></span>
+            </div>
+            <span className="reel-cap">{t(H.interview)}</span>
           </button>
         ))}
-      </Stagger>
-    </Section>
+      </Rail>
+    </section>
   );
 }
 
-/* ── Apply ─────────────────────────────────────────────── */
+/* ── Films: four cards that preview in view ─────────────── */
 
-const APPLY_PATHS = [
-  { id: "attend", label: { en: "Attend", ar: "الحضور" } },
-  { id: "masterclass", label: { en: "Masterclass seat", ar: "مقعد الماستر كلاس" } },
-  { id: "speak", label: { en: "Present", ar: "تقديم بحث" } },
-  { id: "partner", label: { en: "Partner", ar: "شراكة" } },
-  { id: "media", label: { en: "Press", ar: "الإعلام" } },
-];
-
-export function ApplyBand() {
+export function Films({ head = true }: { head?: boolean }) {
   const t = useT();
   const locale = useLocale();
+  const open = useLightbox();
   return (
-    <Section>
-      <Reveal>
-        <Glow className="apb">
-          <SectionHead kicker={t({ en: "Apply · about a minute", ar: "التقديم · حوالي دقيقة" })}
-            title={`${t({ en: "Not sure where you fit?", ar: "لست متأكدًا أين مكانك؟" })}`}
-            lead={t({ en: "A few questions, shaped by your answers. We'll tell you which pass, seat or partnership suits you, and carry your details through.", ar: "أسئلة قليلة تتشكل حسب إجاباتك. سنخبرك بالتذكرة أو المقعد أو الشراكة الأنسب لك، ونكمل ببياناتك." })} />
-          <div className="apb-paths">
-            {APPLY_PATHS.map((p, i) => (
-              <Link key={p.id} href={`${page(locale, "apply")}?intent=${p.id}`} className="apb-path">
-                <span className="u-tnum">0{i + 1}</span>{t(p.label)}
-              </Link>
-            ))}
-          </div>
-        </Glow>
-      </Reveal>
+    <Section tone="dark" className={head ? "" : "flush"}>
+      {head && (
+        <SectionHead kicker={t(H.filmsEyebrow)} title={t(H.filmsTitle)}>
+          <Link href={page(locale, "films")} className="tlink">{t(H.allFilms)} <Fwd size={14} /></Link>
+        </SectionHead>
+      )}
+      <Rail className="films" label={t(H.filmsTitle)}>
+        {FILMS_D.map((f) => (
+          <button key={f.key} type="button" className="film-card"
+            onClick={() => open(f.file ? { kind: "file", src: asset(f.file), poster: asset(`/media/loops/film-${f.key}.webp`), title: t(f.title) } : { kind: "drive", id: f.drive!, title: t(f.title) })}>
+            <div className="film-media">
+              <Film name={`film-${f.key}`} dir="loops" av1={false} cover label="" />
+              <span className="film-play"><Play size={16} /></span>
+              <span className="film-kind">{t(f.kind)}</span>
+            </div>
+            <b>{t(f.title)}</b>
+          </button>
+        ))}
+      </Rail>
     </Section>
   );
 }
 
-/* ── Passes & partners: featured in the centre ───────────── */
+/* ── Passes ────────────────────────────────────────────── */
 
 export function Passes() {
   const t = useT();
   const locale = useLocale();
-  const order = [PASSES[0], PASSES[2], PASSES[1]];
   return (
     <Section id="passes">
-      <SectionHead kicker={t({ en: "Passes", ar: "التذاكر" })} title={t(HOME.passesTitle)} lead={t({ en: "Choose the conference, the masterclass, or both together.", ar: "اختر المؤتمر، أو الماستر كلاس، أو الاثنين معًا." })} />
-      <Rail className="grid-3">
-        {order.map((p) => (
-          <Glow key={p.id} className={`card pass${p.featured ? " is-featured" : ""}`}>
-            <span className="pass-name">{t(p.name)}</span>
-            <span className={`pass-price${p.featured ? " gold-text" : ""}`}>{t(p.price)}</span>
-            {p.note && <span className="pass-note">{t(p.note)}</span>}
-            {p.id === "masterclass" && <span className="tag">{t(UI.provisional)}</span>}
-            <ul>{p.points.map((x, i) => <li key={i}>{t(x)}</li>)}</ul>
-            <Link href={`${page(locale, "register")}?pass=${p.id}`} className={`btn ${p.featured ? "btn-gold" : "btn-ghost"}`}>{t(UI.register)}</Link>
-          </Glow>
+      <SectionHead kicker={t(H.passEyebrow)} title={t(H.passTitle)} />
+      <div className="passes">
+        {PASSES.map((p, i) => (
+          <article key={p.id} className={`pass pass-${p.id}`} style={k(i)}>
+            <div className="pass-top">
+              <span className="lbl">{t(p.name)}</span>
+              {p.featured && <span className="best">{t(H.bestValue)}</span>}
+            </div>
+            <span className="pass-price" dir={p.id === "masterclass" ? "ltr" : undefined}>{p.id === "bundle" ? t({ en: "Conference + masterclass", ar: "المؤتمر + الماستركلاس" }) : t(p.price)}</span>
+            <ul>{p.points.map((x, j) => <li key={j}>{t(x)}</li>)}</ul>
+            <Link href={`${page(locale, "register")}?pass=${p.id}`} className="btn pass-btn">{t(H.choose)}</Link>
+          </article>
         ))}
-      </Rail>
+      </div>
+      <Reveal className="not-sure">
+        {t(H.notSure)} <Link href={page(locale, "apply")}>{t(H.notSureCta)}</Link>
+      </Reveal>
     </Section>
   );
 }
 
-export function Tiers({ link = true, head = true }: { link?: boolean; head?: boolean }) {
+/* ── Partners ──────────────────────────────────────────── */
+
+export function Tiers({ head = true }: { link?: boolean; head?: boolean }) {
   const t = useT();
   const locale = useLocale();
-  const order = [TIERS[1], TIERS[0], TIERS[2]];
   return (
-    <Section flush={!head}>
-      {head
-        ? <SectionHead kicker={t({ en: "Partners", ar: "الشركاء" })} title={t(HOME.partnersTitle)} lead={t(PARTNERS_FOR)}>
-            {link && <Link href={page(locale, "partners")} className="link">{t(UI.becomePartner)} <Fwd /></Link>}
-          </SectionHead>
-        : <header className="sh"><p className="lead">{t(PARTNERS_FOR)}</p></header>}
-      <Rail className="grid-3">
-        {order.map((tr) => (
-          <Glow key={tr.id} className={`card tier${tr.id === "gold" ? " is-featured" : ""}`}>
-            <h3 data-tier={tr.id}>{t(tr.name)}</h3>
-            <ul>{tr.points.map((x, i) => <li key={i}>{t(x)}</li>)}</ul>
-          </Glow>
+    <Section className={`partners${head ? "" : " flush"}`}>
+      <div className="part-grid">
+        <Reveal className="part-copy">
+          {head && <p className="eyebrow">{t(H.partEyebrow)}</p>}
+          {head && <h2 className="h2">{nb(t(H.partTitle))}</h2>}
+          <p className="lead">{t(H.partBody)}</p>
+          <div className="row">
+            <Link href={`${page(locale, "apply")}?intent=partner`} className="btn btn-dark">{t(H.becomePartner)}</Link>
+            {head && <Link href={page(locale, "partners")} className="btn btn-line">{t(H.compareTiers)}</Link>}
+          </div>
+        </Reveal>
+        <div className="tier-list">
+          {TIERS.map((tr, i) => (
+            <Reveal key={tr.id} delay={i * 0.1} className={`tier tier-${tr.id}`}>
+              <span className="tier-name">{t(tr.name)}</span>
+              <span className="tier-line">{tr.points.map((p) => t(p)).join(" · ")}</span>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+      <Reveal className="orgs orgs-light">
+        {ORGANIZERS.map((o, i) => (
+          <div key={i}><span className="lbl">{t(o.role)}</span><b>{t(o.name)}</b></div>
         ))}
-      </Rail>
+      </Reveal>
     </Section>
   );
 }
 
-/* ── Venue & final call ────────────────────────────────── */
+/* ── Venue ─────────────────────────────────────────────── */
 
 export function Venue() {
   const t = useT();
   return (
-    <Section>
-      <SectionHead kicker={t(HOME.venueTitle)} title={t(EVENT.venue)} lead={t(HOME.venueBody)} />
-      <Reveal className="venue-ph">
-        <Parallax><img src={asset("/media/posters/hotel.webp")} alt={t(EVENT.venue)} loading="lazy" decoding="async" /></Parallax>
-      </Reveal>
-      <Reveal className="row-c venue-act">
-        <a className="btn btn-ghost" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(EVENT.mapsQuery)}`} target="_blank" rel="noreferrer"><MapPin size={15} /> {t(UI.directions)}</a>
-        <span className="btn btn-ghost" style={{ pointerEvents: "none" }}><CalendarDays size={15} /> {t(EVENT.date)}</span>
-      </Reveal>
-    </Section>
+    <section className="venue t-dark">
+      <div className="venue-media">
+        <Film name="venue" dir="loops" av1={false} cover label={t(H.venueName)} />
+      </div>
+      <div className="venue-copy">
+        <Reveal><p className="eyebrow">{t(H.venueEyebrow)}</p></Reveal>
+        <Reveal delay={0.1}><h2 className="h2">{t(H.venueName)}</h2></Reveal>
+        <Reveal delay={0.15}><p className="lead">{t(H.venueCity)} · {t(EVENT.date)}</p></Reveal>
+        <Reveal delay={0.2} className="row">
+          <a className="btn btn-line" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(EVENT.mapsQuery)}`} target="_blank" rel="noreferrer">{t(H.directions)} <ArrowUpRight size={15} /></a>
+          <button type="button" className="btn btn-line" onClick={() => { const a = document.createElement("a"); a.href = icsFile(`DZAC 5 · ${EVENT.full.en}`, EVENT.venue.en); a.download = "DZAC5.ics"; a.click(); }}>{t(H.addCal)}</button>
+        </Reveal>
+      </div>
+    </section>
   );
 }
+
+/* ── Final call: the closing film, the countdown, the way in ─ */
 
 export function Final() {
   const t = useT();
   const locale = useLocale();
   return (
-    <Section>
-      <Reveal className="final">
-        <div className="final-film fm-frame" style={{ position: "relative" }}>
-          <Film name={`sting-${locale}`} cover label={`DZAC 5 · ${t(EVENT.tagline)}`} />
-        </div>
-        <div className="final-copy">
-          <h2 className="h2">{t(HOME.finalTitle)}</h2>
-          <p>{t(HOME.finalBody)}</p>
-          <div className="row-c">
-            <Link href={page(locale, "register")} className="btn btn-primary btn-lg">{t(UI.registerNow)} <Fwd /></Link>
-            <Link href={page(locale, "apply")} className="btn btn-ghost btn-lg">{t(UI.apply)}</Link>
-          </div>
-        </div>
-      </Reveal>
-    </Section>
+    <section className="final t-dark">
+      <div className="final-media">
+        <Film name="backdrop" small="-sm" cover label="" />
+      </div>
+      <div className="final-shade" aria-hidden />
+      <div className="final-in wrap">
+        <Reveal><p className="eyebrow">{t(H.finalEyebrow)}</p></Reveal>
+        <Reveal delay={0.1}><h2 className="final-title">{t(EVENT.tagline)}</h2></Reveal>
+        <Reveal delay={0.2}><Countdown /></Reveal>
+        <Reveal delay={0.3} className="row row-c">
+          <Link href={page(locale, "register")} className="btn btn-light btn-lg">{t(UI.registerNow)} <Fwd /></Link>
+          <Link href={page(locale, "apply")} className="btn btn-line btn-lg">{t(H.findPass)}</Link>
+        </Reveal>
+      </div>
+    </section>
   );
 }
 
 /* ── Inner page hero ───────────────────────────────────── */
 
 export function PageHero({ kicker, title, lead, bg, children }: { kicker: string; title: string; lead?: string; bg?: string; children?: ReactNode }) {
-  const k = (n: number) => ({ ["--k" as string]: n }) as CSSProperties;
   return (
-    <section className="ph">
+    <section className="ph t-dark">
       {bg && <div className="ph-bg" aria-hidden><img src={bg} alt="" decoding="async" /></div>}
-      <div className="wrap">
-        <div className="ph-in hero-in">
-          <p className="kicker" style={k(0)}>{kicker}</p>
-          <h1 className="h1" style={k(1)}>{nb(title)}</h1>
-          {lead && <p className="lead" style={k(2)}>{lead}</p>}
-          {children}
-        </div>
+      <div className="wrap ph-in">
+        <p className="eyebrow" style={k(0)}>{kicker}</p>
+        <h1 className="h1" style={k(1)}>{nb(title)}</h1>
+        {lead && <p className="lead" style={k(2)}>{lead}</p>}
+        {children}
       </div>
     </section>
   );
+}
+
+/* Kept for pages that still import it. */
+export function ApplyBand() {
+  return null;
 }

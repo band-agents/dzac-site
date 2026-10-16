@@ -8,7 +8,7 @@ import { EVENT, HOME, WORKSHOP } from "@/content/site";
 import { useLocale, useT } from "@/lib/locale";
 import { Reveal } from "@/lib/motion";
 import { asset, page, photo } from "@/lib/paths";
-import { Beyond, Editions, Faculty, Lounge, Masterclass, PageHero, Passes, Section, SectionHead, Tiers, Tracks } from "../sections";
+import { Editions, Films, Faculty, Lounge, Masterclass, PageHero, Passes, Section, SectionHead, Tiers, Tracks } from "../sections";
 import { useLightbox } from "../Lightbox";
 import { AbstractForm, CertificateView, CheckInView, PartnerForm } from "./Forms";
 import { ApplyView } from "./Apply";
@@ -36,7 +36,6 @@ export function ProgramView() {
       <PageHero kicker={`${t(EVENT.date)} · ${t(EVENT.venue)}`} title={t({ en: "Scientific program", ar: "البرنامج العلمي" })}
         lead={t({ en: "Six tracks on one stage, and a wider conversation beyond andrology.", ar: "ستة مسارات على منصة واحدة، وحوار أوسع يتجاوز طب الذكورة." })} bg={photo("1745")} />
       <Tracks link={false} />
-      <Beyond />
       <AbstractBand />
     </>
   );
@@ -90,7 +89,7 @@ export function GalleryPage() {
     <>
       <PageHero kicker="DZAC 4 · 8–9 January 2026" title={t({ en: "Gallery", ar: "معرض الصور" })}
         lead={t({ en: "Two days at the Triumph Luxury Hotel and the Alexandria Urology Hospital. The DZAC 1 to 3 archives join soon.", ar: "يومان في فندق تريومف ومستشفى الإسكندرية لجراحة المسالك. أرشيف DZAC 1 إلى 3 ينضم قريبًا." })} />
-      <section className="s"><div className="wrap"><GalleryView /></div></section>
+      <section className="band t-light flush"><div className="wrap"><GalleryView /></div></section>
     </>
   );
 }
@@ -101,7 +100,7 @@ export function FilmsPage() {
     <>
       <PageHero kicker={t({ en: "Films", ar: "الأفلام" })} title={t({ en: "Watch DZAC", ar: "شاهد DZAC" })}
         lead={t({ en: "The DZAC 4 film, the masterclass, the Dar El Zokora story and the Men's Lounge interviews.", ar: "فيلم DZAC 4، والماستر كلاس، وحكاية دار الذكورة، ولقاءات Men's Lounge." })} bg={asset("/media/posters/dzac4-film.webp")} />
-      <section className="s"><div className="wrap"><FilmsGrid /></div></section>
+      <Films head={false} />
       <Lounge />
     </>
   );
@@ -114,7 +113,7 @@ export function PartnersView() {
       <PageHero kicker={t({ en: "Partners", ar: "الشركاء" })} title={t(HOME.partnersTitle)}
         lead={t({ en: "Put your brand in front of the region's urologists and andrologists, on stage, on screen and in the exhibition.", ar: "اعرض علامتك أمام أطباء المسالك والذكورة في المنطقة: على المنصة، وعلى الشاشات، وفي المعرض." })} bg={photo("1449")} />
       <Tiers link={false} head={false} />
-      <section className="s"><div className="wrap" style={{ maxWidth: 900 }}><PartnerForm /></div></section>
+      <section className="band t-light flush"><div className="wrap" style={{ maxWidth: 900 }}><PartnerForm /></div></section>
     </>
   );
 }
@@ -125,7 +124,7 @@ export function RegisterPage() {
     <>
       <PageHero kicker={`${t(EVENT.date)} · ${t(EVENT.venue)}`} title={t({ en: "Register for DZAC 5", ar: "سجّل في DZAC 5" })}
         lead={t({ en: "Four short steps, then your e-ticket with a QR code for the door.", ar: "أربع خطوات قصيرة، ثم تذكرتك الإلكترونية برمز QR للدخول." })} />
-      <section className="s"><div className="wrap" style={{ maxWidth: 980 }}><RegisterView /></div></section>
+      <section className="band t-light flush"><div className="wrap" style={{ maxWidth: 980 }}><RegisterView /></div></section>
     </>
   );
 }
@@ -136,7 +135,7 @@ export function ApplyPage() {
     <>
       <PageHero kicker={t({ en: "Apply · about a minute", ar: "التقديم · حوالي دقيقة" })} title={t({ en: "Apply to DZAC 5", ar: "قدّم على DZAC 5" })}
         lead={t({ en: "Tell us who you are and what you're after. The form adapts as you answer, and tells you what fits you best.", ar: "أخبرنا من أنت وما الذي تبحث عنه. النموذج يتكيف مع إجاباتك، ويخبرك بما يناسبك أكثر." })} />
-      <section className="s"><div className="wrap"><ApplyView /></div></section>
+      <section className="band t-light flush"><div className="wrap"><ApplyView /></div></section>
     </>
   );
 }
@@ -146,7 +145,7 @@ export function TicketPage() {
   return (
     <>
       <PageHero kicker="DZAC 5" title={t({ en: "Your ticket", ar: "تذكرتك" })} lead={t({ en: "Show the QR code at registration.", ar: "اعرض رمز QR عند التسجيل." })} />
-      <section className="s"><div className="wrap" style={{ maxWidth: 980 }}><TicketView /></div></section>
+      <section className="band t-light flush"><div className="wrap" style={{ maxWidth: 980 }}><TicketView /></div></section>
     </>
   );
 }
@@ -157,7 +156,7 @@ export function AbstractsView() {
     <>
       <PageHero kicker={t({ en: "Call for abstracts", ar: "دعوة لتقديم الملخصات" })} title={t({ en: "Submit an abstract", ar: "قدّم ملخصًا بحثيًا" })}
         lead={t({ en: "Original work in any of the six tracks, as an oral presentation, a poster or a surgical video.", ar: "أعمال أصلية في أي من المسارات الستة، كعرض شفهي أو بوستر أو فيديو جراحي." })} />
-      <section className="s"><div className="wrap" style={{ maxWidth: 980 }}><AbstractForm /></div></section>
+      <section className="band t-light flush"><div className="wrap" style={{ maxWidth: 980 }}><AbstractForm /></div></section>
     </>
   );
 }
@@ -168,7 +167,7 @@ export function CertificatePage() {
     <>
       <PageHero kicker="DZAC 5" title={t({ en: "Certificate of attendance", ar: "شهادة الحضور" })}
         lead={t({ en: "After the conference, enter your ticket code to download your certificate.", ar: "بعد المؤتمر، اكتب كود تذكرتك لتحميل شهادتك." })} />
-      <section className="s"><div className="wrap" style={{ maxWidth: 1080 }}><CertificateView /></div></section>
+      <section className="band t-light flush"><div className="wrap" style={{ maxWidth: 1080 }}><CertificateView /></div></section>
     </>
   );
 }
@@ -179,7 +178,7 @@ export function CheckInPage() {
     <>
       <PageHero kicker={t({ en: "Staff", ar: "فريق العمل" })} title={t({ en: "Check-in", ar: "تسجيل الدخول" })}
         lead={t({ en: "Scan a ticket's QR code or type its code. Each ticket checks in once.", ar: "امسح رمز QR أو اكتب الكود. كل تذكرة تدخل مرة واحدة." })} />
-      <section className="s"><div className="wrap" style={{ maxWidth: 980 }}><CheckInView /></div></section>
+      <section className="band t-light flush"><div className="wrap" style={{ maxWidth: 980 }}><CheckInView /></div></section>
     </>
   );
 }

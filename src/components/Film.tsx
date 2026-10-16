@@ -15,7 +15,7 @@ import { asset } from "@/lib/paths";
 
 const AV1 = 'video/mp4; codecs="av01.0.05M.08"';
 
-export function Film({ name, label, className, cover, deferred, small, priority }: {
+export function Film({ name, label, className, cover, deferred, small, priority, dir = "films", av1 = true, eager = false }: {
   /** File stem in public/media/films, e.g. "hero-ltr". */
   name: string;
   label: string;
@@ -28,6 +28,12 @@ export function Film({ name, label, className, cover, deferred, small, priority 
   small?: string;
   /** Load the poster eagerly with high priority (the hero's largest paint). */
   priority?: boolean;
+  /** Folder under public/media (films, previews, loops). */
+  dir?: string;
+  /** Whether an .av1.mp4 sibling exists. */
+  av1?: boolean;
+  /** Start loading as soon as the page is idle, not only near the viewport. */
+  eager?: boolean;
 }) {
   const box = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
@@ -44,14 +50,14 @@ export function Film({ name, label, className, cover, deferred, small, priority 
     const load = () => {
       if (loaded) return;
       loaded = true;
-      v.src = asset(`/media/films/${stem}${v.canPlayType(AV1) ? ".av1" : ""}.mp4`);
+      v.src = asset(`/media/${dir}/${stem}${av1 && v.canPlayType(AV1) ? ".av1" : ""}.mp4`);
       v.load();
     };
     const sync = () => {
       if (!ready) return;
       if (visible) { load(); v.play().catch(() => {}); } else if (loaded) v.pause();
     };
-    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; sync(); }, { rootMargin: "250px 0px" });
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; sync(); }, { rootMargin: eager ? "1200px 0px" : "300px 0px" });
     io.observe(el);
 
     let timer = 0;
@@ -66,11 +72,11 @@ export function Film({ name, label, className, cover, deferred, small, priority 
       window.clearTimeout(timer);
       v.removeEventListener("playing", onPlay);
     };
-  }, [name, small, deferred]);
+  }, [name, small, deferred, dir, av1, eager]);
 
   return (
     <div ref={box} className={`fm${cover ? " fm-cover" : ""} ${className ?? ""}`} role="img" aria-label={label}>
-      <img className="fm-poster" src={asset(`/media/films/${name}.webp`)} alt="" decoding="async"
+      <img className="fm-poster" src={asset(`/media/${dir}/${name}.webp`)} alt="" decoding="async"
         loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} style={{ opacity: playing ? 0 : 1 }} />
       <video ref={video} className="fm-video" muted loop playsInline preload="none" aria-hidden tabIndex={-1} />
     </div>

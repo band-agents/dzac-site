@@ -16,6 +16,17 @@ Brief: the client's deck `Downloads/DZAC5_Presentation (1).pdf` (16 slides) plus
 `output: "export"`: plain files, GitHub Pages ready. `NEXT_BASE_PATH=/<repo>` for a sub-path host;
 `asset()` in lib/paths adds it to /public files (Link adds it itself).
 
+## Design (round 5, 10-16)
+
+Now implements Dan's Claude Design file `DZAC 5.dc.html` (the zip `Downloads/مواد مؤتمر DZAC 5.zip`: design + Portal +
+fonts Host Grotesk / Raftel / Elegant in public/fonts) — editorial bands, DZAC⁰⁵ wordmark — recoloured to the
+conference branding from the deck/stage: navy #070D1B, royal blue #0656D4/#0872F5, cyan #3ED1F2, masterclass
+navy + gold #C89B4E/#DAC79E. Bands set tokens via .t-light/.t-dark/.t-blue/.t-gold. Copy in content/home.ts,
+real programme sessions in content/programme.ts. Loops (film previews, lounge interviews, review montage, venue)
+in public/media/loops; Remotion adds `backdrop` (final call bg). Scroll: hero lifts away, review/masterclass/
+venue films open from a framed card, tracks wipe in and open into sessions, editions pin + slide (≥900px).
+Phone: rails, passes stack (sticky), bottom countdown bar. The older Look/Spacing notes below are superseded.
+
 ## Look
 
 Luxury, quiet type (2026-10-15, after Dan found the first cut "too aggressive and boldy"): Cormorant
