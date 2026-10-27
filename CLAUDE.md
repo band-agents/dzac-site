@@ -56,6 +56,15 @@ pinned scenes (Statement, Beyond) only pin at ≥900px; Beyond is a swipe rail b
 - Measured 10-16 on a 4× throttled CPU vs the round-2 live site: main-thread work at load 6.5 s → 3.0 s,
   script 3.1 s → 0.5 s, scroll 26 → 65 fps. Tools in the session scratchpad (perf.cjs, cssexp.cjs).
 
+## Official poster + organizer (10-27)
+
+The client's DZAC 5 poster is the source of truth for the tagline (**Shaping the Future of Men's Health**, AR نصوغ
+مستقبل صحة الرجل) and the venue (**Triumph Luxury Hotel, New Cairo**). It sits on the home page as `Poster` (lightbox +
+JPG download, `public/media/posters/dzac5-poster*`). **Horizon** is the event organizer: `public/brand/horizon.png` is a
+white logo with real alpha, keyed from the black JPG (the "transparent" one they sent is a baked-in checkerboard). It shows
+in the poster section, the organizers row (`logo` on ORGANIZERS) and the footer. The tagline is baked into the sting
+films: change it in clips.ts and re-render `sting-en sting-ar`.
+
 ## Directions (10-16, after Dan rejected the Claude Design round)
 
 `public/directions/`: three standalone static concepts plus a board (`/directions/`), not part of the Next

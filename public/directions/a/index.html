@@ -217,6 +217,22 @@ html[lang="ar"] .bw strong { letter-spacing: 0; line-height: 1.3; font-size: cla
 .past { margin-top: 44px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .past span { padding: 9px 16px; border-radius: 999px; background: var(--mist); font-size: 14px; }
 .past em { font-style: normal; font-size: 13px; color: var(--ink2); margin-inline-end: 8px; }
+.pst { background: var(--blue); color: #fff; overflow: hidden; }
+.pst .wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+.pst-ph { display: block; border-radius: 26px; overflow: hidden; box-shadow: 0 40px 90px -30px rgba(6, 16, 51, .7); transition: transform .6s var(--ease); max-width: 480px; }
+.pst-ph:hover { transform: translateY(-6px) rotate(-.5deg); }
+.pst-ph img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.pst .k { color: var(--cyan); }
+.pst h2 { margin-block: 16px 26px; }
+.pst-facts { display: grid; gap: 8px; font-size: 17px; color: rgba(255, 255, 255, .85); }
+.pst-org { display: flex; align-items: center; gap: 22px; margin-block: 30px; padding-block: 22px; border-block: 1px solid rgba(255, 255, 255, .25); }
+.pst-org small { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: rgba(255, 255, 255, .75); }
+html[lang="ar"] .pst-org small { letter-spacing: 0; font-size: 14px; }
+.pst-org img { width: 200px; height: auto; }
+.org-logo { width: 140px; height: auto; margin-top: 4px; }
+.ft-org { display: inline-flex; align-items: center; gap: 12px; }
+.ft-org img { width: 96px; height: auto; }
+@media (max-width: 860px) { .pst .wrap { grid-template-columns: minmax(0, 1fr); } .pst-ph { margin-inline: auto; } }
 .orgs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
 .orgs div { padding: 22px; border-radius: 22px; border: 1px solid var(--line); display: grid; gap: 6px; }
 .orgs small { font-size: 12px; color: var(--ink2); }
@@ -344,6 +360,14 @@ window.render = () => {
     <div class="news rail" data-rail>${C.news.map((n, i) => `<article class="nw" data-n="0${i + 1}" data-r style="--d:${i}"><h3>${t(n.t)}</h3><p>${t(n.b)}</p></article>`).join("")}</div><div data-dots></div>
   </div></section>
 
+  <section class="sec pst"><div class="wrap">
+    <a class="pst-ph" href="#" data-poster data-r><img src="${M(C.poster.sm)}" srcset="${M(C.poster.sm)} 600w, ${M(C.poster.src)} 1080w" sizes="(max-width: 860px) 90vw, 480px" alt="${esc(t(C.poster.alt))}" loading="lazy"></a>
+    <div data-r style="--d:1"><span class="k">${t(C.poster.kicker)}</span><h2 class="big">${t(E.tagline)}</h2>
+      <div class="pst-facts"><span>${t(E.date)}</span><span>${t(E.venue)}</span></div>
+      <div class="pst-org"><small>${t(C.poster.organizedBy)}</small><img src="${M(C.orgs[2].logo)}" alt="Horizon" loading="lazy"></div>
+      <div class="hero-cta"><a class="btn btn-w" href="${site("register")}">${t(u.registerNow)} ${arrow}</a><a class="btn btn-o" href="${M(C.poster.file)}" download><span>${t(C.poster.download)}</span></a></div></div>
+  </div></section>
+
   <section class="sec prog" id="prog"><div class="wrap">
     <div class="head"><div><span class="k">${t({ en: "Scientific programme", ar: "البرنامج العلمي" })}</span><h2 class="big" data-r>${t(u.tracks)}</h2></div><p style="max-width:34ch;opacity:.7">${t({ en: "Tap a track to open its sessions.", ar: "اضغط على أي محور لعرض جلساته." })}</p></div>
     <div class="cols" id="cols">${C.tracks.map((tr, i) => `<div class="col${i === 0 ? " on" : ""}" data-i="${i}" role="button" tabindex="0" aria-expanded="${i === 0}">
@@ -387,7 +411,7 @@ window.render = () => {
   <section class="sec" id="fac"><div class="wrap">
     <div class="head"><div><span class="k">${t(u.faculty)}</span><h2 class="big" data-r>${t(u.leadership)}</h2></div></div>
     <div class="fac rail" data-rail>${C.leaders.map((l, i) => `<div class="pr" data-r style="--d:${i}"><div class="pr-ph">${l.img ? `<img src="${photo(l.img)}" alt="${esc(t(l.n))}" loading="lazy">` : `<span class="pr-in">${l.n.en.replace(/^(Prof\. Dr\.|Prof\.|Dr\.)\s*/, "").split(/\s+/).slice(0, 2).map((w) => w[0]).join("")}</span>`}</div><small>${t(l.r)}</small><strong>${t(l.n)}</strong></div>`).join("")}</div><div data-dots></div>
-    <div class="orgs">${C.orgs.map((o) => `<div data-r><small>${t(o.r)}</small><strong style="font-weight:400">${t(o.n)}</strong></div>`).join("")}</div>
+    <div class="orgs">${C.orgs.map((o) => `<div data-r><small>${t(o.r)}</small>${o.logoInk ? `<img class="org-logo" src="${M(o.logoInk)}" alt="${esc(t(o.n))}" loading="lazy">` : `<strong style="font-weight:400">${t(o.n)}</strong>`}</div>`).join("")}</div>
     <div class="past" data-r><em>${t(u.pastFaculty)}</em>${C.past.map((p) => `<span>${p}</span>`).join("")}</div>
   </div></section>
 
@@ -417,7 +441,7 @@ window.render = () => {
     ${cd()}
     <div class="hero-cta" style="justify-content:center"><a class="btn btn-w" href="${site("register")}">${t(u.registerNow)} ${arrow}</a><a class="btn btn-o" href="${site("apply")}"><span>${t(u.findPass)}</span></a></div>
   </div></section>
-  <footer class="ft"><div class="wrap"><a class="logo" href="#top">DZAC<b>5</b></a><span>${t(E.full)} · ${t(E.date)} · ${t(E.venue)}</span><span>Dar El Zokora · ISMHA · Horizon</span></div></footer>`;
+  <footer class="ft"><div class="wrap"><a class="logo" href="#top">DZAC<b>5</b></a><span>${t(E.full)} · ${t(E.date)} · ${t(E.venue)}</span><span class="ft-org">Dar El Zokora · ISMHA · ${t(C.orgs[2].r)} <img src="${M(C.orgs[2].logo)}" alt="Horizon" loading="lazy"></span></div></footer>`;
 
   /* Track columns: one open at a time */
   const cols = document.getElementById("cols");

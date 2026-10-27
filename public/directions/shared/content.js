@@ -88,7 +88,7 @@ window.DZC = {
   orgs: [
     { r: { en: "Organized by", ar: "تنظيم" }, n: { en: "Dar El Zokora Group", ar: "مجموعة دار الذكورة" } },
     { r: { en: "Scientific partner", ar: "الشريك العلمي" }, n: { en: "ISMHA · International Society of Man Health and Andrology", ar: "ISMHA · الجمعية الدولية لصحة الرجل وطب الذكورة" } },
-    { r: { en: "Event organizer", ar: "منظم الحدث" }, n: { en: "Horizon", ar: "Horizon" } },
+    { r: { en: "Event organizer", ar: "منظم الحدث" }, n: { en: "Horizon", ar: "Horizon" }, logo: "brand/horizon.png", logoInk: "brand/horizon-ink.png" },
   ],
   editions: [
     { n: "01", w: { en: "Where it began", ar: "البداية" }, p: { en: "Dar El Zokora", ar: "دار الذكورة" }, x: { en: "The first Dar El Zokora conference", ar: "أول مؤتمر لدار الذكورة" } },
@@ -119,6 +119,13 @@ window.DZC = {
   ],
   lounge: ["1-JIx6XkE6PSsfRzDWlAEvA3720pg-AKl", "105md8ZsgKy_LKPgNxyc8YrnnC0HseEYX", "1Gsss4k86a9lhHJQ6wyBCCLSEO9Ym-qpv", "1HQF_sFVK-Xm0dYV4D_fREzKTW4erO02X", "1oGNP7RdAOfT49Ux0QLceBD-sWBVx8FQY", "1Zkcw5CrMniMVnkIhDIWMuyA4IuStFYzD", "1oadJ-hkVXgQPpnoyJF9DfNUN6yTej5Dq"],
   gallery: ["1721", "761", "1385", "2617", "1233", "1585", "2929", "2145", "1745", "1481", "441", "2297", "2185", "1241", "513", "2025"],
+  poster: {
+    src: "media/posters/dzac5-poster.webp", sm: "media/posters/dzac5-poster-sm.webp", file: "media/posters/DZAC5-poster.jpg",
+    kicker: { en: "The official poster", ar: "البوستر الرسمي" },
+    download: { en: "Download the poster", ar: "حمّل البوستر" },
+    organizedBy: { en: "Organized by", ar: "تنظيم" },
+    alt: { en: "DZAC 5 official poster", ar: "البوستر الرسمي لـ DZAC 5" },
+  },
   ui: {
     register: { en: "Register", ar: "سجّل الآن" },
     registerNow: { en: "Register now", ar: "سجّل الآن" },

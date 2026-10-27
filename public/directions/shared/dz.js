@@ -126,6 +126,7 @@
   function players() {
     document.querySelectorAll("[data-play-drive]").forEach((b) => b.onclick = (e) => { e.preventDefault(); lightbox(`<iframe src="https://drive.google.com/file/d/${b.dataset.playDrive}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`, b.dataset.vertical === "1"); });
     document.querySelectorAll("[data-play-file]").forEach((b) => b.onclick = (e) => { e.preventDefault(); lightbox(`<video src="${b.dataset.playFile}" controls autoplay playsinline></video>`); });
+    document.querySelectorAll("[data-poster]").forEach((b) => b.onclick = (e) => { e.preventDefault(); lightbox(`<img src="${M(C.poster.src)}" alt="" style="width:100%;height:auto;max-height:88svh;object-fit:contain;border-radius:12px">`, true); });
     document.querySelectorAll("[data-lang]").forEach((b) => b.onclick = (e) => { e.preventDefault(); setLang(lang === "en" ? "ar" : "en"); });
   }
 
