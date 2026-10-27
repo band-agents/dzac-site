@@ -15,12 +15,12 @@ export const EVENT = {
   name: "DZAC 5",
   full: { en: "Dar El Zokora Annual Conference", ar: "المؤتمر السنوي لدار الذكورة" } as L,
   edition: { en: "5th edition", ar: "النسخة الخامسة" } as L,
-  tagline: { en: "The Future of Men's Health Starts Here", ar: "مستقبل صحة الرجل يبدأ من هنا" } as L,
+  tagline: { en: "Shaping the Future of Men's Health", ar: "نصوغ مستقبل صحة الرجل" } as L,
   date: { en: "14 January 2027", ar: "14 يناير 2027" } as L,
   /** Countdown target. The start time is ours until the program fixes it. */ // TBC
   startsAt: "2027-01-14T09:00:00+02:00",
-  venue: { en: "Triumph Luxury Hotel, Cairo", ar: "فندق تريومف لاكشري، القاهرة" } as L,
-  mapsQuery: "Triumph Luxury Hotel Cairo",
+  venue: { en: "Triumph Luxury Hotel, New Cairo", ar: "فندق تريومف لاكشري، القاهرة الجديدة" } as L,
+  mapsQuery: "Triumph Luxury Hotel New Cairo",
   hashtag: "#DZAC5",
   facebook: "https://www.facebook.com/dzacofficial",
   organizer: { en: "Dar El Zokora Group", ar: "مجموعة دار الذكورة" } as L,
@@ -134,7 +134,7 @@ export const LEADERS = [
 export const ORGANIZERS = [
   { role: { en: "Organized by", ar: "تنظيم" }, name: { en: "Dar El Zokora Group", ar: "مجموعة دار الذكورة" } },
   { role: { en: "Scientific partner", ar: "الشريك العلمي" }, name: { en: "International Society of Man Health and Andrology (ISMHA)", ar: "الجمعية الدولية لصحة الرجل وطب الذكورة (ISMHA)" } },
-  { role: { en: "Event organizer", ar: "منظم الحدث" }, name: { en: "Horizon", ar: "Horizon" } },
+  { role: { en: "Event organizer", ar: "منظم الحدث" }, name: { en: "Horizon", ar: "Horizon" }, logo: "/brand/horizon.png" },
 ];
 
 /** Faculty of earlier editions, as listed on darelzokora.com. Not a DZAC 5 line-up. */
@@ -156,7 +156,7 @@ export const EDITIONS = [
   { n: 2, when: { en: "Alexandria", ar: "الإسكندرية" }, theme: { en: "A multidisciplinary meeting on prosthetic surgery and infertility", ar: "لقاء متعدد التخصصات حول جراحات الدعامات والعقم" }, where: { en: "Live surgery at the Saudi German Hospital", ar: "جراحات حية في المستشفى السعودي الألماني" } },
   { n: 3, when: { en: "19–20 December 2024", ar: "19–20 ديسمبر 2024" }, theme: { en: "Andrology Switch", ar: "Andrology Switch" }, where: { en: "Radisson Blu Alex West, Alexandria", ar: "راديسون بلو أليكس ويست، الإسكندرية" } },
   { n: 4, when: { en: "8–9 January 2026", ar: "8–9 يناير 2026" }, theme: { en: "Empowering the Future of Male Health", ar: "Empowering the Future of Male Health" }, where: { en: "Triumph Luxury Hotel and Alexandria Urology Hospital", ar: "فندق تريومف لاكشري ومستشفى الإسكندرية لجراحة المسالك" } },
-  { n: 5, when: { en: "14 January 2027", ar: "14 يناير 2027" }, theme: { en: "The Future of Men's Health Starts Here", ar: "مستقبل صحة الرجل يبدأ من هنا" }, where: { en: "Triumph Luxury Hotel, Cairo", ar: "فندق تريومف لاكشري، القاهرة" } },
+  { n: 5, when: { en: "14 January 2027", ar: "14 يناير 2027" }, theme: { en: "Shaping the Future of Men's Health", ar: "نصوغ مستقبل صحة الرجل" }, where: { en: "Triumph Luxury Hotel, New Cairo", ar: "فندق تريومف لاكشري، القاهرة الجديدة" } },
 ];
 
 export const REVIEW = {
@@ -311,9 +311,13 @@ export const HOME = {
   passesTitle: { en: "Registration", ar: "التسجيل" },
   partnersTitle: { en: "Partner with DZAC 5", ar: "شارك مع DZAC 5" },
   venueTitle: { en: "The venue", ar: "مكان المؤتمر" },
+  posterKicker: { en: "The official poster", ar: "البوستر الرسمي" },
+  posterAlt: { en: "DZAC 5 official poster: Shaping the Future of Men's Health, 14 January 2027, Triumph Luxury Hotel, New Cairo", ar: "البوستر الرسمي لـ DZAC 5: نصوغ مستقبل صحة الرجل، 14 يناير 2027، فندق تريومف لاكشري، القاهرة الجديدة" },
+  posterDownload: { en: "Download the poster", ar: "حمّل البوستر" },
+  organizedBy: { en: "Organized by", ar: "تنظيم" },
   venueBody: {
-    en: "DZAC returns to the Triumph Luxury Hotel in Cairo, home of DZAC 4's main stage.",
-    ar: "يعود DZAC إلى فندق تريومف لاكشري بالقاهرة، حيث أُقيمت منصة DZAC 4 الرئيسية.",
+    en: "DZAC returns to the Triumph Luxury Hotel in New Cairo, home of DZAC 4's main stage.",
+    ar: "يعود DZAC إلى فندق تريومف لاكشري بالقاهرة الجديدة، حيث أُقيمت منصة DZAC 4 الرئيسية.",
   },
   finalTitle: { en: "Be in the room.", ar: "كن في القاعة." }, // ours
   finalBody: {

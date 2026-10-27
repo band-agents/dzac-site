@@ -418,6 +418,23 @@ html[lang="ar"] .tier h3 { font-style: normal; font-size: 30px; line-height: 1.4
 html[lang="ar"] .ft-col h4 { font-family: var(--text); letter-spacing: 0; font-size: 12.5px; }
 .ft-col a { color: var(--muted); font-weight: 300; }
 .ft-col a:hover { color: var(--text-c); }
+/* Official poster + organizer */
+.poster { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(var(--gap) * 2); align-items: center; max-width: 1120px; margin-inline: auto; }
+.poster-ph button { display: block; width: min(100%, 480px); margin-inline: auto; border-radius: 18px; overflow: hidden; border: 1px solid var(--line2); box-shadow: 0 40px 90px -40px rgba(8, 114, 245, .55); transition: transform .6s var(--ease), box-shadow .6s var(--ease); cursor: zoom-in; }
+.poster-ph button:hover { transform: translateY(-4px); box-shadow: 0 50px 100px -40px rgba(62, 209, 242, .6); }
+.poster-ph img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.poster-tx { display: grid; justify-items: center; gap: var(--stack); text-align: center; }
+.poster-facts { display: grid; gap: 10px; justify-items: center; color: var(--muted); }
+.poster-facts li { display: inline-flex; align-items: center; gap: 10px; }
+.poster-facts svg { color: var(--champagne); }
+.poster-org { display: grid; justify-items: center; gap: 12px; padding-block: 18px; border-block: 1px solid var(--line); width: min(100%, 360px); }
+.poster-org small { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .24em; text-transform: uppercase; }
+html[lang="ar"] .poster-org small { font-family: var(--text); letter-spacing: 0; font-size: 12.5px; }
+.poster-org img { width: 190px; height: auto; }
+.org-logo { width: 150px; height: auto; margin-top: 6px; opacity: .92; }
+.ft-org { display: inline-flex; align-items: center; gap: 12px; margin-top: 8px; }
+.ft-org img { width: 104px; height: auto; opacity: .85; }
+@media (max-width: 900px) { .poster { grid-template-columns: minmax(0, 1fr); } }
 .ft-base { display: grid; justify-items: center; gap: 6px; margin-top: calc(var(--head) / 2); font-size: 13px; color: var(--dim); text-align: center; }
 @media (max-width: 760px) { .ft-grid { grid-template-columns: minmax(0, 1fr); } .ft-col + .ft-col { border-inline-start: 0; border-top: 1px solid var(--line); } }
 

@@ -25,6 +25,6 @@ export const OR_CLIPS = (rtl: boolean): Clip[] => [
 ];
 
 export const STING_TEXT = {
-  en: { tagline: "The Future of Men's Health Starts Here", date: "14 January 2027" },
-  ar: { tagline: "مستقبل صحة الرجل يبدأ من هنا", date: "14 يناير 2027" },
+  en: { tagline: "Shaping the Future of Men's Health", date: "14 January 2027" },
+  ar: { tagline: "نصوغ مستقبل صحة الرجل", date: "14 يناير 2027" },
 };

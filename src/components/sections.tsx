@@ -151,6 +151,42 @@ export function Statement() {
   );
 }
 
+/* ── The official poster, and who runs the day ──────────── */
+
+export function Poster() {
+  const t = useT();
+  const locale = useLocale();
+  const open = useLightbox();
+  const src = asset("/media/posters/dzac5-poster.webp");
+  return (
+    <Section>
+      <div className="poster">
+        <Reveal className="poster-ph">
+          <button type="button" onClick={() => open({ kind: "photos", list: [{ src, alt: t(HOME.posterAlt) }], index: 0 })} aria-label={t(HOME.posterAlt)}>
+            <img src={asset("/media/posters/dzac5-poster-sm.webp")} srcSet={`${asset("/media/posters/dzac5-poster-sm.webp")} 600w, ${src} 1080w`} sizes="(max-width: 900px) 90vw, 520px" alt={t(HOME.posterAlt)} loading="lazy" decoding="async" />
+          </button>
+        </Reveal>
+        <Reveal className="poster-tx">
+          <p className="kicker">{t(HOME.posterKicker)}</p>
+          <h2 className="h2">{t(EVENT.tagline)}</h2>
+          <ul className="poster-facts">
+            <li><CalendarDays size={16} /> {t(EVENT.date)}</li>
+            <li><MapPin size={16} /> {t(EVENT.venue)}</li>
+          </ul>
+          <div className="poster-org">
+            <small>{t(HOME.organizedBy)}</small>
+            <img src={asset("/brand/horizon.png")} alt="Horizon" width={640} height={273} loading="lazy" />
+          </div>
+          <div className="row-c">
+            <Link href={page(locale, "register")} className="btn btn-primary btn-lg">{t(UI.registerNow)} <Fwd /></Link>
+            <a href={asset("/media/posters/DZAC5-poster.jpg")} download className="btn btn-ghost btn-lg">{t(HOME.posterDownload)}</a>
+          </div>
+        </Reveal>
+      </div>
+    </Section>
+  );
+}
+
 /* ── What's new ────────────────────────────────────────── */
 
 export function WhatsNew() {
@@ -288,7 +324,7 @@ export function Faculty({ past = true, head = true }: { past?: boolean; head?: b
       </Rail>
       <Reveal className="grid-3 orgs">
         {ORGANIZERS.map((o, i) => (
-          <div key={i} className="org"><small>{t(o.role)}</small><b>{t(o.name)}</b></div>
+          <div key={i} className="org"><small>{t(o.role)}</small>{o.logo ? <img className="org-logo" src={asset(o.logo)} alt={t(o.name)} loading="lazy" /> : <b>{t(o.name)}</b>}</div>
         ))}
       </Reveal>
       {past && (

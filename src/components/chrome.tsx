@@ -17,7 +17,7 @@ import { CalendarDays, MapPin, Menu, X } from "lucide-react";
 import { EVENT, NAV, UI } from "@/content/site";
 import { useLocale, useT } from "@/lib/locale";
 import { useScrolled } from "@/lib/motion";
-import { page } from "@/lib/paths";
+import { asset, page } from "@/lib/paths";
 import { DzMark, Wordmark } from "./brand";
 
 function useSwitchHref() {
@@ -121,7 +121,8 @@ export function Footer() {
           </div>
         </div>
         <div className="ft-base">
-          <span>{t({ en: "Organized by Dar El Zokora Group · Scientific partner ISMHA · Event organizer Horizon", ar: "تنظيم مجموعة دار الذكورة · الشريك العلمي ISMHA · منظم الحدث Horizon" })}</span>
+          <span>{t({ en: "Organized by Dar El Zokora Group · Scientific partner ISMHA", ar: "تنظيم مجموعة دار الذكورة · الشريك العلمي ISMHA" })}</span>
+          <span className="ft-org">{t({ en: "Event organizer", ar: "منظم الحدث" })} <img src={asset("/brand/horizon.png")} alt="Horizon" width={640} height={273} loading="lazy" /></span>
           <span>© 2026 {t(EVENT.organizer)} · DZAC</span>
         </div>
       </div>
