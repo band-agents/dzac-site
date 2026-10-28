@@ -255,6 +255,11 @@ html[dir="rtl"] .ed b { text-align: end; }
 .final .btn-p:hover { background: var(--navy); color: #fff; }
 .ft { padding-block: 40px 120px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: var(--dim); font-size: 13px; }
 
+/* The poster as a bento tile: phones only, straight after the main tile (the poster section takes its place on larger screens) */
+.b-poster { display: none; }
+.b-poster .bp-img img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.bp-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; }
+
 /* DZAC 5 speakers: portraits with the country flag */
 .spk { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--gap); }
 .spk .fm { min-height: 340px; }
@@ -317,6 +322,8 @@ html[dir="rtl"] .ed b { text-align: end; }
 }
 @media (max-width: 760px) {
   :root { --r: 22px; }
+  .b-poster { display: flex; grid-column: span 2; gap: 0; }
+  #poster { display: none; }
   body { font-size: 15px; }
   .hd { top: 10px; }
   .hd .btn, .mini-cd { display: none; }
@@ -434,6 +441,10 @@ window.render = () => {
           <p class="tag">${t(E.tagline)}</p>
           <div class="row"><a class="btn btn-p" href="${site("register")}">${t(u.registerNow)} <span class="arr">→</span></a><a class="btn btn-g" href="#passes" data-find>${t(u.findPass)}</a></div>
         </div>
+      </div>
+      <div class="t media b-poster" data-r style="--d:1">
+        <a class="bp-img" href="#" data-poster><img src="${M(C.poster.sm)}" width="600" height="750" alt="${esc(t(C.poster.alt))}"></a>
+        <div class="bp-bar"><span class="lbl"><span class="dot"></span>${t(C.poster.kicker)}</span><a class="chip" href="${M(C.poster.file)}" download>${t(C.poster.download)} ↓</a></div>
       </div>
       <div class="t b-cd" data-r style="--d:1">
         <span class="lbl"><span class="dot"></span>${t(u.opensIn)}</span>
