@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<meta name="theme-color" content="#030A1F">
+<title>DZAC 5 · Direction C · Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@200..600&family=Geist+Mono:wght@300..500&family=IBM+Plex+Sans+Arabic:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/dz.css">
+<style>
+/* ═══ C · ATLAS ════════════════════════════════════════════
+   The conference as one calm control surface: glass tiles on a slow blue
+   mesh, everything one tap away. A bento hero that answers when / where /
+   what at a glance, a programme you can filter and search, a pass finder
+   that answers in two taps, and a tab bar on phones. Geist + Geist Mono;
+   IBM Plex Sans Arabic in Arabic. A soft light follows the cursor. */
+:root {
+  --bg: #030A1F; --navy: #061033; --blue: #0656D4; --blue2: #0872F5; --cyan: #3ED1F2; --gold: #DAC79E;
+  --fg: #EEF3FF; --mute: rgba(222, 232, 255, .62); --dim: rgba(222, 232, 255, .4);
+  --glass: rgba(255, 255, 255, .055); --glass2: rgba(255, 255, 255, .09); --edge: rgba(255, 255, 255, .11);
+  --f: "Geist", system-ui, sans-serif; --mono: "Geist Mono", ui-monospace, monospace;
+  --pad: clamp(16px, 3vw, 40px); --gap: clamp(10px, 1vw, 14px); --r: 26px; --ease: cubic-bezier(.2, .8, .2, 1);
+}
+html[lang="ar"] { --f: "IBM Plex Sans Arabic", system-ui, sans-serif; }
+html { overflow-x: clip; background: var(--bg); scroll-behavior: smooth; scroll-padding-top: 96px; }
+body { font-family: var(--f); font-weight: 300; color: var(--fg); background: var(--bg); font-size: 15px; line-height: 1.55; min-height: 100vh; }
+.mono { font-family: var(--mono); font-feature-settings: "zero" 0; }
+html[lang="ar"] .mono:not([dir="ltr"]) { font-family: var(--f); }
+
+/* Mesh: four soft lights drifting behind everything */
+.mesh { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.mesh i { position: absolute; border-radius: 50%; opacity: .55; animation: drift 26s ease-in-out infinite alternate; }
+.mesh i:nth-child(1) { width: 60vmax; height: 60vmax; left: -20vmax; top: -20vmax; background: radial-gradient(circle, #0656D4, transparent 65%); }
+.mesh i:nth-child(2) { width: 50vmax; height: 50vmax; right: 0; top: 10vmax; background: radial-gradient(circle, #0A2A7A, transparent 65%); animation-duration: 32s; animation-delay: -8s; }
+.mesh i:nth-child(3) { width: 40vmax; height: 40vmax; left: 30vmax; bottom: 0; background: radial-gradient(circle, rgba(62, 209, 242, .55), transparent 65%); animation-duration: 38s; animation-delay: -14s; }
+.mesh i:nth-child(4) { width: 36vmax; height: 36vmax; right: 10vmax; bottom: 10vmax; background: radial-gradient(circle, rgba(218, 199, 158, .25), transparent 65%); animation-duration: 30s; }
+@keyframes drift { to { translate: 8vmax -6vmax; scale: 1.15; } }
+.grain { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .07; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+.wrap { max-width: 1480px; margin-inline: auto; padding-inline: var(--pad); }
+.lbl { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); display: inline-flex; align-items: center; gap: 8px; }
+html[lang="ar"] .lbl { font-family: var(--f); letter-spacing: 0; font-size: 13px; }
+.lbl .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+.lbl .live { background: #FF4D5E; box-shadow: 0 0 12px #FF4D5E; animation: blink 1.4s infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.h { font-weight: 300; font-size: clamp(32px, 4vw, 60px); line-height: 1.02; letter-spacing: -.035em; }
+html[lang="ar"] .h { letter-spacing: 0; line-height: 1.3; }
+.h b { font-weight: 500; background: linear-gradient(90deg, #fff, var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sub { color: var(--mute); max-width: 56ch; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding-inline: 22px; border-radius: 999px; font-weight: 500; font-size: 14px; white-space: nowrap; transition: background-color .3s, color .3s, transform .3s var(--ease), box-shadow .3s; }
+.btn:active { transform: scale(.97); }
+.btn-p { background: #fff; color: var(--navy); }
+.btn-p:hover { background: var(--cyan); box-shadow: 0 10px 40px -10px rgba(62, 209, 242, .7); }
+.btn-g { background: var(--glass2); border: 1px solid var(--edge); backdrop-filter: blur(10px); }
+.btn-g:hover { background: rgba(255, 255, 255, .16); }
+.arr { display: inline-block; transition: translate .3s var(--ease); }
+[dir="rtl"] .arr { scale: -1 1; }
+a:hover .arr, button:hover .arr { translate: 4px 0; }
+[dir="rtl"] a:hover .arr { translate: -4px 0; }
+
+/* Glass tile + cursor spotlight */
+.t { position: relative; border-radius: var(--r); background: var(--glass); border: 1px solid var(--edge); backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4); overflow: hidden; isolation: isolate; padding: clamp(18px, 1.8vw, 26px); display: flex; flex-direction: column; gap: 12px; transition: border-color .4s, transform .5s var(--ease); }
+.t::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .4s; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(62, 209, 242, .16), transparent 60%); }
+.t:hover::before { opacity: 1; }
+.t:hover { border-color: rgba(62, 209, 242, .35); }
+.t.media { padding: 0; }
+.t.media > .vw, .t.media > img { position: absolute; inset: 0; z-index: -2; }
+.t.media > img { width: 100%; height: 100%; object-fit: cover; }
+.t .sh { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(3, 10, 31, .1) 30%, rgba(3, 10, 31, .85)); }
+.t .in { position: relative; height: 100%; padding: clamp(18px, 1.8vw, 26px); display: flex; flex-direction: column; gap: 10px; }
+.t .grow { flex: 1; }
+a.t:hover { transform: translateY(-3px); }
+
+/* Header */
+.hd { position: fixed; z-index: 70; top: 14px; inset-inline: 0; }
+.hd-in { display: flex; align-items: center; gap: 10px; height: 58px; padding-inline: 10px 8px; border-radius: 999px; background: rgba(6, 16, 51, .5); border: 1px solid var(--edge); backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4); }
+html[dir="rtl"] .hd-in { padding-inline: 10px 8px; }
+.logo { display: flex; align-items: center; gap: 10px; padding-inline: 10px; font-weight: 500; letter-spacing: -.02em; font-size: 18px; direction: ltr; }
+.logo i { width: 28px; height: 28px; border-radius: 9px; background: linear-gradient(135deg, var(--blue2), var(--cyan)); display: grid; place-items: center; font-style: normal; font-size: 15px; color: #fff; font-weight: 600; }
+.nav { display: flex; gap: 2px; margin-inline: auto; }
+.nav a { height: 40px; padding-inline: 14px; display: grid; place-items: center; border-radius: 999px; font-size: 14px; color: var(--mute); transition: background-color .3s, color .3s; }
+.nav a:hover, .nav a.on { background: var(--glass2); color: var(--fg); }
+.hd .btn { height: 42px; }
+.lang { height: 42px; min-width: 50px; padding-inline: 12px; border-radius: 999px; display: grid; place-items: center; font-size: 13px; border: 1px solid var(--edge); }
+.mini-cd { font-family: var(--mono); font-size: 12px; color: var(--mute); padding-inline: 10px; direction: ltr; }
+.mini-cd b { color: var(--cyan); font-weight: 400; }
+
+/* Hero bento */
+.hero { padding-top: 92px; }
+.bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: minmax(120px, auto); gap: var(--gap); }
+.b-main { grid-column: span 8; grid-row: span 4; min-height: 600px; }
+.b-main .in { justify-content: flex-end; gap: 16px; }
+.b-main h1 { font-weight: 200; font-size: clamp(76px, 10.5vw, 176px); line-height: .82; letter-spacing: -.06em; direction: ltr; text-align: start; }
+html[dir="rtl"] .b-main h1 { text-align: end; }
+.b-main h1 span { font-weight: 500; background: linear-gradient(160deg, #fff 20%, var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.b-main .tag { font-size: clamp(20px, 1.8vw, 28px); font-weight: 300; letter-spacing: -.02em; max-width: 22ch; line-height: 1.2; }
+.b-main .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.b-main .top { position: absolute; top: clamp(18px, 1.8vw, 26px); inset-inline: clamp(18px, 1.8vw, 26px); display: flex; justify-content: space-between; }
+.chip { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding-inline: 12px; border-radius: 999px; background: rgba(3, 10, 31, .45); border: 1px solid var(--edge); backdrop-filter: blur(10px); font-size: 12px; }
+.b-cd { grid-column: span 4; grid-row: span 2; }
+.cd { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; direction: ltr; margin-top: auto; }
+.cd div { border-radius: 16px; background: rgba(255, 255, 255, .05); border: 1px solid var(--edge); padding: 14px 6px 10px; text-align: center; }
+.cd b { display: block; font-family: var(--mono); font-weight: 300; font-size: clamp(30px, 2.8vw, 46px); line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.cd small { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: .1em; }
+html[lang="ar"] .cd small { letter-spacing: 0; font-size: 12px; }
+.bar { height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+.bar i { display: block; height: 100%; width: var(--w, 50%); background: linear-gradient(90deg, var(--blue2), var(--cyan)); border-radius: inherit; }
+.b-when { grid-column: span 4; grid-row: span 2; }
+.when-d { font-size: clamp(30px, 2.6vw, 42px); font-weight: 300; letter-spacing: -.03em; line-height: 1.05; }
+.b-mc { grid-column: span 3; grid-row: span 2; min-height: 290px; }
+.b-mc b.n { font-family: var(--mono); font-weight: 200; font-size: 88px; line-height: .85; letter-spacing: -.06em; }
+.b-lounge { grid-column: span 3; grid-row: span 2; }
+.b-facts { grid-column: span 6; grid-row: span 2; }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); height: 100%; }
+.facts div { border-radius: 18px; background: rgba(255, 255, 255, .04); border: 1px solid var(--edge); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
+.facts b { font-family: var(--mono); font-weight: 200; font-size: clamp(40px, 3.6vw, 60px); line-height: .9; letter-spacing: -.05em; }
+.facts span { font-size: 13px; color: var(--mute); }
+.play { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .16); backdrop-filter: blur(10px); border: 1px solid var(--edge); font-size: 12px; transition: background-color .3s, scale .3s var(--ease); }
+a:hover .play { background: #fff; color: var(--navy); scale: 1.08; }
+
+/* Sections */
+.s { padding-block: clamp(70px, 9vw, 130px) 0; }
+.s-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(22px, 2.6vw, 36px); }
+.s-head > div { display: grid; gap: 12px; }
+
+/* Programme explorer */
+.tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: var(--gap); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+.chips button { height: 38px; padding-inline: 14px; border-radius: 999px; background: var(--glass); border: 1px solid var(--edge); font-size: 13px; color: var(--mute); transition: background-color .3s, color .3s, border-color .3s; white-space: nowrap; }
+.chips button:hover { color: var(--fg); }
+.chips button.on { background: #fff; color: var(--navy); border-color: #fff; }
+.chips button small { font-family: var(--mono); opacity: .6; margin-inline-start: 6px; }
+.search { position: relative; width: min(320px, 100%); }
+.search input { width: 100%; height: 42px; border-radius: 999px; border: 1px solid var(--edge); background: rgba(3, 10, 31, .45); color: var(--fg); font: inherit; font-size: 14px; padding-inline: 40px 16px; outline: none; transition: border-color .3s, box-shadow .3s; }
+.search input:focus { border-color: var(--cyan); box-shadow: 0 0 0 4px rgba(62, 209, 242, .15); }
+.search svg { position: absolute; inset-inline-start: 14px; top: 50%; translate: 0 -50%; opacity: .6; }
+.prog { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: var(--gap); }
+.trk { min-height: 420px; position: sticky; top: 96px; align-self: start; }
+.trk h3 { font-weight: 300; font-size: clamp(26px, 2.4vw, 36px); line-height: 1.1; letter-spacing: -.02em; }
+.ses { display: grid; gap: var(--gap); align-content: start; }
+.se { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 18px; align-items: start; }
+.se .no { font-family: var(--mono); font-size: 13px; color: var(--cyan); padding-top: 3px; direction: ltr; }
+.se h4 { font-weight: 400; font-size: 17px; line-height: 1.4; letter-spacing: -.01em; }
+.se p { font-size: 13px; color: var(--mute); margin-top: 6px; }
+.se .tg { font-size: 11px; padding: 5px 10px; border-radius: 999px; background: rgba(62, 209, 242, .1); color: var(--cyan); white-space: nowrap; font-family: var(--mono); }
+html[lang="ar"] .se .tg { font-family: var(--f); }
+.se mark { background: rgba(62, 209, 242, .3); color: #fff; border-radius: 3px; }
+.empty { text-align: center; color: var(--mute); padding: 40px; }
+.beyond { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--gap); margin-top: var(--gap); }
+.beyond .t { min-height: 150px; justify-content: space-between; }
+.beyond strong { font-weight: 400; font-size: 20px; letter-spacing: -.02em; }
+.beyond span { font-size: 13px; color: var(--mute); }
+
+/* Masterclass */
+.mc { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--gap); }
+.mc-v { min-height: 560px; }
+.mc-v .in { justify-content: space-between; }
+.mc-d { gap: 18px; }
+.mc-d h3 { font-weight: 300; font-size: clamp(30px, 3vw, 46px); line-height: 1.05; letter-spacing: -.03em; }
+.mc-d li { display: flex; gap: 12px; padding-block: 12px; border-top: 1px solid var(--edge); font-size: 15px; }
+.mc-d li::before { content: ""; flex: 0 0 18px; height: 18px; border-radius: 6px; margin-top: 2px; background: rgba(62, 209, 242, .15) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5 9.5l2.5 2.5L13 6.5' fill='none' stroke='%233ED1F2' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.fee { display: flex; justify-content: space-between; align-items: end; gap: 12px; padding: 18px; border-radius: 18px; background: rgba(255, 255, 255, .05); border: 1px solid var(--edge); margin-top: auto; }
+.fee b { font-family: var(--mono); font-weight: 300; font-size: 38px; letter-spacing: -.04em; line-height: 1; }
+.seats { display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 3px; }
+.seats i { aspect-ratio: 1; border-radius: 3px; background: rgba(62, 209, 242, .18); }
+.seats i.f { background: var(--cyan); box-shadow: 0 0 8px rgba(62, 209, 242, .6); }
+
+/* Pass finder */
+.finder { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: var(--gap); }
+.finder .chips { min-width: 0; max-width: 100%; }
+.finder > span { color: var(--mute); font-size: 14px; margin-inline-end: 6px; }
+.passes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
+.ps { min-height: 400px; gap: 16px; transition: border-color .4s, transform .5s var(--ease), opacity .4s, box-shadow .4s; }
+.ps h3 { font-weight: 300; font-size: 30px; letter-spacing: -.03em; }
+.ps .pr { font-family: var(--mono); font-size: 13px; color: var(--cyan); }
+.ps li { display: flex; gap: 10px; font-size: 14px; padding-block: 8px; border-top: 1px solid var(--edge); }
+.ps li::before { content: "→"; color: var(--dim); font-family: var(--mono); }
+[dir="rtl"] .ps li::before { content: "←"; }
+.ps .btn { margin-top: auto; }
+.ps.best { background: linear-gradient(160deg, rgba(8, 114, 245, .45), rgba(6, 16, 51, .4)); border-color: rgba(62, 209, 242, .4); }
+.ps .badge { position: absolute; top: 18px; inset-inline-end: 18px; font-size: 11px; padding: 5px 10px; border-radius: 999px; background: #fff; color: var(--navy); font-weight: 500; }
+.passes.pick .ps { opacity: .4; }
+.passes.pick .ps.match { opacity: 1; transform: translateY(-6px); border-color: var(--cyan); box-shadow: 0 30px 80px -30px rgba(62, 209, 242, .5); }
+
+/* Faculty */
+.pst { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--gap); }
+.pst-ph { padding: 0; min-height: 0; cursor: zoom-in; }
+.pst-ph img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 5; transition: scale 1s var(--ease); }
+.pst-ph:hover img { scale: 1.03; }
+.pst-tx { justify-content: center; gap: 18px; padding: clamp(24px, 3vw, 48px); }
+.pst-tx h2 { font-weight: 300; font-size: clamp(34px, 4vw, 62px); line-height: 1.02; letter-spacing: -.035em; }
+html[lang="ar"] .pst-tx h2 { letter-spacing: 0; line-height: 1.3; }
+.pst-facts { display: flex; flex-wrap: wrap; gap: 8px; }
+.pst-org { display: flex; align-items: center; gap: 18px; padding: 16px 18px; border-radius: 18px; background: rgba(255, 255, 255, .05); border: 1px solid var(--edge); }
+.pst-org img { width: 170px; height: auto; }
+.pst-tx .row { display: flex; flex-wrap: wrap; gap: 10px; }
+.org-logo { width: 130px; height: auto; margin-top: 4px; }
+.ft-org { display: inline-flex; align-items: center; gap: 10px; }
+.ft-org img { width: 90px; height: auto; opacity: .8; }
+@media (max-width: 900px) { .pst { grid-template-columns: minmax(0, 1fr); } .pst-org { flex-direction: column; align-items: flex-start; } }
+.fac { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
+.fm { min-height: 380px; }
+.fm .in { justify-content: flex-end; }
+.fm img { filter: saturate(.7) contrast(1.05); transition: scale 1s var(--ease), filter .6s; }
+.fm:hover img { scale: 1.05; filter: none; }
+.fm .ini { position: absolute; inset: 0; z-index: -2; display: grid; place-items: center; font-weight: 200; font-size: 96px; letter-spacing: -.06em; color: rgba(62, 209, 242, .35); background: radial-gradient(circle at 50% 35%, rgba(8, 114, 245, .35), transparent 70%); }
+.fm strong { font-weight: 400; font-size: 18px; line-height: 1.25; }
+.fm small { font-size: 12px; color: var(--cyan); }
+.marq { overflow: hidden; margin-top: var(--gap); border-radius: 999px; border: 1px solid var(--edge); background: var(--glass); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.marq div { display: flex; gap: 40px; width: max-content; padding-block: 14px; animation: mq 40s linear infinite; direction: ltr; }
+.marq span { font-size: 15px; color: var(--mute); white-space: nowrap; }
+.marq span::before { content: "✦"; color: var(--cyan); margin-inline-end: 40px; font-size: 10px; }
+@keyframes mq { to { translate: -50% 0; } }
+
+/* Watch */
+.watch { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: 200px; gap: var(--gap); }
+.w-1 { grid-column: span 6; grid-row: span 2; }
+.w-2, .w-3 { grid-column: span 3; grid-row: span 2; }
+.w-4 { grid-column: span 6; grid-row: span 1; }
+.w-l { grid-column: span 2; grid-row: span 2; }
+.watch .in { justify-content: space-between; }
+.watch strong { font-weight: 400; font-size: 18px; letter-spacing: -.01em; line-height: 1.25; }
+.watch .w-l strong { font-size: 13px; }
+
+/* Editions */
+.eds { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--gap); position: relative; }
+.ed { min-height: 220px; }
+.ed b { font-family: var(--mono); font-weight: 200; font-size: 54px; letter-spacing: -.06em; line-height: .9; direction: ltr; text-align: start; }
+html[dir="rtl"] .ed b { text-align: end; }
+.ed strong { font-weight: 400; font-size: 15px; }
+.ed span { font-size: 13px; color: var(--mute); }
+.ed.now { background: linear-gradient(160deg, rgba(8, 114, 245, .5), rgba(6, 16, 51, .4)); border-color: rgba(62, 209, 242, .45); }
+
+/* Partners + venue */
+.pv { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+.pv-o { grid-column: span 5; }
+.pv-o li { display: grid; gap: 2px; padding-block: 14px; border-top: 1px solid var(--edge); }
+.pv-o li small { font-size: 12px; color: var(--cyan); }
+.pv-o li span { font-size: 17px; font-weight: 400; }
+.pv-t { grid-column: span 7; }
+.tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); flex: 1; }
+.tiers div { border-radius: 18px; padding: 16px; border: 1px solid var(--edge); background: rgba(255, 255, 255, .04); display: flex; flex-direction: column; gap: 10px; }
+.tiers strong { font-weight: 400; font-size: 20px; }
+.tiers div:first-child strong { color: var(--gold); }
+.tiers span { font-size: 13px; color: var(--mute); }
+.pv-v { grid-column: span 12; min-height: 460px; }
+.pv-v .in { justify-content: flex-end; }
+.pv-v h3 { font-weight: 300; font-size: clamp(36px, 4.4vw, 66px); letter-spacing: -.04em; line-height: 1; }
+.final { margin-top: var(--gap); display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; background: linear-gradient(120deg, #0656D4, #0872F5 50%, #3ED1F2); border: 0; }
+.final h3 { font-weight: 300; font-size: clamp(26px, 2.8vw, 42px); letter-spacing: -.03em; line-height: 1.1; max-width: 22ch; }
+.final .btn-p:hover { background: var(--navy); color: #fff; }
+.ft { padding-block: 40px 120px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: var(--dim); font-size: 13px; }
+
+/* The poster as a bento tile: phones only, straight after the main tile (the poster section takes its place on larger screens) */
+.b-poster { display: none; }
+.b-poster .bp-img img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.bp-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; }
+
+/* DZAC 5 speakers: portraits with the country flag */
+.spk { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--gap); }
+.spk .fm { min-height: 340px; }
+.flag { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--fg); }
+.flag img { width: 24px; height: 16px; border-radius: 3px; object-fit: cover; box-shadow: 0 0 0 1px rgba(255, 255, 255, .3); }
+.fac-h { margin-block: clamp(30px, 3.4vw, 46px) 14px; }
+
+/* Sponsors: full-colour logos on white plates, scrolling */
+.spons { overflow: hidden; border-radius: var(--r); border: 1px solid var(--edge); background: var(--glass); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.spons > div { display: flex; gap: 16px; width: max-content; padding: 18px 8px; animation: mq 46s linear infinite; direction: ltr; }
+.spons span { flex: none; display: grid; place-items: center; width: 230px; height: 96px; border-radius: 18px; background: #fff; padding: 20px 30px; }
+.spons img { max-width: 100%; max-height: 46px; width: auto; height: auto; }
+.spons:hover > div { animation-play-state: paused; }
+
+/* DZAC 2 in pictures */
+.gal-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-block: clamp(30px, 3.4vw, 46px) 14px; }
+.gal { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(240px, 23%); gap: var(--gap); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px; }
+.gal::-webkit-scrollbar { display: none; }
+.gal .t { aspect-ratio: 4 / 3; cursor: zoom-in; scroll-snap-align: start; }
+.gal .t img { transition: scale 1s var(--ease); }
+.gal .t:hover img { scale: 1.05; }
+.ed .chip { align-self: flex-start; }
+
+/* Masterclass: the cover, its two parts, and an early-bird line in place of the fee */
+.mc-cover { cursor: zoom-in; }
+.mc-cover img { object-position: 50% 0; transition: scale 1s var(--ease); }
+.mc-cover:hover img { scale: 1.02; }
+.parts { display: grid; gap: 10px; }
+.parts div { border-radius: 16px; padding: 14px 16px; border: 1px solid var(--edge); background: rgba(255, 255, 255, .04); }
+.parts strong { display: block; font-weight: 500; font-size: 15px; color: var(--cyan); }
+.parts span { font-size: 14px; color: var(--fg); }
+.fee.early b { font-family: var(--f); font-weight: 400; font-size: clamp(22px, 2vw, 28px); letter-spacing: -.02em; }
+.ps .pr s { color: var(--dim); margin-inline: 6px; }
+
+/* ISOA, which founded the conference */
+.isoa { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
+.isoa img { width: 46px; height: auto; flex: none; }
+.isoa b { display: block; font-weight: 500; font-size: 17px; }
+.isoa em { display: block; font-style: normal; font-size: 13px; color: var(--mute); }
+.pst-org { flex-wrap: wrap; }
+.pst-org .isoa { margin-top: 0; }
+
+/* Tab bar (phones) */
+.tabbar { display: none; }
+
+@media (max-width: 1100px) {
+  .nav { display: none; }
+  .hd-in { justify-content: space-between; }
+  .b-main { grid-column: span 12; min-height: 560px; }
+  .b-cd, .b-when { grid-column: span 6; }
+  .b-mc, .b-lounge { grid-column: span 3; }
+  .b-facts { grid-column: span 6; }
+  .prog { grid-template-columns: minmax(0, 1fr); }
+  .trk { position: relative; top: 0; min-height: 260px; }
+  .beyond { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .mc { grid-template-columns: minmax(0, 1fr); }
+  .fac { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .spk { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pv-o, .pv-t { grid-column: span 12; }
+}
+@media (max-width: 760px) {
+  :root { --r: 22px; }
+  .b-poster { display: flex; grid-column: span 2; gap: 0; }
+  #poster { display: none; }
+  body { font-size: 15px; }
+  .hd { top: 10px; }
+  .hd .btn, .mini-cd { display: none; }
+  .hd-in { height: 52px; }
+  .hero { padding-top: 76px; }
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: auto; }
+  .b-main { grid-column: span 2; min-height: 72svh; }
+  .b-main h1 { font-size: 27vw; }
+  .b-cd, .b-when, .b-facts { grid-column: span 2; }
+  .b-mc, .b-lounge { grid-column: span 1; min-height: 280px; }
+  .b-mc b.n { font-size: 64px; }
+  .b-main .row .btn { flex: 1; }
+  .tools { flex-direction: column; align-items: stretch; }
+  .search { width: 100%; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); }
+  .chips::-webkit-scrollbar { display: none; }
+  .se { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .se .tg { justify-self: start; }
+  .beyond, .passes, .fac, .spk, .eds, .tiers { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); scroll-padding-inline: var(--pad); }
+  .beyond::-webkit-scrollbar, .passes::-webkit-scrollbar, .fac::-webkit-scrollbar, .spk::-webkit-scrollbar, .eds::-webkit-scrollbar, .tiers::-webkit-scrollbar { display: none; }
+  .beyond > *, .passes > *, .fac > *, .spk > *, .eds > * { flex: 0 0 78%; scroll-snap-align: start; }
+  .gal { grid-auto-columns: 74%; margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); scroll-padding-inline: var(--pad); }
+  .spons span { width: 170px; height: 78px; padding: 16px 22px; }
+  .beyond > * { flex-basis: 58%; }
+  .tiers { margin-inline: 0; padding-inline: 0; }
+  .tiers > * { flex: 0 0 80%; scroll-snap-align: start; }
+  [data-dots] { display: flex; color: var(--cyan); }
+  .mc-v { min-height: 62svh; }
+  .watch { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 180px; }
+  .w-1, .w-4 { grid-column: span 2; }
+  .w-2, .w-3 { grid-column: span 1; }
+  .w-l { grid-column: span 1; grid-row: span 2; }
+  .pv-v { min-height: 360px; }
+  .final .btn { width: 100%; }
+  .tabbar { display: flex; position: fixed; z-index: 80; bottom: max(12px, env(safe-area-inset-bottom)); inset-inline: 12px; height: 64px; padding: 6px; border-radius: 22px; background: rgba(6, 16, 51, .7); border: 1px solid var(--edge); backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4); gap: 4px; }
+  .tabbar a { flex: 1; display: grid; place-items: center; align-content: center; gap: 3px; border-radius: 16px; font-size: 10.5px; color: var(--mute); transition: background-color .3s, color .3s; }
+  html[lang="ar"] .tabbar a { font-size: 11.5px; }
+  .tabbar a svg { width: 20px; height: 20px; }
+  .tabbar a.on { color: var(--fg); background: var(--glass2); }
+  .tabbar a.reg { background: #fff; color: var(--navy); font-weight: 500; flex: 1.2; }
+}
+@media (prefers-reduced-motion: reduce) { .mesh i, .marq div { animation: none; } }
+</style>
+</head>
+<body>
+<div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+<header class="hd"><div class="wrap"><div class="hd-in" id="hd"></div></div></header>
+<main id="app"></main>
+<nav class="tabbar" id="tabbar"></nav>
+<script src="../shared/content.js"></script>
+<script src="../shared/dz.js"></script>
+<script>
+const { C, t, esc, M, D, photo, site, vid } = DZ;
+const L = (en, ar) => t({ en, ar });
+const I = {
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>',
+  prog: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h7"/></svg>',
+  mc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  pass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2"/></svg>',
+  reg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  search: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+};
+let track = 0, q = "", pick = "", gal = DZC.galleries.length - 1;
+const face = (p) => p.src ? `<img src="${D(p.src)}" alt="${esc(t(p.n))}" loading="lazy" style="object-position:50% 18%">`
+  : p.img ? `<img src="${photo(p.img)}" alt="${esc(t(p.n))}" loading="lazy" style="object-position:50% 20%">`
+  : `<span class="ini">${p.n.en.replace(/^(Prof\. Dr\.|Prof\.|Dr\.)\s*/, "").split(/\s+/).slice(0, 2).map((w) => w[0]).join("")}</span>`;
+const isoa = (o) => `<span class="isoa"><img src="${D(o.mark)}" alt=""><span><b>${o.short}</b><em>${t(o.n).replace(/^ISOA · /, "")}</em></span></span>`;
+
+function sessions() {
+  const out = [];
+  C.tracks.forEach((tr, i) => tr.s.forEach(([s, sp], j) => out.push({ i, j, tr, s, sp })));
+  return out;
+}
+/* Past editions in pictures: one tab per edition */
+function renderGal() {
+  const g = C.galleries[gal], e = C.editions.find((x) => x.n === g.n);
+  const items = g.src ? g.src.map((p) => [D(p), D(p)]) : g.ids.map((id) => [photo(id), photo(id, "lg")]);
+  document.getElementById("gal").innerHTML = items.map(([sm, lg]) => `<a class="t media" href="#" data-img="${lg}"><img src="${sm}" alt="DZAC ${+g.n}" loading="lazy"></a>`).join("");
+  document.getElementById("galcap").textContent = `${t(e.w)} · ${t(e.p)}`;
+  document.querySelectorAll("#galtabs button").forEach((b) => b.classList.toggle("on", +b.dataset.g === gal));
+  document.getElementById("gal").scrollTo({ left: 0 });
+}
+function hl(s) { const e = esc(s); if (!q) return e; const re = new RegExp("(" + q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig"); return e.replace(re, "<mark>$1</mark>"); }
+function renderProg() {
+  const u = C.ui, all = sessions();
+  // The organizers' order: Prof. Ghattas, then Prof. Antonini, then everyone else in programme order.
+  const rank = (sp) => (/Gh?attas/i.test(sp) ? 0 : /Antonini/i.test(sp) ? 1 : 2);
+  const list = all.filter((x) => (track < 0 || x.i === track) && (!q || (x.s + " " + x.sp + " " + t(x.tr.t)).toLowerCase().includes(q.toLowerCase())))
+    .sort((a, b) => rank(a.sp) - rank(b.sp) || a.i - b.i || a.j - b.j);
+  const tr = track < 0 ? null : C.tracks[track];
+  document.getElementById("chips").innerHTML = `<button type="button" data-k="-1" class="${track < 0 ? "on" : ""}">${L("All tracks", "كل المحاور")}<small>${all.length}</small></button>` +
+    C.tracks.map((x, i) => `<button type="button" data-k="${i}" class="${track === i ? "on" : ""}">${t(x.t)}</button>`).join("");
+  document.getElementById("trk").innerHTML = tr
+    ? `<img src="${tr.src ? D(tr.src) : photo(tr.img, "lg")}" alt="${tr.who ? esc(t(tr.who)) : ""}" loading="lazy"${tr.src ? ' style="object-position:50% 18%"' : ""}><div class="sh"></div><div class="in"><span class="lbl"><span class="dot"></span>${L("Track", "المحور")} <span class="mono" dir="ltr">${tr.n}</span></span><div class="grow"></div><h3>${t(tr.t)}</h3><p class="sub" style="font-size:13px">${tr.who ? `<strong style="color:var(--fg);font-weight:400">${t(tr.who)}</strong> · ` : ""}${t(u.talks)}</p></div>`
+    : `<img src="${photo("1721", "lg")}" alt="" loading="lazy"><div class="sh"></div><div class="in"><span class="lbl"><span class="dot"></span>${L("One day · one stage", "يوم واحد · منصة واحدة")}</span><div class="grow"></div><h3>${L("Six tracks, eighteen talks", "ستة محاور، ثماني عشرة محاضرة")}</h3><p class="sub" style="font-size:13px">${L("Pick a track or search a topic or a speaker.", "اختر محورًا أو ابحث عن موضوع أو محاضر.")}</p></div>`;
+  document.getElementById("ses").innerHTML = list.length
+    ? list.map((x) => `<article class="t se" data-r><span class="no">${x.tr.n}.${x.j + 1}</span><div><h4 dir="ltr" style="text-align:start">${hl(x.s)}</h4><p dir="ltr" style="text-align:start">${x.sp ? hl(x.sp) : t(u.tbc)}</p></div>${track < 0 ? `<span class="tg">${t(x.tr.t)}</span>` : ""}</article>`).join("")
+    : `<div class="t empty">${L("Nothing matches that yet. Try another word.", "لا نتائج. جرّب كلمة أخرى.")}</div>`;
+  document.querySelectorAll("#chips button").forEach((b) => b.onclick = () => { track = +b.dataset.k; renderProg(); });
+  document.querySelectorAll("#ses [data-r]").forEach((el) => el.classList.add("in"));
+}
+
+window.render = () => {
+  const u = C.ui, E = C.event;
+  const narrow = matchMedia("(max-width: 760px)").matches;
+  document.getElementById("hd").innerHTML = `<a class="logo" href="#top"><i>5</i>DZAC</a>
+    <nav class="nav">${[["programme", u.programme], ["masterclass", u.masterclass], ["passes", u.passes], ["faculty", u.faculty], ["watch", u.films], ["venue", u.venue]].map(([id, l]) => `<a href="#${id}">${t(l)}</a>`).join("")}</nav>
+    <span class="mini-cd"><b data-u="d">–</b>d <b data-u="h">–</b>h <b data-u="m">–</b>m</span>
+    <a href="#" class="lang" data-lang>${t(u.lang)}</a><a class="btn btn-p" href="${site("register")}">${t(u.register)} <span class="arr">→</span></a>`;
+  document.getElementById("tabbar").innerHTML = [["top", I.home, L("Home", "الرئيسية")], ["programme", I.prog, t(u.programme)], ["masterclass", I.mc, t(u.masterclass)], ["passes", I.pass, t(u.passes)]]
+    .map(([id, ic, l]) => `<a href="#${id}" data-tab="${id}">${ic}<span>${l}</span></a>`).join("") + `<a class="reg" href="${site("register")}">${I.reg}<span>${t(u.register)}</span></a>`;
+  const daysLeft = Math.max(0, Math.ceil((new Date(E.startsAt) - Date.now()) / 864e5));
+  const passed = Math.min(100, Math.max(4, 100 - (daysLeft / 365) * 100));
+
+  document.getElementById("app").innerHTML = `
+  <section class="hero wrap" id="top">
+    <div class="bento">
+      <div class="t media b-main" data-r>
+        <div class="vw">${narrow ? vid(D("montage-v.mp4"), D("montage-v.webp")) : vid(D("montage-h.mp4"), D("montage-h.webp"))}</div><div class="sh" style="background:linear-gradient(180deg,rgba(3,10,31,.35),rgba(3,10,31,.05) 35%,rgba(3,10,31,.9))"></div>
+        <div class="top"><span class="chip"><span class="lbl" style="color:inherit"><span class="dot"></span>${t(E.edition)}</span></span><a class="chip" href="#" data-play-drive="${C.films[0].drive}">▶ ${t(u.watch)}</a></div>
+        <div class="in">
+          <h1>DZAC<span>5</span></h1>
+          <p class="tag">${t(E.tagline)}</p>
+          <div class="row"><a class="btn btn-p" href="${site("register")}">${t(u.registerNow)} <span class="arr">→</span></a><a class="btn btn-g" href="#passes" data-find>${t(u.findPass)}</a></div>
+        </div>
+      </div>
+      <div class="t media b-poster" data-r style="--d:1">
+        <a class="bp-img" href="#" data-poster><img src="${M(C.poster.sm)}" width="600" height="750" alt="${esc(t(C.poster.alt))}"></a>
+        <div class="bp-bar"><span class="lbl"><span class="dot"></span>${t(C.poster.kicker)}</span><a class="chip" href="${M(C.poster.file)}" download>${t(C.poster.download)} ↓</a></div>
+      </div>
+      <div class="t b-cd" data-r style="--d:1">
+        <span class="lbl"><span class="dot"></span>${t(u.opensIn)}</span>
+        <div class="cd">${[["d", u.days], ["h", u.hrs], ["m", u.min], ["s", u.sec]].map(([k, l]) => `<div><b data-u="${k}">–</b><small>${t(l)}</small></div>`).join("")}</div>
+        <div class="bar" style="--w:${passed.toFixed(1)}%"><i></i></div>
+        <span class="lbl" style="justify-content:space-between;display:flex"><span>${L("Countdown to", "العد التنازلي حتى")} 09:00</span><span class="mono" dir="ltr">14.01.27</span></span>
+      </div>
+      <a class="t media b-when" href="${E.maps}" target="_blank" rel="noreferrer" data-r style="--d:2">
+        <div class="vw">${vid(M("media/loops/venue.mp4"), M("media/loops/venue.webp"))}</div><div class="sh"></div>
+        <div class="in"><span class="lbl" style="color:#fff"><span class="dot"></span>${L("When · where", "متى · أين")}</span><div class="grow"></div>
+          <p class="when-d">${t(E.date)}</p><p style="color:var(--mute)">${t(E.venue)} <span class="arr">↗</span></p></div>
+      </a>
+      <a class="t media b-mc" href="#masterclass" data-r style="--d:3">
+        <div class="vw">${vid(D("v-m2-or.mp4"), D("v-m2-or.webp"))}</div><div class="sh"></div>
+        <div class="in"><span class="lbl" style="color:#fff"><span class="dot live"></span>LIVE · OR</span><div class="grow"></div>
+          <b class="n" data-count="20">20</b><span style="font-size:13px">${t(C.mc.live)}</span></div>
+      </a>
+      <a class="t media b-lounge" href="#" data-play-drive="${C.lounge[0]}" data-vertical="1" data-r style="--d:4">
+        <div class="vw">${vid(M("media/loops/lounge-1.mp4"), M("media/loops/lounge-1.webp"))}</div><div class="sh"></div>
+        <div class="in"><span class="lbl" style="color:#fff">${t(u.lounge)}</span><div class="grow"></div><span class="play">▶</span><span style="font-size:13px">${t(u.interview)}</span></div>
+      </a>
+      <div class="t b-facts" data-r style="--d:5">
+        <div class="facts">${C.facts.map((f) => `<div><b data-count="${f.n}">${f.n}</b><span>${t(f.l)}</span></div>`).join("")}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s wrap" id="poster">
+    <div class="pst">
+      <a class="t media pst-ph" href="#" data-poster data-r><img src="${M(C.poster.sm)}" srcset="${M(C.poster.sm)} 600w, ${M(C.poster.src)} 1080w" sizes="(max-width: 900px) 92vw, 520px" alt="${esc(t(C.poster.alt))}" loading="lazy"></a>
+      <div class="t pst-tx" data-r style="--d:1">
+        <span class="lbl"><span class="dot"></span>${t(C.poster.kicker)}</span>
+        <h2>${t(E.tagline)}</h2>
+        <div class="pst-facts"><span class="chip">${t(E.date)}</span><span class="chip">${t(E.venue)}</span></div>
+        <div class="pst-org"><span class="lbl">${t(C.orgs[1].r)}</span>${isoa(C.orgs[1])}<span class="lbl">${t(C.poster.organizedBy)}</span><img src="${M(C.orgs[2].logo)}" alt="Horizon" loading="lazy"></div>
+        <div class="row"><a class="btn btn-p" href="${site("register")}">${t(u.registerNow)} <span class="arr">→</span></a><a class="btn btn-g" href="${M(C.poster.file)}" download>${t(C.poster.download)}</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s wrap" id="programme">
+    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.programme)}</span><h2 class="h" data-r>${L("Find your", "اعثر على")} <b>${L("session", "محاضرتك")}</b></h2></div><p class="sub" data-r>${t(C.welcome)}</p></div>
+    <div class="tools"><div class="chips" id="chips"></div><label class="search">${I.search}<input id="q" type="search" placeholder="${esc(L("Search topic or speaker", "ابحث بالموضوع أو المحاضر"))}" autocomplete="off"></label></div>
+    <div class="prog"><div class="t media trk" id="trk"></div><div class="ses" id="ses"></div></div>
+    <div class="beyond" data-rail>${C.beyond.map((b, i) => `<div class="t" data-r style="--d:${i}"><span class="lbl">${t(u.beyond)}</span><div><strong>${t(b.t)}</strong><br><span>${t(b.b)}</span></div></div>`).join("")}</div><div data-dots></div>
+  </section>
+
+  <section class="s wrap" id="masterclass">
+    <div class="s-head"><div><span class="lbl"><span class="dot live"></span>${t(C.mc.kicker)}</span><h2 class="h" data-r>${t(C.mc.title)}</h2></div><p class="sub" data-r>${t(C.mc.approach)}</p></div>
+    <div class="mc">
+      <a class="t media mc-v mc-cover" href="#" data-img="${D(C.mc.cover)}" data-r><img src="${D(C.mc.cover)}" alt="${esc(t(C.mc.kicker) + " · " + t(C.mc.title))}" loading="lazy"></a>
+      <div class="t mc-d" data-r style="--d:1">
+        <span class="lbl">${t(C.mc.name)}</span>
+        <div class="parts">${C.mc.parts.map((p) => `<div><strong>${t(p.t)}</strong><span>${t(p.b)}</span></div>`).join("")}</div>
+        <ul>${C.mc.points.filter((_, i) => i !== 2).map((p) => `<li>${t(p)}</li>`).join("")}</ul>
+        <div><span class="lbl" style="margin-bottom:10px">${L("20 implants · limited seats", "20 عملية · مقاعد محدودة")}</span><div class="seats">${Array.from({ length: 20 }, (_, i) => `<i class="f" style="opacity:${(0.4 + 0.6 * (i + 1) / 20).toFixed(2)}"></i>`).join("")}</div></div>
+        <div class="fee early"><div><span class="lbl">${t(u.fee)}</span><br><b>${t(C.mc.earlyBird)}</b></div><small style="color:var(--mute);font-size:12.5px;max-width:20ch;text-align:end">${t(C.mc.earlyNote)}</small></div>
+        <a class="btn btn-p" href="${site("apply")}?intent=masterclass">${t(u.seat)} <span class="arr">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="s wrap" id="passes">
+    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.passes)}</span><h2 class="h" data-r>${L("Two taps to", "نقرتان إلى")} <b>${L("your pass", "باقتك")}</b></h2></div></div>
+    <div class="finder"><span>${L("I'm coming for…", "سأحضر من أجل…")}</span><div class="chips" id="finder" style="flex:initial">${[["talks", L("The conference", "المؤتمر")], ["surgery", L("Masterclass & workshop", "الماستر كلاس والورشة")], ["both", L("Both", "الاثنين")]].map(([k, l]) => `<button type="button" data-p="${k}">${l}</button>`).join("")}</div></div>
+    <div class="passes" id="pz" data-rail>${C.passes.map((p, i) => `<div class="t ps${p.best ? " best" : ""}" data-id="${p.id}" data-r style="--d:${i}">
+      ${p.best ? `<span class="badge">${t(p.p)}</span>` : ""}<span class="lbl">DZAC 5 · <span class="mono" dir="ltr">0${i + 1}</span></span><h3>${t(p.n)}</h3><span class="pr" style="text-align:start">${p.best ? t(p.x) : t(p.p) + (p.was ? ` <s>${t(p.was)}</s>` : "") + " · " + t(p.x)}</span>
+      <ul>${p.i.map((x) => `<li>${t(x)}</li>`).join("")}</ul>
+      <a class="btn ${p.best ? "btn-p" : "btn-g"}" href="${site("register")}?pass=${p.id}">${t(u.choose)} <span class="arr">→</span></a></div>`).join("")}</div><div data-dots></div>
+    <p class="sub" style="margin-top:18px;font-size:14px">${L("Still not sure?", "ما زلت محتارًا؟")} <a href="${site("apply")}" style="color:var(--cyan)">${L("Answer four questions and we'll match you", "أجب عن أربعة أسئلة ونرشّح لك")} <span class="arr">→</span></a></p>
+  </section>
+
+  <section class="s wrap" id="faculty">
+    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.faculty)}</span><h2 class="h" data-r>${t(u.speakers)}</h2></div></div>
+    <div class="spk" data-rail>${C.speakers.map((p, i) => `<div class="t media fm" data-r style="--d:${i}">${face(p)}<div class="sh"></div><div class="in"><small>${t(p.r)}</small><strong>${t(p.n)}</strong>${p.c ? `<span class="flag"><img src="${D("flags/" + p.c + ".svg")}" alt="" loading="lazy">${t(p.cn)}</span>` : ""}</div></div>`).join("")}</div><div data-dots></div>
+    <div class="fac-h"><span class="lbl"><span class="dot"></span>${t(u.leadership)}</span></div>
+    <div class="fac" data-rail>${C.leaders.map((l, i) => `<div class="t media fm" data-r style="--d:${i}">${face(l)}<div class="sh"></div><div class="in"><small>${t(l.r)}</small><strong>${t(l.n)}</strong></div></div>`).join("")}</div><div data-dots></div>
+    <div class="marq" aria-label="${esc(t(u.pastFaculty))}"><div>${[...C.past, ...C.past].map((p) => `<span>${p}</span>`).join("")}</div></div>
+  </section>
+
+  <section class="s wrap" id="sponsors">
+    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.sponsors)}</span><h2 class="h" data-r>${L("With the support of", "بدعم من")} <b>${L("our sponsors", "رعاتنا")}</b></h2></div></div>
+    <div class="spons" aria-label="${esc(C.sponsors.map((s) => s.n).join(", "))}"><div>${Array.from({ length: 8 }, (_, k) => C.sponsors.map((s) => `<span${k ? ' aria-hidden="true"' : ""}><img src="${D(s.logo)}" alt="${k ? "" : esc(s.n)}" loading="lazy"></span>`).join("")).join("")}</div></div>
+  </section>
+
+  <section class="s wrap" id="watch">
+    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.films)}</span><h2 class="h" data-r>${L("Watch", "شاهد")} <b>DZAC</b></h2></div><p class="sub" data-r>${t(u.loungeBody)}</p></div>
+    <div class="watch">
+      ${C.films.map((f, i) => `<a class="t media w-${i + 1}" href="#" ${f.file ? `data-play-file="${M(f.file)}"` : `data-play-drive="${f.drive}"`} data-r style="--d:${i}"><div class="vw">${vid(M(`media/loops/film-${f.key}.mp4`), M(`media/loops/film-${f.key}.webp`))}</div><div class="sh"></div><div class="in"><span class="lbl" style="color:#fff">${t(f.k)}</span><div style="display:flex;justify-content:space-between;align-items:end;gap:12px"><strong>${t(f.t)}</strong><span class="play">▶</span></div></div></a>`).join("")}
+      ${C.lounge.slice(1, 4).map((id, i) => `<a class="t media w-l" href="#" data-play-drive="${id}" data-vertical="1" data-r style="--d:${i}"><div class="vw">${vid(M(`media/loops/lounge-${i + 2}.mp4`), M(`media/loops/lounge-${i + 2}.webp`))}</div><div class="sh"></div><div class="in"><span class="play" style="width:36px;height:36px">▶</span><div class="grow"></div><strong>${t(u.lounge)} · <span class="mono" dir="ltr">0${i + 2}</span></strong></div></a>`).join("")}
+    </div>
+  </section>
+
+  <section class="s wrap" id="editions">
+    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.editions)}</span><h2 class="h" data-r>${t(u.reviewTitle)}</h2></div></div>
+    <div class="eds" data-rail>${C.editions.map((e, i) => `<div class="t ed${i === 4 ? " now" : ""}" data-r style="--d:${i}"><span class="lbl">${t(e.w)}</span><b>${e.n}</b><div class="grow"></div><strong>${t(e.p)}</strong><span>${t(e.x)}</span>${e.photos ? `<a class="chip" href="#gallery" data-gal="${e.n}">${L("Photos", "الصور")} <span class="arr">→</span></a>` : ""}</div>`).join("")}</div><div data-dots></div>
+    <div class="gal-h" id="gallery"><span class="lbl"><span class="dot"></span>${t(u.inPictures)}</span><div class="chips" id="galtabs" style="flex:initial">${C.galleries.map((g, i) => `<button type="button" data-g="${i}">DZAC ${+g.n}</button>`).join("")}</div></div>
+    <p class="sub" id="galcap" style="font-size:13px;margin-bottom:12px"></p>
+    <div class="gal" id="gal"></div>
+  </section>
+
+  <section class="s wrap" id="venue">
+    <div class="pv">
+      <div class="t pv-o" data-r><span class="lbl"><span class="dot"></span>${t(u.partners)}</span><ul>${[C.orgs[1], C.orgs[0], C.orgs[2]].map((o) => `<li><small>${t(o.r)}</small>${o.mark ? isoa(o) : o.logo ? `<img class="org-logo" src="${M(o.logo)}" alt="${esc(t(o.n))}" loading="lazy">` : `<span>${t(o.n)}</span>`}</li>`).join("")}</ul></div>
+      <div class="t pv-t" data-r style="--d:1"><span class="lbl">${t(C.partnersFor)}</span><div class="tiers">${C.tiers.map((x) => `<div><strong>${t(x.n)}</strong><span>${t(x.i)}</span></div>`).join("")}</div><a class="btn btn-g" style="align-self:flex-start" href="${site("apply")}?intent=partner">${t(u.becomePartner)} <span class="arr">→</span></a></div>
+      <a class="t media pv-v" href="${E.maps}" target="_blank" rel="noreferrer" data-r><div class="vw">${vid(M("media/loops/venue.mp4"), M("media/loops/venue.webp"))}</div><div class="sh"></div>
+        <div class="in"><span class="lbl" style="color:#fff"><span class="dot"></span>${t(u.venue)} · ${t(E.city)}</span><h3>${t(E.venueName)}</h3><span class="btn btn-g" style="align-self:flex-start">${t(u.directions)} <span class="arr">↗</span></span></div></a>
+    </div>
+    <div class="t final" data-r><h3>${t(E.tagline)}</h3><a class="btn btn-p" href="${site("register")}">${t(u.registerNow)} <span class="arr">→</span></a></div>
+  </section>
+  <footer class="wrap ft"><span>${t(E.full)} · ${t(E.date)} · ${t(E.venue)}</span><span class="ft-org">ISOA · Dar El Zokora · <img src="${M(C.orgs[2].logo)}" alt="Horizon" loading="lazy"></span></footer>`;
+
+  renderProg();
+  renderGal();
+  document.querySelectorAll("#galtabs button").forEach((b) => b.onclick = () => { gal = +b.dataset.g; renderGal(); });
+  document.querySelectorAll("[data-gal]").forEach((a) => a.addEventListener("click", () => { gal = C.galleries.findIndex((g) => g.n === a.dataset.gal); renderGal(); }));
+  const qi = document.getElementById("q");
+  qi.oninput = () => { q = qi.value.trim(); if (q && track >= 0 && !qi.dataset.t) { qi.dataset.t = 1; track = -1; } renderProg(); };
+
+  /* Pass finder */
+  const map = { talks: "conference", surgery: "masterclass", both: "bundle" };
+  document.querySelectorAll("#finder button").forEach((b) => b.onclick = () => {
+    pick = pick === b.dataset.p ? "" : b.dataset.p;
+    document.querySelectorAll("#finder button").forEach((x) => x.classList.toggle("on", x.dataset.p === pick));
+    const pz = document.getElementById("pz"); pz.classList.toggle("pick", !!pick);
+    pz.querySelectorAll(".ps").forEach((c) => c.classList.toggle("match", c.dataset.id === map[pick]));
+    const m = pz.querySelector(".match"); if (m && narrow) pz.scrollTo({ left: m.offsetLeft - pz.offsetLeft - 16, behavior: "smooth" });
+  });
+
+  /* Tab bar: highlight the section in view */
+  const ids = ["top", "programme", "masterclass", "passes"];
+  const tio = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) document.querySelectorAll("[data-tab]").forEach((a) => a.classList.toggle("on", a.dataset.tab === e.target.id)); }), { rootMargin: "-45% 0px -50% 0px" });
+  ids.forEach((id) => tio.observe(document.getElementById(id)));
+  const nio = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) document.querySelectorAll(".nav a").forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-45% 0px -50% 0px" });
+  document.querySelectorAll("main section[id]").forEach((s) => nio.observe(s));
+};
+
+/* Cursor spotlight on glass tiles */
+addEventListener("pointermove", (e) => {
+  const tile = e.target.closest && e.target.closest(".t"); if (!tile) return;
+  const r = tile.getBoundingClientRect();
+  tile.style.setProperty("--mx", e.clientX - r.left + "px"); tile.style.setProperty("--my", e.clientY - r.top + "px");
+}, { passive: true });
+/* OR timecode */
+const t0 = Date.now();
+setInterval(() => { const el = document.getElementById("tc"); if (!el) return; const s = Math.floor((Date.now() - t0) / 1000) + 3127; el.textContent = [s / 3600, (s / 60) % 60, s % 60].map((n) => String(Math.floor(n)).padStart(2, "0")).join(":"); }, 1000);
+</script>
+</body>
+</html>
