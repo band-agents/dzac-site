@@ -36,30 +36,30 @@ window.DZC = {
     { t: { en: "Register online", ar: "التسجيل أونلاين" }, b: { en: "Book your seat here, with a conference and masterclass bundle and an e-ticket at the door.", ar: "احجز مقعدك من هنا، مع باقة المؤتمر والماستر كلاس وتذكرة إلكترونية عند الدخول." } },
   ],
   tracks: [
-    { n: "01", t: { en: "Pediatrics", ar: "ذكورة الأطفال" }, img: "2321", s: [
-      ["Complications of Neonatal Circumcision: Advanced Reconstructive Surgery for Iatrogenic Penile Injuries", "Prof. Dr. Galal El-Shorbagy"],
-      ["Idiopathic Hypogonadotropic Hypogonadism (IHH) in Children: Early Diagnostic Markers Before the Age of Puberty", "Prof. Dr. Salah Nagla"],
-      ["Precocious vs. Delayed Puberty: Modern Endocrine Workup and Impact on Final Adult Height and Fertility", "Prof. Dr. Yasmeen Ashraf"]] },
-    { n: "02", t: { en: "Endocrinology and Psychosexual Medicine", ar: "الغدد الصماء والطب النفسي الجنسي" }, img: "2145", s: [
-      ["Testosterone and the Brain: The Impact of Hypogonadism on Cognitive Decline and Mood Disorders in Aging Men", ""],
-      ["Selective Estrogen Receptor Modulators (SERMs) vs. HCG: Optimizing Medical Therapy for Hypogonadotropic Hypogonadism", ""],
-      ["Digital Detox and Sexual Health: Addressing Porn-Induced Erectile Dysfunction (PIED) in Gen Z", ""]] },
-    { n: "03", t: { en: "Andrology", ar: "طب الذكورة" }, img: "2617", s: [
+    { n: "01", t: { en: "Andrology", ar: "طب الذكورة" }, img: "2617", s: [
       ["Penile Size Preservation Protocols: Combining Vacuum Devices, Traction, and Aggressive Sizing to Prevent Post-Implant Shortening", "Prof. Dr. David Ralph"],
       ["Penile Prosthesis Combined with Grafting for Severe Peyronie's Disease: One-Stage Correction of Curvature and ED", "Prof. Dr. Paul Perito"],
       ["Ectopic Reservoir Placement in Inflatable Penile Prosthesis (IPP): Avoiding Vascular and Visceral Injuries in the High-Submuscular Space", "Prof. Dr. Gabriele Antonini"]] },
-    { n: "04", t: { en: "Debates in Infertility", ar: "جدل العقم" }, img: "2185", s: [
+    { n: "02", t: { en: "Urology", ar: "المسالك البولية" }, img: "2297", src: "people/amr-mohsen.webp", who: { en: "Dr. Amr Mohsen", ar: "د. عمرو محسن" }, s: [
+      ["Navigating the challenges: Complications associated with flexible ureteroscopy", "Prof. Dr. Ahmed Yehia"],
+      ["AEEP: from surgical alternative to surgical standard", "Prof. Dr. Ismail Fattouh Rady"],
+      ["Rethinking LUTS: when the pelvic floor matters", "Prof. Dr. Samuel Ibrahim"]] },
+    { n: "03", t: { en: "Debates in Infertility", ar: "جدل العقم" }, img: "2185", s: [
       ["The \"Non-Responder\" in Micro-TESE: Advanced Testicular Mapping Protocols Before a Second Rescue Attempt", "Prof. Dr. Yasser Mesbah"],
       ["Subclinical Varicocele: To Operate or Not to Operate in the Era of Assisted Reproductive Technology (ART)?", "Prof. Dr. Ayman Rashed"],
       ["Early vs. Delayed Varicocelectomy in Adolescents: Global Consensus from the Arab and Asian Associations", "Prof. Dr. Majed Ragab"]] },
+    { n: "04", t: { en: "Endocrinology and Psychosexual Medicine", ar: "الغدد الصماء والطب النفسي الجنسي" }, img: "2145", s: [
+      ["Testosterone and the Brain: The Impact of Hypogonadism on Cognitive Decline and Mood Disorders in Aging Men", ""],
+      ["Selective Estrogen Receptor Modulators (SERMs) vs. HCG: Optimizing Medical Therapy for Hypogonadotropic Hypogonadism", ""],
+      ["Digital Detox and Sexual Health: Addressing Porn-Induced Erectile Dysfunction (PIED) in Gen Z", ""]] },
     { n: "05", t: { en: "Genetics and Regenerative Medicine", ar: "الجينات والطب التجديدي" }, img: "1585", s: [
       ["The Epigenetic Impact of Male Obesity: How Paternal Weight Affects the Health of Future Generations", ""],
       ["Regenerative Medicine in Erectile Dysfunction: Stem Cells, Exosomes, and PRP under the Microscope of Global Societies", "Prof. Dr. Mohammed ElHefnawy"],
       ["The Resurgence of Topical and Non-Invasive Therapies for Early-Stage Peyronie's Disease", "Prof. Dr. Ahmed ElAssemy"]] },
-    { n: "06", t: { en: "Urology", ar: "المسالك البولية" }, img: "2297", src: "people/amr-mohsen.webp", who: { en: "Dr. Amr Mohsen", ar: "د. عمرو محسن" }, s: [
-      ["Navigating the challenges: Complications associated with flexible ureteroscopy", "Prof. Dr. Ahmed Yehia"],
-      ["AEEP: from surgical alternative to surgical standard", "Prof. Dr. Ismail Fattouh Rady"],
-      ["Rethinking LUTS: when the pelvic floor matters", "Prof. Dr. Samuel Ibrahim"]] },
+    { n: "06", t: { en: "Pediatrics", ar: "ذكورة الأطفال" }, img: "2321", s: [
+      ["Complications of Neonatal Circumcision: Advanced Reconstructive Surgery for Iatrogenic Penile Injuries", "Prof. Dr. Galal El-Shorbagy"],
+      ["Idiopathic Hypogonadotropic Hypogonadism (IHH) in Children: Early Diagnostic Markers Before the Age of Puberty", "Prof. Dr. Salah Nagla"],
+      ["Precocious vs. Delayed Puberty: Modern Endocrine Workup and Impact on Final Adult Height and Fertility", "Prof. Dr. Yasmeen Ashraf"]] },
   ],
   beyond: [
     { t: { en: "Wellness", ar: "العافية" }, b: { en: "Men's wellbeing and lifestyle medicine", ar: "صحة الرجل وطب نمط الحياة" } },
@@ -104,11 +104,15 @@ window.DZC = {
     { n: "Rigicon", logo: "sponsors/rigicon.svg" },
     { n: "Coloplast", logo: "sponsors/coloplast.svg" },
   ],
-  dzac2: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"],
+  galleries: [
+    { n: "02", src: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"].map((k) => "dzac2/dzac2-" + k + ".webp") },
+    { n: "03", src: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((k) => "dzac3/dzac3-" + k + ".webp") },
+    { n: "04", ids: ["1721", "761", "1385", "2617", "1233", "1585", "2929", "2145", "1745", "1481", "441", "2297"] },
+  ],
   leaders: [
     { r: { en: "Conference President", ar: "رئيس المؤتمر" }, n: { en: "Prof. Ossama Ghattas", ar: "أ.د. أسامة غطاس" }, img: "761" },
     { r: { en: "Vice-President", ar: "نائب رئيس المؤتمر" }, n: { en: "Prof. Dr. Gabriele Antonini", ar: "أ.د. جابرييل أنطونيني" }, img: "2617" },
-    { r: { en: "Head of Scientific Committee", ar: "رئيس اللجنة العلمية" }, n: { en: "Dr. AbdulMonem Bahaa El-Din Gomha", ar: "د. عبد المنعم بهاء الدين جمعة" }, img: "" },
+    { r: { en: "Head of Scientific Committee", ar: "رئيس اللجنة العلمية" }, n: { en: "Dr. AbdulMonem Bahaa El-Din Gomha", ar: "د. عبد المنعم بهاء الدين جمعة" }, img: "", src: "people/gomha.webp" },
     { r: { en: "Conference Secretary", ar: "سكرتير المؤتمر" }, n: { en: "Dr. Amr Mohsen", ar: "د. عمرو محسن" }, img: "", src: "people/amr-mohsen.webp" },
   ],
   past: ["David Ralph", "Gabriele Antonini", "Ege Can Şerefoğlu", "Juan I. Salamanca", "Sam Ward", "Mohamed Hamdan", "Carlo Bettocchi", "Yasser Farahat"],
@@ -120,8 +124,8 @@ window.DZC = {
   editions: [
     { n: "01", w: { en: "Where it began", ar: "البداية" }, p: { en: "Triumph Luxury Hotel, Cairo", ar: "فندق تريومف لاكشري، القاهرة" }, x: { en: "The first Dar El Zokora conference", ar: "أول مؤتمر لدار الذكورة" } },
     { n: "02", w: { en: "7–8 Dec 2023", ar: "7–8 ديسمبر 2023" }, p: { en: "Radisson Blu Hotel, Alex West", ar: "فندق راديسون بلو أليكس ويست" }, x: { en: "Live surgery, prosthetics and infertility", ar: "جراحات حية والدعامات والعقم" }, photos: true },
-    { n: "03", w: { en: "19–20 Dec 2024", ar: "19–20 ديسمبر 2024" }, p: { en: "Radisson Blu Hotel, Alex West", ar: "فندق راديسون بلو أليكس ويست" }, x: { en: "“Andrology Switch”", ar: "«Andrology Switch»" } },
-    { n: "04", w: { en: "8–9 Jan 2026", ar: "8–9 يناير 2026" }, p: { en: "Triumph Luxury Hotel, Cairo", ar: "فندق تريومف لاكشري، القاهرة" }, x: { en: "“Empowering the Future of Male Health”", ar: "«تمكين مستقبل صحة الرجل»" } },
+    { n: "03", w: { en: "19–20 Dec 2024", ar: "19–20 ديسمبر 2024" }, p: { en: "Radisson Blu Hotel, Alex West", ar: "فندق راديسون بلو أليكس ويست" }, x: { en: "“Andrology Switch”", ar: "«Andrology Switch»" }, photos: true },
+    { n: "04", w: { en: "8–9 Jan 2026", ar: "8–9 يناير 2026" }, p: { en: "Triumph Luxury Hotel, Cairo", ar: "فندق تريومف لاكشري، القاهرة" }, x: { en: "“Empowering the Future of Male Health”", ar: "«تمكين مستقبل صحة الرجل»" }, photos: true },
     { n: "05", w: { en: "14 Jan 2027", ar: "14 يناير 2027" }, p: { en: "Triumph Luxury Hotel, New Cairo", ar: "فندق تريومف لاكشري، القاهرة الجديدة" }, x: { en: "“Shaping the Future of Men's Health”", ar: "«نصوغ مستقبل صحة الرجل»" } },
   ],
   passes: [
@@ -193,7 +197,7 @@ window.DZC = {
     scroll: { en: "Scroll", ar: "مرّر" },
     speakers: { en: "DZAC 5 speakers", ar: "محاضرو DZAC 5" },
     sponsors: { en: "Sponsors", ar: "الرعاة" },
-    dzac2: { en: "DZAC 2 in pictures", ar: "DZAC 2 بالصور" },
+    inPictures: { en: "Past editions in pictures", ar: "النسخ السابقة بالصور" },
     countryTbc: { en: "Country to be confirmed", ar: "الدولة قيد التأكيد" },
   },
 };

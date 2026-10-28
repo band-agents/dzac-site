@@ -387,7 +387,7 @@ const I = {
   reg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   search: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
 };
-let track = 0, q = "", pick = "";
+let track = 0, q = "", pick = "", gal = DZC.galleries.length - 1;
 const face = (p) => p.src ? `<img src="${D(p.src)}" alt="${esc(t(p.n))}" loading="lazy" style="object-position:50% 18%">`
   : p.img ? `<img src="${photo(p.img)}" alt="${esc(t(p.n))}" loading="lazy" style="object-position:50% 20%">`
   : `<span class="ini">${p.n.en.replace(/^(Prof\. Dr\.|Prof\.|Dr\.)\s*/, "").split(/\s+/).slice(0, 2).map((w) => w[0]).join("")}</span>`;
@@ -397,6 +397,15 @@ function sessions() {
   const out = [];
   C.tracks.forEach((tr, i) => tr.s.forEach(([s, sp], j) => out.push({ i, j, tr, s, sp })));
   return out;
+}
+/* Past editions in pictures: one tab per edition */
+function renderGal() {
+  const g = C.galleries[gal], e = C.editions.find((x) => x.n === g.n);
+  const items = g.src ? g.src.map((p) => [D(p), D(p)]) : g.ids.map((id) => [photo(id), photo(id, "lg")]);
+  document.getElementById("gal").innerHTML = items.map(([sm, lg]) => `<a class="t media" href="#" data-img="${lg}"><img src="${sm}" alt="DZAC ${+g.n}" loading="lazy"></a>`).join("");
+  document.getElementById("galcap").textContent = `${t(e.w)} · ${t(e.p)}`;
+  document.querySelectorAll("#galtabs button").forEach((b) => b.classList.toggle("on", +b.dataset.g === gal));
+  document.getElementById("gal").scrollTo({ left: 0 });
 }
 function hl(s) { const e = esc(s); if (!q) return e; const re = new RegExp("(" + q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig"); return e.replace(re, "<mark>$1</mark>"); }
 function renderProg() {
@@ -540,9 +549,10 @@ window.render = () => {
 
   <section class="s wrap" id="editions">
     <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.editions)}</span><h2 class="h" data-r>${t(u.reviewTitle)}</h2></div></div>
-    <div class="eds" data-rail>${C.editions.map((e, i) => `<div class="t ed${i === 4 ? " now" : ""}" data-r style="--d:${i}"><span class="lbl">${t(e.w)}</span><b>${e.n}</b><div class="grow"></div><strong>${t(e.p)}</strong><span>${t(e.x)}</span>${e.photos ? `<a class="chip" href="#dzac2">${L("Photos", "الصور")} <span class="arr">→</span></a>` : ""}</div>`).join("")}</div><div data-dots></div>
-    <div class="gal-h" id="dzac2"><span class="lbl"><span class="dot"></span>${t(u.dzac2)}</span><span class="lbl">${t(C.editions[1].w)} · ${t(C.editions[1].p)}</span></div>
-    <div class="gal">${C.dzac2.map((n) => `<a class="t media" href="#" data-img="${D("dzac2/dzac2-" + n + ".webp")}"><img src="${D("dzac2/dzac2-" + n + ".webp")}" alt="DZAC 2" loading="lazy"></a>`).join("")}</div>
+    <div class="eds" data-rail>${C.editions.map((e, i) => `<div class="t ed${i === 4 ? " now" : ""}" data-r style="--d:${i}"><span class="lbl">${t(e.w)}</span><b>${e.n}</b><div class="grow"></div><strong>${t(e.p)}</strong><span>${t(e.x)}</span>${e.photos ? `<a class="chip" href="#gallery" data-gal="${e.n}">${L("Photos", "الصور")} <span class="arr">→</span></a>` : ""}</div>`).join("")}</div><div data-dots></div>
+    <div class="gal-h" id="gallery"><span class="lbl"><span class="dot"></span>${t(u.inPictures)}</span><div class="chips" id="galtabs" style="flex:initial">${C.galleries.map((g, i) => `<button type="button" data-g="${i}">DZAC ${+g.n}</button>`).join("")}</div></div>
+    <p class="sub" id="galcap" style="font-size:13px;margin-bottom:12px"></p>
+    <div class="gal" id="gal"></div>
   </section>
 
   <section class="s wrap" id="venue">
@@ -557,6 +567,9 @@ window.render = () => {
   <footer class="wrap ft"><span>${t(E.full)} · ${t(E.date)} · ${t(E.venue)}</span><span class="ft-org">ISOA · Dar El Zokora · <img src="${M(C.orgs[2].logo)}" alt="Horizon" loading="lazy"></span></footer>`;
 
   renderProg();
+  renderGal();
+  document.querySelectorAll("#galtabs button").forEach((b) => b.onclick = () => { gal = +b.dataset.g; renderGal(); });
+  document.querySelectorAll("[data-gal]").forEach((a) => a.addEventListener("click", () => { gal = C.galleries.findIndex((g) => g.n === a.dataset.gal); renderGal(); }));
   const qi = document.getElementById("q");
   qi.oninput = () => { q = qi.value.trim(); if (q && track >= 0 && !qi.dataset.t) { qi.dataset.t = 1; track = -1; } renderProg(); };
 
