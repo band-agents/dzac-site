@@ -76,6 +76,12 @@ Geist, programme filter/search, pass finder, phone tab bar). All read `shared/co
 to the real site. A fixed element bigger than the viewport (C's mesh) widens the phone layout in RTL:
 keep fixed backgrounds at `inset: 0` with `overflow: hidden`.
 
+**The client chose C (10-28).** Their changes live in `shared/content.js` as new fields C reads (`welcome`, `mc.parts/earlyBird/cover`,
+`speakers` with flags, `sponsors`, `dzac2`, ISOA at `orgs[1]`), so A and B keep working: they still read `mc.fee`, and the
+Horizon logo is read as `orgs[2]`. The masterclass shows no price (early-bird line instead); the pass shows 3,000 USD with
+4,000 struck. The masterclass cover is cropped above its old 5,000 € panel. Flags only for confirmed countries
+(AlObeidi and AlKabir are unconfirmed). Speaker order everywhere: Ghattas, Antonini, then the rest.
+
 ## Shape
 
 - `src/content/site.ts`: **every word, EN + AR**. `// ours` = written by us, needs the organisers;

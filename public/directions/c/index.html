@@ -255,6 +255,48 @@ html[dir="rtl"] .ed b { text-align: end; }
 .final .btn-p:hover { background: var(--navy); color: #fff; }
 .ft { padding-block: 40px 120px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: var(--dim); font-size: 13px; }
 
+/* DZAC 5 speakers: portraits with the country flag */
+.spk { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--gap); }
+.spk .fm { min-height: 340px; }
+.flag { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--fg); }
+.flag img { width: 24px; height: 16px; border-radius: 3px; object-fit: cover; box-shadow: 0 0 0 1px rgba(255, 255, 255, .3); }
+.fac-h { margin-block: clamp(30px, 3.4vw, 46px) 14px; }
+
+/* Sponsors: full-colour logos on white plates, scrolling */
+.spons { overflow: hidden; border-radius: var(--r); border: 1px solid var(--edge); background: var(--glass); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.spons > div { display: flex; gap: 16px; width: max-content; padding: 18px 8px; animation: mq 46s linear infinite; direction: ltr; }
+.spons span { flex: none; display: grid; place-items: center; width: 230px; height: 96px; border-radius: 18px; background: #fff; padding: 20px 30px; }
+.spons img { max-width: 100%; max-height: 46px; width: auto; height: auto; }
+.spons:hover > div { animation-play-state: paused; }
+
+/* DZAC 2 in pictures */
+.gal-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-block: clamp(30px, 3.4vw, 46px) 14px; }
+.gal { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(240px, 23%); gap: var(--gap); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px; }
+.gal::-webkit-scrollbar { display: none; }
+.gal .t { aspect-ratio: 4 / 3; cursor: zoom-in; scroll-snap-align: start; }
+.gal .t img { transition: scale 1s var(--ease); }
+.gal .t:hover img { scale: 1.05; }
+.ed .chip { align-self: flex-start; }
+
+/* Masterclass: the cover, its two parts, and an early-bird line in place of the fee */
+.mc-cover { cursor: zoom-in; }
+.mc-cover img { object-position: 50% 0; transition: scale 1s var(--ease); }
+.mc-cover:hover img { scale: 1.02; }
+.parts { display: grid; gap: 10px; }
+.parts div { border-radius: 16px; padding: 14px 16px; border: 1px solid var(--edge); background: rgba(255, 255, 255, .04); }
+.parts strong { display: block; font-weight: 500; font-size: 15px; color: var(--cyan); }
+.parts span { font-size: 14px; color: var(--fg); }
+.fee.early b { font-family: var(--f); font-weight: 400; font-size: clamp(22px, 2vw, 28px); letter-spacing: -.02em; }
+.ps .pr s { color: var(--dim); margin-inline: 6px; }
+
+/* ISOA, which founded the conference */
+.isoa { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
+.isoa img { width: 46px; height: auto; flex: none; }
+.isoa b { display: block; font-weight: 500; font-size: 17px; }
+.isoa em { display: block; font-style: normal; font-size: 13px; color: var(--mute); }
+.pst-org { flex-wrap: wrap; }
+.pst-org .isoa { margin-top: 0; }
+
 /* Tab bar (phones) */
 .tabbar { display: none; }
 
@@ -270,6 +312,7 @@ html[dir="rtl"] .ed b { text-align: end; }
   .beyond { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .mc { grid-template-columns: minmax(0, 1fr); }
   .fac { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .spk { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .pv-o, .pv-t { grid-column: span 12; }
 }
 @media (max-width: 760px) {
@@ -292,9 +335,11 @@ html[dir="rtl"] .ed b { text-align: end; }
   .chips::-webkit-scrollbar { display: none; }
   .se { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .se .tg { justify-self: start; }
-  .beyond, .passes, .fac, .eds, .tiers { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); scroll-padding-inline: var(--pad); }
-  .beyond::-webkit-scrollbar, .passes::-webkit-scrollbar, .fac::-webkit-scrollbar, .eds::-webkit-scrollbar, .tiers::-webkit-scrollbar { display: none; }
-  .beyond > *, .passes > *, .fac > *, .eds > * { flex: 0 0 78%; scroll-snap-align: start; }
+  .beyond, .passes, .fac, .spk, .eds, .tiers { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); scroll-padding-inline: var(--pad); }
+  .beyond::-webkit-scrollbar, .passes::-webkit-scrollbar, .fac::-webkit-scrollbar, .spk::-webkit-scrollbar, .eds::-webkit-scrollbar, .tiers::-webkit-scrollbar { display: none; }
+  .beyond > *, .passes > *, .fac > *, .spk > *, .eds > * { flex: 0 0 78%; scroll-snap-align: start; }
+  .gal { grid-auto-columns: 74%; margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); scroll-padding-inline: var(--pad); }
+  .spons span { width: 170px; height: 78px; padding: 16px 22px; }
   .beyond > * { flex-basis: 58%; }
   .tiers { margin-inline: 0; padding-inline: 0; }
   .tiers > * { flex: 0 0 80%; scroll-snap-align: start; }
@@ -336,6 +381,10 @@ const I = {
   search: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
 };
 let track = 0, q = "", pick = "";
+const face = (p) => p.src ? `<img src="${D(p.src)}" alt="${esc(t(p.n))}" loading="lazy" style="object-position:50% 18%">`
+  : p.img ? `<img src="${photo(p.img)}" alt="${esc(t(p.n))}" loading="lazy" style="object-position:50% 20%">`
+  : `<span class="ini">${p.n.en.replace(/^(Prof\. Dr\.|Prof\.|Dr\.)\s*/, "").split(/\s+/).slice(0, 2).map((w) => w[0]).join("")}</span>`;
+const isoa = (o) => `<span class="isoa"><img src="${D(o.mark)}" alt=""><span><b>${o.short}</b><em>${t(o.n).replace(/^ISOA · /, "")}</em></span></span>`;
 
 function sessions() {
   const out = [];
@@ -345,12 +394,15 @@ function sessions() {
 function hl(s) { const e = esc(s); if (!q) return e; const re = new RegExp("(" + q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig"); return e.replace(re, "<mark>$1</mark>"); }
 function renderProg() {
   const u = C.ui, all = sessions();
-  const list = all.filter((x) => (track < 0 || x.i === track) && (!q || (x.s + " " + x.sp + " " + t(x.tr.t)).toLowerCase().includes(q.toLowerCase())));
+  // The organizers' order: Prof. Ghattas, then Prof. Antonini, then everyone else in programme order.
+  const rank = (sp) => (/Gh?attas/i.test(sp) ? 0 : /Antonini/i.test(sp) ? 1 : 2);
+  const list = all.filter((x) => (track < 0 || x.i === track) && (!q || (x.s + " " + x.sp + " " + t(x.tr.t)).toLowerCase().includes(q.toLowerCase())))
+    .sort((a, b) => rank(a.sp) - rank(b.sp) || a.i - b.i || a.j - b.j);
   const tr = track < 0 ? null : C.tracks[track];
   document.getElementById("chips").innerHTML = `<button type="button" data-k="-1" class="${track < 0 ? "on" : ""}">${L("All tracks", "كل المحاور")}<small>${all.length}</small></button>` +
     C.tracks.map((x, i) => `<button type="button" data-k="${i}" class="${track === i ? "on" : ""}">${t(x.t)}</button>`).join("");
   document.getElementById("trk").innerHTML = tr
-    ? `<img src="${photo(tr.img, "lg")}" alt="" loading="lazy"><div class="sh"></div><div class="in"><span class="lbl"><span class="dot"></span>${L("Track", "المحور")} <span class="mono" dir="ltr">${tr.n}</span></span><div class="grow"></div><h3>${t(tr.t)}</h3><p class="sub" style="font-size:13px">${t(u.talks)}</p></div>`
+    ? `<img src="${tr.src ? D(tr.src) : photo(tr.img, "lg")}" alt="${tr.who ? esc(t(tr.who)) : ""}" loading="lazy"${tr.src ? ' style="object-position:50% 18%"' : ""}><div class="sh"></div><div class="in"><span class="lbl"><span class="dot"></span>${L("Track", "المحور")} <span class="mono" dir="ltr">${tr.n}</span></span><div class="grow"></div><h3>${t(tr.t)}</h3><p class="sub" style="font-size:13px">${tr.who ? `<strong style="color:var(--fg);font-weight:400">${t(tr.who)}</strong> · ` : ""}${t(u.talks)}</p></div>`
     : `<img src="${photo("1721", "lg")}" alt="" loading="lazy"><div class="sh"></div><div class="in"><span class="lbl"><span class="dot"></span>${L("One day · one stage", "يوم واحد · منصة واحدة")}</span><div class="grow"></div><h3>${L("Six tracks, eighteen talks", "ستة محاور، ثماني عشرة محاضرة")}</h3><p class="sub" style="font-size:13px">${L("Pick a track or search a topic or a speaker.", "اختر محورًا أو ابحث عن موضوع أو محاضر.")}</p></div>`;
   document.getElementById("ses").innerHTML = list.length
     ? list.map((x) => `<article class="t se" data-r><span class="no">${x.tr.n}.${x.j + 1}</span><div><h4 dir="ltr" style="text-align:start">${hl(x.s)}</h4><p dir="ltr" style="text-align:start">${x.sp ? hl(x.sp) : t(u.tbc)}</p></div>${track < 0 ? `<span class="tg">${t(x.tr.t)}</span>` : ""}</article>`).join("")
@@ -416,14 +468,14 @@ window.render = () => {
         <span class="lbl"><span class="dot"></span>${t(C.poster.kicker)}</span>
         <h2>${t(E.tagline)}</h2>
         <div class="pst-facts"><span class="chip">${t(E.date)}</span><span class="chip">${t(E.venue)}</span></div>
-        <div class="pst-org"><span class="lbl">${t(C.poster.organizedBy)}</span><img src="${M(C.orgs[2].logo)}" alt="Horizon" loading="lazy"></div>
+        <div class="pst-org"><span class="lbl">${t(C.orgs[1].r)}</span>${isoa(C.orgs[1])}<span class="lbl">${t(C.poster.organizedBy)}</span><img src="${M(C.orgs[2].logo)}" alt="Horizon" loading="lazy"></div>
         <div class="row"><a class="btn btn-p" href="${site("register")}">${t(u.registerNow)} <span class="arr">→</span></a><a class="btn btn-g" href="${M(C.poster.file)}" download>${t(C.poster.download)}</a></div>
       </div>
     </div>
   </section>
 
   <section class="s wrap" id="programme">
-    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.programme)}</span><h2 class="h" data-r>${L("Find your", "اعثر على")} <b>${L("session", "محاضرتك")}</b></h2></div><p class="sub" data-r>${t(C.intro)}</p></div>
+    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.programme)}</span><h2 class="h" data-r>${L("Find your", "اعثر على")} <b>${L("session", "محاضرتك")}</b></h2></div><p class="sub" data-r>${t(C.welcome)}</p></div>
     <div class="tools"><div class="chips" id="chips"></div><label class="search">${I.search}<input id="q" type="search" placeholder="${esc(L("Search topic or speaker", "ابحث بالموضوع أو المحاضر"))}" autocomplete="off"></label></div>
     <div class="prog"><div class="t media trk" id="trk"></div><div class="ses" id="ses"></div></div>
     <div class="beyond" data-rail>${C.beyond.map((b, i) => `<div class="t" data-r style="--d:${i}"><span class="lbl">${t(u.beyond)}</span><div><strong>${t(b.t)}</strong><br><span>${t(b.b)}</span></div></div>`).join("")}</div><div data-dots></div>
@@ -432,16 +484,13 @@ window.render = () => {
   <section class="s wrap" id="masterclass">
     <div class="s-head"><div><span class="lbl"><span class="dot live"></span>${t(C.mc.kicker)}</span><h2 class="h" data-r>${t(C.mc.title)}</h2></div><p class="sub" data-r>${t(C.mc.approach)}</p></div>
     <div class="mc">
-      <div class="t media mc-v" data-r>
-        <div class="vw">${vid(M("media/video/masterclass-film.mp4"), M("media/posters/masterclass-film.webp"))}</div><div class="sh"></div>
-        <div class="in"><div style="display:flex;justify-content:space-between"><span class="chip"><span class="lbl" style="color:#fff"><span class="dot live"></span>REC · OR 01</span></span><span class="chip mono" dir="ltr" id="tc">00:00:00</span></div>
-          <div><b class="mono" style="font-weight:200;font-size:clamp(90px,10vw,150px);line-height:.85;letter-spacing:-.06em" data-count="20">20</b><p style="font-size:15px">${t(C.mc.live)}</p></div></div>
-      </div>
+      <a class="t media mc-v mc-cover" href="#" data-img="${D(C.mc.cover)}" data-r><img src="${D(C.mc.cover)}" alt="${esc(t(C.mc.kicker) + " · " + t(C.mc.title))}" loading="lazy"></a>
       <div class="t mc-d" data-r style="--d:1">
-        <span class="lbl">${L("What you get", "ما ستحصل عليه")}</span>
-        <ul>${C.mc.points.map((p) => `<li>${t(p)}</li>`).join("")}</ul>
+        <span class="lbl">${t(C.mc.name)}</span>
+        <div class="parts">${C.mc.parts.map((p) => `<div><strong>${t(p.t)}</strong><span>${t(p.b)}</span></div>`).join("")}</div>
+        <ul>${C.mc.points.filter((_, i) => i !== 2).map((p) => `<li>${t(p)}</li>`).join("")}</ul>
         <div><span class="lbl" style="margin-bottom:10px">${L("20 implants · limited seats", "20 عملية · مقاعد محدودة")}</span><div class="seats">${Array.from({ length: 20 }, (_, i) => `<i class="f" style="opacity:${(0.4 + 0.6 * (i + 1) / 20).toFixed(2)}"></i>`).join("")}</div></div>
-        <div class="fee"><div><span class="lbl">${t(u.fee)}</span><br><b dir="ltr">${C.mc.fee}</b></div><small style="color:var(--dim);font-size:12px;max-width:16ch;text-align:end">${t(C.mc.feeNote)}</small></div>
+        <div class="fee early"><div><span class="lbl">${t(u.fee)}</span><br><b>${t(C.mc.earlyBird)}</b></div><small style="color:var(--mute);font-size:12.5px;max-width:20ch;text-align:end">${t(C.mc.earlyNote)}</small></div>
         <a class="btn btn-p" href="${site("apply")}?intent=masterclass">${t(u.seat)} <span class="arr">→</span></a>
       </div>
     </div>
@@ -449,18 +498,25 @@ window.render = () => {
 
   <section class="s wrap" id="passes">
     <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.passes)}</span><h2 class="h" data-r>${L("Two taps to", "نقرتان إلى")} <b>${L("your pass", "باقتك")}</b></h2></div></div>
-    <div class="finder"><span>${L("I'm coming for…", "سأحضر من أجل…")}</span><div class="chips" id="finder" style="flex:initial">${[["talks", L("The talks", "المحاضرات")], ["surgery", L("Live surgery", "الجراحات الحية")], ["both", L("Both", "الاثنين")]].map(([k, l]) => `<button type="button" data-p="${k}">${l}</button>`).join("")}</div></div>
+    <div class="finder"><span>${L("I'm coming for…", "سأحضر من أجل…")}</span><div class="chips" id="finder" style="flex:initial">${[["talks", L("The conference", "المؤتمر")], ["surgery", L("Masterclass & workshop", "الماستر كلاس والورشة")], ["both", L("Both", "الاثنين")]].map(([k, l]) => `<button type="button" data-p="${k}">${l}</button>`).join("")}</div></div>
     <div class="passes" id="pz" data-rail>${C.passes.map((p, i) => `<div class="t ps${p.best ? " best" : ""}" data-id="${p.id}" data-r style="--d:${i}">
-      ${p.best ? `<span class="badge">${t(p.p)}</span>` : ""}<span class="lbl">DZAC 5 · <span class="mono" dir="ltr">0${i + 1}</span></span><h3>${t(p.n)}</h3><span class="pr" dir="${p.id === "masterclass" ? "ltr" : "auto"}" style="text-align:start">${p.best ? t(p.x) : t(p.p)} ${p.best ? "" : "· " + t(p.x)}</span>
+      ${p.best ? `<span class="badge">${t(p.p)}</span>` : ""}<span class="lbl">DZAC 5 · <span class="mono" dir="ltr">0${i + 1}</span></span><h3>${t(p.n)}</h3><span class="pr" style="text-align:start">${p.best ? t(p.x) : t(p.p) + (p.was ? ` <s>${t(p.was)}</s>` : "") + " · " + t(p.x)}</span>
       <ul>${p.i.map((x) => `<li>${t(x)}</li>`).join("")}</ul>
       <a class="btn ${p.best ? "btn-p" : "btn-g"}" href="${site("register")}?pass=${p.id}">${t(u.choose)} <span class="arr">→</span></a></div>`).join("")}</div><div data-dots></div>
     <p class="sub" style="margin-top:18px;font-size:14px">${L("Still not sure?", "ما زلت محتارًا؟")} <a href="${site("apply")}" style="color:var(--cyan)">${L("Answer four questions and we'll match you", "أجب عن أربعة أسئلة ونرشّح لك")} <span class="arr">→</span></a></p>
   </section>
 
   <section class="s wrap" id="faculty">
-    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.faculty)}</span><h2 class="h" data-r>${t(u.leadership)}</h2></div></div>
-    <div class="fac" data-rail>${C.leaders.map((l, i) => `<div class="t media fm" data-r style="--d:${i}">${l.img ? `<img src="${photo(l.img)}" alt="${esc(t(l.n))}" loading="lazy" style="object-position:50% 20%">` : `<span class="ini">${l.n.en.replace(/^(Prof\. Dr\.|Prof\.|Dr\.)\s*/, "").split(/\s+/).slice(0, 2).map((w) => w[0]).join("")}</span>`}<div class="sh"></div><div class="in"><small>${t(l.r)}</small><strong>${t(l.n)}</strong></div></div>`).join("")}</div><div data-dots></div>
+    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.faculty)}</span><h2 class="h" data-r>${t(u.speakers)}</h2></div></div>
+    <div class="spk" data-rail>${C.speakers.map((p, i) => `<div class="t media fm" data-r style="--d:${i}">${face(p)}<div class="sh"></div><div class="in"><small>${t(p.r)}</small><strong>${t(p.n)}</strong>${p.c ? `<span class="flag"><img src="${D("flags/" + p.c + ".svg")}" alt="" loading="lazy">${t(p.cn)}</span>` : ""}</div></div>`).join("")}</div><div data-dots></div>
+    <div class="fac-h"><span class="lbl"><span class="dot"></span>${t(u.leadership)}</span></div>
+    <div class="fac" data-rail>${C.leaders.map((l, i) => `<div class="t media fm" data-r style="--d:${i}">${face(l)}<div class="sh"></div><div class="in"><small>${t(l.r)}</small><strong>${t(l.n)}</strong></div></div>`).join("")}</div><div data-dots></div>
     <div class="marq" aria-label="${esc(t(u.pastFaculty))}"><div>${[...C.past, ...C.past].map((p) => `<span>${p}</span>`).join("")}</div></div>
+  </section>
+
+  <section class="s wrap" id="sponsors">
+    <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.sponsors)}</span><h2 class="h" data-r>${L("With the support of", "بدعم من")} <b>${L("our sponsors", "رعاتنا")}</b></h2></div></div>
+    <div class="spons" aria-label="${esc(C.sponsors.map((s) => s.n).join(", "))}"><div>${Array.from({ length: 8 }, (_, k) => C.sponsors.map((s) => `<span${k ? ' aria-hidden="true"' : ""}><img src="${D(s.logo)}" alt="${k ? "" : esc(s.n)}" loading="lazy"></span>`).join("")).join("")}</div></div>
   </section>
 
   <section class="s wrap" id="watch">
@@ -473,19 +529,21 @@ window.render = () => {
 
   <section class="s wrap" id="editions">
     <div class="s-head"><div><span class="lbl"><span class="dot"></span>${t(u.editions)}</span><h2 class="h" data-r>${t(u.reviewTitle)}</h2></div></div>
-    <div class="eds" data-rail>${C.editions.map((e, i) => `<div class="t ed${i === 4 ? " now" : ""}" data-r style="--d:${i}"><span class="lbl">${t(e.w)}</span><b>${e.n}</b><div class="grow"></div><strong>${t(e.p)}</strong><span>${t(e.x)}</span></div>`).join("")}</div><div data-dots></div>
+    <div class="eds" data-rail>${C.editions.map((e, i) => `<div class="t ed${i === 4 ? " now" : ""}" data-r style="--d:${i}"><span class="lbl">${t(e.w)}</span><b>${e.n}</b><div class="grow"></div><strong>${t(e.p)}</strong><span>${t(e.x)}</span>${e.photos ? `<a class="chip" href="#dzac2">${L("Photos", "الصور")} <span class="arr">→</span></a>` : ""}</div>`).join("")}</div><div data-dots></div>
+    <div class="gal-h" id="dzac2"><span class="lbl"><span class="dot"></span>${t(u.dzac2)}</span><span class="lbl">${t(C.editions[1].w)} · ${t(C.editions[1].p)}</span></div>
+    <div class="gal">${C.dzac2.map((n) => `<a class="t media" href="#" data-img="${D("dzac2/dzac2-" + n + ".webp")}"><img src="${D("dzac2/dzac2-" + n + ".webp")}" alt="DZAC 2" loading="lazy"></a>`).join("")}</div>
   </section>
 
   <section class="s wrap" id="venue">
     <div class="pv">
-      <div class="t pv-o" data-r><span class="lbl"><span class="dot"></span>${t(u.partners)}</span><ul>${C.orgs.map((o) => `<li><small>${t(o.r)}</small>${o.logo ? `<img class="org-logo" src="${M(o.logo)}" alt="${esc(t(o.n))}" loading="lazy">` : `<span>${t(o.n)}</span>`}</li>`).join("")}</ul></div>
+      <div class="t pv-o" data-r><span class="lbl"><span class="dot"></span>${t(u.partners)}</span><ul>${[C.orgs[1], C.orgs[0], C.orgs[2]].map((o) => `<li><small>${t(o.r)}</small>${o.mark ? isoa(o) : o.logo ? `<img class="org-logo" src="${M(o.logo)}" alt="${esc(t(o.n))}" loading="lazy">` : `<span>${t(o.n)}</span>`}</li>`).join("")}</ul></div>
       <div class="t pv-t" data-r style="--d:1"><span class="lbl">${t(C.partnersFor)}</span><div class="tiers">${C.tiers.map((x) => `<div><strong>${t(x.n)}</strong><span>${t(x.i)}</span></div>`).join("")}</div><a class="btn btn-g" style="align-self:flex-start" href="${site("apply")}?intent=partner">${t(u.becomePartner)} <span class="arr">→</span></a></div>
       <a class="t media pv-v" href="${E.maps}" target="_blank" rel="noreferrer" data-r><div class="vw">${vid(M("media/loops/venue.mp4"), M("media/loops/venue.webp"))}</div><div class="sh"></div>
         <div class="in"><span class="lbl" style="color:#fff"><span class="dot"></span>${t(u.venue)} · ${t(E.city)}</span><h3>${t(E.venueName)}</h3><span class="btn btn-g" style="align-self:flex-start">${t(u.directions)} <span class="arr">↗</span></span></div></a>
     </div>
     <div class="t final" data-r><h3>${t(E.tagline)}</h3><a class="btn btn-p" href="${site("register")}">${t(u.registerNow)} <span class="arr">→</span></a></div>
   </section>
-  <footer class="wrap ft"><span>${t(E.full)} · ${t(E.date)} · ${t(E.venue)}</span><span class="ft-org">Dar El Zokora · ISMHA · <img src="${M(C.orgs[2].logo)}" alt="Horizon" loading="lazy"></span></footer>`;
+  <footer class="wrap ft"><span>${t(E.full)} · ${t(E.date)} · ${t(E.venue)}</span><span class="ft-org">ISOA · Dar El Zokora · <img src="${M(C.orgs[2].logo)}" alt="Horizon" loading="lazy"></span></footer>`;
 
   renderProg();
   const qi = document.getElementById("q");

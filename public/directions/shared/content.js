@@ -18,6 +18,11 @@ window.DZC = {
     en: "One day in Cairo for the people shaping men's health: urology, sexual medicine, male infertility and prosthetic surgery, on one stage, with the world's andrology in the room.",
     ar: "يوم واحد في القاهرة يجمع من يصنعون مستقبل صحة الرجل: المسالك البولية، والطب الجنسي، وعقم الرجال، وجراحات الدعامات، على منصة واحدة، وفي القاعة نخبة طب الذكورة في العالم.",
   },
+  // The organizers' own words (10-28), used by direction C.
+  welcome: {
+    en: "We look forward to welcoming young doctors and researchers in andrology from Egypt, across the Arab world and around the globe to this gathering of international experts. Through panel discussions, expert lectures, scientific talks, hands-on workshops and masterclasses, DZAC 5 is a chance to exchange knowledge, explore the latest advances and sharpen practical skills in andrology.",
+    ar: "نتطلّع إلى استقبال الأطباء والباحثين الشباب في طب الذكورة من مصر والعالم العربي وحول العالم، في هذا التجمّع لنخبة من الخبراء الدوليين. ومن خلال حلقات النقاش ومحاضرات الخبراء والعروض العلمية وورش العمل العملية والماستر كلاس، يقدّم DZAC 5 فرصة لتبادل المعرفة واستكشاف أحدث التطورات وصقل المهارات العملية في طب الذكورة.",
+  },
   facts: [
     { n: 6, l: { en: "Scientific tracks", ar: "محاور علمية" } },
     { n: 18, l: { en: "Talks on the programme", ar: "محاضرة في البرنامج" } },
@@ -51,7 +56,7 @@ window.DZC = {
       ["The Epigenetic Impact of Male Obesity: How Paternal Weight Affects the Health of Future Generations", ""],
       ["Regenerative Medicine in Erectile Dysfunction: Stem Cells, Exosomes, and PRP under the Microscope of Global Societies", "Prof. Dr. Mohammed ElHefnawy"],
       ["The Resurgence of Topical and Non-Invasive Therapies for Early-Stage Peyronie's Disease", "Prof. Dr. Ahmed ElAssemy"]] },
-    { n: "06", t: { en: "Urology", ar: "المسالك البولية" }, img: "2297", s: [
+    { n: "06", t: { en: "Urology", ar: "المسالك البولية" }, img: "2297", src: "people/amr-mohsen.webp", who: { en: "Dr. Amr Mohsen", ar: "د. عمرو محسن" }, s: [
       ["Navigating the challenges: Complications associated with flexible ureteroscopy", "Prof. Dr. Ahmed Yehia"],
       ["AEEP: from surgical alternative to surgical standard", "Prof. Dr. Ismail Fattouh Rady"],
       ["Rethinking LUTS: when the pelvic floor matters", "Prof. Dr. Samuel Ibrahim"]] },
@@ -77,33 +82,55 @@ window.DZC = {
     ],
     fee: "5,000 €",
     feeNote: { en: "Currency to be confirmed", ar: "العملة قيد التأكيد" },
+    name: { en: "Masterclass & Workshop", ar: "الماستر كلاس وورشة العمل" },
+    cover: "mc-cover.webp",
+    parts: [
+      { t: { en: "Masterclass", ar: "الماستر كلاس" }, b: { en: "Live implants conducted by Prof. Ossama Ghattas and Prof. Gabriele Antonini.", ar: "عمليات زراعة حية يجريها أ.د. أسامة غطاس وأ.د. جابرييل أنطونيني." } },
+      { t: { en: "Workshop", ar: "ورشة العمل" }, b: { en: "Hands-on sessions with the international faculty.", ar: "جلسات عملية مع المحاضرين الدوليين." } },
+    ],
+    earlyBird: { en: "Early-bird discount", ar: "خصم الحجز المبكر" },
+    earlyNote: { en: "Your price is shown when you register.", ar: "يظهر السعر عند التسجيل." },
   },
+  // DZAC 5 speakers, in the organizers' order. A flag only where the country is confirmed.
+  speakers: [
+    { n: { en: "Prof. Ossama Ghattas", ar: "أ.د. أسامة غطاس" }, c: "eg", cn: { en: "Egypt", ar: "مصر" }, img: "761", r: { en: "Masterclass", ar: "الماستر كلاس" } },
+    { n: { en: "Prof. Gabriele Antonini", ar: "أ.د. جابرييل أنطونيني" }, c: "it", cn: { en: "Italy", ar: "إيطاليا" }, img: "2617", r: { en: "Masterclass", ar: "الماستر كلاس" } },
+    { n: { en: "Dr. Alejandro Carvajal", ar: "د. أليخاندرو كارباخال" }, c: "co", cn: { en: "Colombia", ar: "كولومبيا" }, r: { en: "Workshop", ar: "ورشة العمل" } },
+    { n: { en: "Dr. Anas AlObeidi", ar: "د. أنس العبيدي" }, c: "", cn: null, r: { en: "Workshop", ar: "ورشة العمل" } },
+    { n: { en: "Dr. Mohammed AlKabir", ar: "د. محمد الكبير" }, c: "", cn: null, r: { en: "Workshop", ar: "ورشة العمل" } },
+  ],
+  sponsors: [
+    { n: "Boston Scientific", logo: "sponsors/boston-scientific.svg" },
+    { n: "Rigicon", logo: "sponsors/rigicon.svg" },
+    { n: "Coloplast", logo: "sponsors/coloplast.svg" },
+  ],
+  dzac2: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"],
   leaders: [
     { r: { en: "Conference President", ar: "رئيس المؤتمر" }, n: { en: "Prof. Ossama Ghattas", ar: "أ.د. أسامة غطاس" }, img: "761" },
     { r: { en: "Vice-President", ar: "نائب رئيس المؤتمر" }, n: { en: "Prof. Dr. Gabriele Antonini", ar: "أ.د. جابرييل أنطونيني" }, img: "2617" },
     { r: { en: "Head of Scientific Committee", ar: "رئيس اللجنة العلمية" }, n: { en: "Dr. AbdulMonem Bahaa El-Din Gomha", ar: "د. عبد المنعم بهاء الدين جمعة" }, img: "" },
-    { r: { en: "Conference Secretary", ar: "سكرتير المؤتمر" }, n: { en: "Dr. Amr Mohsen", ar: "د. عمرو محسن" }, img: "" },
+    { r: { en: "Conference Secretary", ar: "سكرتير المؤتمر" }, n: { en: "Dr. Amr Mohsen", ar: "د. عمرو محسن" }, img: "", src: "people/amr-mohsen.webp" },
   ],
   past: ["David Ralph", "Gabriele Antonini", "Ege Can Şerefoğlu", "Juan I. Salamanca", "Sam Ward", "Mohamed Hamdan", "Carlo Bettocchi", "Yasser Farahat"],
   orgs: [
     { r: { en: "Organized by", ar: "تنظيم" }, n: { en: "Dar El Zokora Group", ar: "مجموعة دار الذكورة" } },
-    { r: { en: "Scientific partner", ar: "الشريك العلمي" }, n: { en: "ISMHA · International Society of Man Health and Andrology", ar: "ISMHA · الجمعية الدولية لصحة الرجل وطب الذكورة" } },
+    { r: { en: "Established by", ar: "أسّسته" }, n: { en: "ISOA · International Society of Andrology and Men's Health", ar: "ISOA · الجمعية الدولية لأمراض الذكورة وصحة الرجل" }, short: "ISOA", mark: "brand/isoa-mark-white.svg" },
     { r: { en: "Event organizer", ar: "منظم الحدث" }, n: { en: "Horizon", ar: "Horizon" }, logo: "brand/horizon.png", logoInk: "brand/horizon-ink.png" },
   ],
   editions: [
-    { n: "01", w: { en: "Where it began", ar: "البداية" }, p: { en: "Dar El Zokora", ar: "دار الذكورة" }, x: { en: "The first Dar El Zokora conference", ar: "أول مؤتمر لدار الذكورة" } },
-    { n: "02", w: { en: "Alexandria", ar: "الإسكندرية" }, p: { en: "Saudi German Hospital", ar: "المستشفى السعودي الألماني" }, x: { en: "Live surgery, prosthetics and infertility", ar: "جراحات حية والدعامات والعقم" } },
-    { n: "03", w: { en: "19–20 Dec 2024", ar: "19–20 ديسمبر 2024" }, p: { en: "Radisson Blu Alex West", ar: "راديسون بلو أليكس ويست" }, x: { en: "“Andrology Switch”", ar: "«Andrology Switch»" } },
-    { n: "04", w: { en: "8–9 Jan 2026", ar: "8–9 يناير 2026" }, p: { en: "Triumph Luxury Hotel + Alexandria Urology Hospital", ar: "فندق تريومف ومستشفى الإسكندرية لجراحة المسالك" }, x: { en: "“Empowering the Future of Male Health”", ar: "«تمكين مستقبل صحة الرجل»" } },
+    { n: "01", w: { en: "Where it began", ar: "البداية" }, p: { en: "Triumph Luxury Hotel, Cairo", ar: "فندق تريومف لاكشري، القاهرة" }, x: { en: "The first Dar El Zokora conference", ar: "أول مؤتمر لدار الذكورة" } },
+    { n: "02", w: { en: "7–8 Dec 2023", ar: "7–8 ديسمبر 2023" }, p: { en: "Radisson Blu Hotel, Alex West", ar: "فندق راديسون بلو أليكس ويست" }, x: { en: "Live surgery, prosthetics and infertility", ar: "جراحات حية والدعامات والعقم" }, photos: true },
+    { n: "03", w: { en: "19–20 Dec 2024", ar: "19–20 ديسمبر 2024" }, p: { en: "Radisson Blu Hotel, Alex West", ar: "فندق راديسون بلو أليكس ويست" }, x: { en: "“Andrology Switch”", ar: "«Andrology Switch»" } },
+    { n: "04", w: { en: "8–9 Jan 2026", ar: "8–9 يناير 2026" }, p: { en: "Triumph Luxury Hotel, Cairo", ar: "فندق تريومف لاكشري، القاهرة" }, x: { en: "“Empowering the Future of Male Health”", ar: "«تمكين مستقبل صحة الرجل»" } },
     { n: "05", w: { en: "14 Jan 2027", ar: "14 يناير 2027" }, p: { en: "Triumph Luxury Hotel, New Cairo", ar: "فندق تريومف لاكشري، القاهرة الجديدة" }, x: { en: "“Shaping the Future of Men's Health”", ar: "«نصوغ مستقبل صحة الرجل»" } },
   ],
   passes: [
-    { id: "conference", n: { en: "Conference", ar: "المؤتمر" }, p: { en: "3 tiers", ar: "3 فئات" }, x: { en: "Early-bird pricing", ar: "أسعار الحجز المبكر" },
-      i: [{ en: "Specialist doctors", ar: "الأطباء الأخصائيون والاستشاريون" }, { en: "Residents", ar: "المقيمون وأطباء الامتياز" }, { en: "Students (with ID)", ar: "الطلاب (بالكارنيه)" }, { en: "Full scientific program", ar: "البرنامج العلمي كاملًا" }] },
-    { id: "bundle", best: true, n: { en: "Bundle", ar: "الباقة" }, p: { en: "Best value", ar: "الأفضل قيمة" }, x: { en: "Conference + masterclass", ar: "المؤتمر + الماستر كلاس" },
-      i: [{ en: "Conference + masterclass", ar: "المؤتمر + الماستر كلاس" }, { en: "Discounted combined fee", ar: "رسوم مجمّعة مخفّضة" }, { en: "Certificate and dinner", ar: "شهادة وعشاء" }, { en: "Priority for DZAC 6", ar: "أولوية في DZAC 6" }] },
-    { id: "masterclass", n: { en: "Masterclass", ar: "الماستر كلاس" }, p: { en: "5,000 €", ar: "5,000 €" }, x: { en: "Limited seats", ar: "مقاعد محدودة" },
-      i: [{ en: "Live OR surgery", ar: "جراحات حية في غرفة العمليات" }, { en: "Scrub-in for all", ar: "دخول غرفة العمليات للجميع" }, { en: "Hands-on training", ar: "تدريب عملي" }, { en: "Limited seats", ar: "مقاعد محدودة" }] },
+    { id: "conference", n: { en: "Conference Access", ar: "دخول المؤتمر" }, p: { en: "Free", ar: "مجانًا" }, x: { en: "Registration required", ar: "التسجيل مطلوب" },
+      i: [{ en: "Free, with registration first", ar: "مجانًا، بعد التسجيل" }, { en: "All six scientific tracks", ar: "المحاور العلمية الستة" }, { en: "Expert lectures and panel discussions", ar: "محاضرات الخبراء وحلقات النقاش" }, { en: "E-ticket at the door", ar: "تذكرة إلكترونية عند الدخول" }] },
+    { id: "masterclass", n: { en: "Masterclass & Workshop", ar: "الماستر كلاس وورشة العمل" }, p: { en: "3,000 USD", ar: "3,000 دولار" }, was: { en: "4,000 USD", ar: "4,000 دولار" }, x: { en: "Limited seats", ar: "مقاعد محدودة" },
+      i: [{ en: "Masterclass with Prof. Ossama Ghattas and Prof. Gabriele Antonini", ar: "الماستر كلاس مع أ.د. أسامة غطاس وأ.د. جابرييل أنطونيني" }, { en: "Workshop with the international faculty", ar: "ورشة عمل مع المحاضرين الدوليين" }, { en: "Live OR surgery, scrub-in for all", ar: "جراحات حية مع دخول غرفة العمليات للجميع" }, { en: "Limited seats", ar: "مقاعد محدودة" }] },
+    { id: "bundle", best: true, n: { en: "The Bundle", ar: "الباقة الكاملة" }, p: { en: "Best value", ar: "الأفضل قيمة" }, x: { en: "Conference + Masterclass & Workshop", ar: "المؤتمر + الماستر كلاس وورشة العمل" },
+      i: [{ en: "Conference Access", ar: "دخول المؤتمر" }, { en: "Masterclass & Workshop", ar: "الماستر كلاس وورشة العمل" }, { en: "A discount for every bundle registration", ar: "خصم لكل من يسجّل في الباقة" }, { en: "Priority for DZAC 6", ar: "أولوية في DZAC 6" }] },
   ],
   tiers: [
     { id: "gold", n: { en: "Gold", ar: "ذهبي" }, i: { en: "Large booth · Stage talk · Logo on stage and website · Social media feature · Screen video", ar: "جناح كبير · كلمة على المنصة · الشعار على المنصة والموقع · فقرة على السوشيال ميديا · فيديو على الشاشات" } },
@@ -164,5 +191,9 @@ window.DZC = {
     menu: { en: "Menu", ar: "القائمة" },
     close: { en: "Close", ar: "إغلاق" },
     scroll: { en: "Scroll", ar: "مرّر" },
+    speakers: { en: "DZAC 5 speakers", ar: "محاضرو DZAC 5" },
+    sponsors: { en: "Sponsors", ar: "الرعاة" },
+    dzac2: { en: "DZAC 2 in pictures", ar: "DZAC 2 بالصور" },
+    countryTbc: { en: "Country to be confirmed", ar: "الدولة قيد التأكيد" },
   },
 };
